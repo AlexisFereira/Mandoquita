@@ -196,3 +196,49 @@ model ProductTag {
   @@index([value])
   @@index([value(ops: raw("gin_trgm_ops"))], type: Gin, map: "ProductTag_search_value_trgm_idx")
 }
+
+model ProductAdminSession {
+  id                    String    @id @default(cuid())
+  tokenHash             String    @unique
+  csrfHash              String
+  credentialFingerprint String
+  createdAt             DateTime  @default(now())
+  lastActivityAt        DateTime  @default(now())
+  idleExpiresAt         DateTime
+  absoluteExpiresAt     DateTime
+  revokedAt             DateTime?
+  updatedAt             DateTime  @updatedAt
+
+  @@index([idleExpiresAt, absoluteExpiresAt, revokedAt], map: "ProductAdminSession_expiry_idx")
+  @@index([createdAt], map: "ProductAdminSession_cleanup_idx")
+}
+
+model ProductAdminThrottle {
+  scope           String
+  keyHash         String
+  windowStartedAt DateTime
+  failureCount    Int       @default(0)
+  lockedUntil     DateTime?
+  updatedAt       DateTime  @updatedAt
+
+  @@id([scope, keyHash])
+  @@index([lockedUntil], map: "ProductAdminThrottle_lock_idx")
+  @@index([updatedAt], map: "ProductAdminThrottle_cleanup_idx")
+}
+
+model ProductAdminAuditEvent {
+  id                BigInt   @id @default(autoincrement())
+  occurredAt        DateTime @default(now())
+  requestId         String
+  event             String
+  outcome           String
+  reason            String?
+  sessionIdHash     String?
+  productId         Int?
+  expectedUpdatedAt DateTime?
+  currentUpdatedAt  DateTime?
+  changedFields     Json?
+
+  @@index([occurredAt], map: "ProductAdminAuditEvent_retention_idx")
+  @@index([productId, occurredAt], map: "ProductAdminAuditEvent_product_idx")
+}

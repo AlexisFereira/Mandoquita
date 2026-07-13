@@ -5,6 +5,10 @@
   box-sizing: border-box;
 }
 
+.ro {
+  border: 1px solid red;
+}
+
 html {
   scroll-behavior: smooth;
   overflow-x: clip;
@@ -90,9 +94,7 @@ textarea {
   opacity: 1;
   transform: none;
   pointer-events: auto;
-  transition:
-    opacity 220ms ease-out,
-    transform 220ms ease-out;
+  transition: opacity 220ms ease-out, transform 220ms ease-out;
   transition-delay: 0ms;
   will-change: opacity, transform;
 }
@@ -200,6 +202,7 @@ textarea {
 
 .ds-text-muted {
   color: rgb(var(--muted) / 1);
+  line-height: 3em;
 }
 
 .desktop-nav {

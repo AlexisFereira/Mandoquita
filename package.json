@@ -12,12 +12,15 @@
     "test:integration:product-content": "tsx scripts/validate-product-content-variants.ts",
     "test:integration:product-seed": "tsx scripts/validate-product-seed.ts",
     "test:integration:search": "tsx scripts/validate-public-search.ts",
+    "test:integration:product-admin": "tsx scripts/validate-product-admin.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init_catalog",
     "prisma:seed": "prisma db seed",
-    "prisma:publish-products-v1": "tsx prisma/publish-products-v1.ts"
+    "prisma:publish-products-v1": "tsx prisma/publish-products-v1.ts",
+    "admin:generate-secrets": "tsx scripts/generate-product-admin-secrets.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1085.0",
     "@prisma/client": "^6.11.1",
     "autoprefixer": "^10.5.2",
     "dotenv": "^16.6.1",

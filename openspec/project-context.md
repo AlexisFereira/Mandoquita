@@ -106,6 +106,22 @@ The platform is optimized for customers rather than administrators.
 
 ---
 
+# Administrative Operations
+
+Product Admin V1 provides one isolated `/admin` capability for an authorized
+maintainer to review and update the approved scalar fields of existing Products.
+It is an operational capability, not part of the public visitor journey and not
+an expansion into accounts, cart, checkout, Online Payments or orders.
+
+Production administration requires a temporary server-side session and a
+managed perimeter such as an approved access proxy, VPN/private network or
+operator-network allowlist. The six-digit credential is not sufficient for
+unrestricted Internet exposure. Images, Variants, taxonomy structure, Product
+creation/deletion and transactional or operational data remain outside Product
+Admin V1.
+
+---
+
 # User Experience Principles
 
 The experience should feel:

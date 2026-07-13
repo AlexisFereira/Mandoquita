@@ -42,7 +42,10 @@ export function Header() {
           )}
         </Link>
 
-        <nav aria-label="Navegación principal" className="desktop-nav items-center gap-8">
+        <nav
+          aria-label="Navegación principal"
+          className="desktop-nav items-center gap-8"
+        >
           {navigation.map((item) => (
             <Link
               key={item.href}

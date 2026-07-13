@@ -8,23 +8,24 @@ Date: 2026-07-13
 
 ## Source Review
 
-The supplied JSON contains 73 unique Product IDs and 73 unique public slugs. All
+The replacement JSON contains 47 unique Product IDs and 47 unique public slugs. All
 records use USD and are explicitly Active but not Editorially Approved and not
 Published. All Category/Subcategory hints resolve to an Active Taxonomy V1 branch
 after one documented source correction: `comunicacion-para-casco` was supplied
 under `electronica-y-seguridad`, while the authoritative hierarchy owns it under
 `accesorios-para-moto`.
 
-The source predates Product Content and Variants V1: it represents each inventory
-row as a separate Product, provides no approved SKU, uses broad Product Type labels
-instead of the authoritative leaf values, and provides media URLs without approved
-alternative text.
+The replacement source consolidates stock variants into one Product per supplied
+SKU grouping, but does not expose the original SKU as a structured field. It uses
+three Product Type labels outside the authoritative leaf vocabulary (`Camiseta rib`,
+`Camiseta estampada`, and `Conjunto de bermuda y camiseta`) and provides media URLs
+without approved alternative text.
 
 ## Seed Decision
 
 `prisma/data/products-v1.json` preserves the supplied source unchanged.
 `prisma/seed.ts` validates its version, currency, shape, uniqueness and taxonomy
-branches, then inserts the 73 records idempotently as non-public Product drafts.
+branches, then inserts the 47 records idempotently as non-public Product drafts.
 
 The seed intentionally does not create Product Variants, Product Images or
 Product-Type assignments. Doing so would fabricate approved SKU, alternative text
@@ -44,44 +45,43 @@ when their slugs also match; conflicting identity causes the transaction to fail
 
 ## Activation Inputs Resolved
 
-- The 73 rows remain separate Products until an authoritative grouping key exists.
+- The 47 supplied consolidated rows become the authoritative Product set.
 - Every Product owns one unique deterministic `MDQ-<source ID>` SKU.
 - Explicit mapping rules assign one exact Product Type leaf per Product.
 - Each supplied URL becomes one Primary Image using the complete Product name as
-  approved alternative text.
+  approved alternative text only when its governed local file exists.
 - Delegated editorial/commercial approval authorizes publication while preserving
   the source prices and `commerciallyAvailable=true` state.
 
 ## Publication Decision
 
 On 2026-07-13 the user delegated the remaining implementation decision to Backend.
-To avoid irreversible false merges without a supplied master Product identity, the
-73 source rows remain separate Products. Each owns one non-selectable Base Variant
+The replacement inventory supplies the approved Product grouping, so its 47 rows
+replace the former 73-row set. Each owns one non-selectable Base Variant
 with deterministic SKU `MDQ-<source ID>`. A supplied local Image becomes Primary
 with the complete Product name as alternative text only when the media file exists;
-currently all 73 files are absent and the approved no-media outcome applies.
-Explicit name/subcategory rules map
-every Product to one official Taxonomy V1 leaf. All 73 records are Editorially
-Approved, Published and Commercially Available; none is Featured.
+currently all 47 files are absent and the approved no-media outcome applies.
+Explicit name/subcategory rules normalize every Product to one official Taxonomy
+V1 leaf. All 47 records are Editorially Approved, Published and Commercially
+Available; 16 receive the separately governed Featured curation below.
 
-This preserves source identity and permits a later separately reviewed Product
-consolidation if Business provides authoritative grouping keys.
+This preserves the replacement source identity while keeping internal SKU and
+supplier references outside the public contract.
 
 ## Featured Curation
 
-The latest authorized business correction keeps only 4 Camiseta Acid Wash
-Oversize Products Featured. Homepage priorities 1–8 contain 4 Acid Wash, 2 Relojes
-and 2 Café Products. All 7 Lentes and the remaining Featured Relojes/Café continue
-after the Homepage limit, while the other 4 Acid Wash records are no longer
-Featured. Featured status does not change price, Commercial Availability or imply
-a promotion.
+The replacement inventory consolidates the former Acid Wash variants into one
+Product. Sixteen Products are Featured: 1 Acid Wash, all 8 Relojes, all 4 Lentes,
+and all 3 Café Products. Homepage priorities 1–8 contain the Acid Wash, 3 Relojes,
+3 Café Products and 1 Lentes Product, preserving visible category variety.
+Featured status does not change price, Commercial Availability or imply a promotion.
 
 ## Verification
 
-The draft seed was executed twice successfully against PostgreSQL to prove
-idempotency. `npm run prisma:publish-products-v1` then activated all records in one
-transaction. `npm run test:integration:product-seed` verifies all 73 identities,
-prices and published states, exact taxonomy branches, 73 unique Base Variant SKUs,
+The former 73 Products were removed from AWS `dbmaster`; the replacement seed then
+inserted 47 drafts and `npm run prisma:publish-products-v1` activated all records
+in one transaction. `npm run test:integration:product-seed` verifies all 47 identities,
+prices and published states, exact taxonomy branches, 47 unique Base Variant SKUs,
 safe missing-media disposition, public discovery, hidden internal SKU and synchronized Product
 ID sequence.
 

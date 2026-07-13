@@ -6,12 +6,14 @@ import inventory from "./data/products-v1.json";
 
 const prisma = new PrismaClient();
 const featuredProductIds = [
-  200001, 200002, 200003, 200004,
-  200031, 200046, 200032, 200047,
-  200039, 200033, 200048, 200040,
-  200034, 200041, 200035, 200042,
-  200036, 200043, 200037, 200044,
-  200038, 200045,
+  // Preserve the approved editorial rhythm after source variants were
+  // consolidated into unique Products: Acid Wash first, then alternate the
+  // strongest watch, coffee and eyewear discovery candidates.
+  200000,
+  200021, 200044, 200022, 200045,
+  200029, 200023, 200046, 200030,
+  200024, 200031, 200025, 200032,
+  200026, 200027, 200028,
 ];
 const featuredOrderById = new Map(featuredProductIds.map((id, index) => [id, index + 1]));
 

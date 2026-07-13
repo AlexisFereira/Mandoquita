@@ -30,3 +30,9 @@ Use this area for reusable accessibility rules that apply across all features.
   Information, governed Icon adoption and the Accessibility portion of motion
   integration are reviewed in
   `../../changes/discovery-trust-experience-v1/accessibility-review.md`.
+- Product Admin V1: access-gate, Product-list, editor, validation/status, focus,
+  keyboard, target, reflow, zoom and light-only design contracts are approved at
+  design level in
+  `../../changes/product-admin-v1/accessibility-design-review.md`; implementation
+  and joint QA validation are approved in
+  `../../changes/product-admin-v1/qa-review.md`.

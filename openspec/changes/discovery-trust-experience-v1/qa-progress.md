@@ -75,7 +75,7 @@ Result: approved.
 - Search integration: p95 106.91 ms <= 150 ms in the final matrix.
 - Taxonomy: 7 Categories, 16 Subcategories, 30 Product Types, 7 Category images,
   zero Published orphans.
-- Product content/Variants and 73-Product publication seed validations pass.
+- Product content/Variants and replacement 47-Product publication seed validations pass.
 - Lifecycle performance was stabilized with explicit PostgreSQL planner statistics
   after its temporary 10,000-row dataset; three consecutive p95 results were
   47.01, 41.63 and 38.86 ms <= 50 ms.

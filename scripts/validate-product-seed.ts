@@ -7,12 +7,11 @@ import { getProductDetail, listFeaturedProducts, listProducts } from "../src/ser
 
 const prisma = new PrismaClient();
 const expectedFeaturedIds = [
-  200001, 200002, 200003, 200004,
-  200031, 200046, 200032, 200047,
-  200039, 200033, 200048, 200040,
-  200034, 200041, 200035, 200042,
-  200036, 200043, 200037, 200044,
-  200038, 200045,
+  200000,
+  200021, 200044, 200022, 200045,
+  200029, 200023, 200046, 200030,
+  200024, 200031, 200025, 200032,
+  200026, 200027, 200028,
 ];
 const featuredOrderById = new Map(expectedFeaturedIds.map((id, index) => [id, index + 1]));
 
@@ -47,7 +46,8 @@ async function main() {
     assert(product.active && product.editorialApproved && product.published, `Published lifecycle mismatch for ${source.slug}`);
     const expectedFeaturedOrder = featuredOrderById.get(product.id) ?? null;
     assert(
-      product.commerciallyAvailable && product.featured === (expectedFeaturedOrder !== null) &&
+      product.commerciallyAvailable === source.commerciallyAvailable &&
+        product.featured === (expectedFeaturedOrder !== null) &&
         product.featuredOrder === expectedFeaturedOrder,
       `Featured/commercial mismatch for ${source.slug}`,
     );
@@ -80,7 +80,10 @@ async function main() {
   const detail = await getProductDetail(prisma, inventory.products[0].slug);
   assert(detail?.variantSelection.mode === "none", "Base Variant became a fabricated visitor choice");
   const publicPayload = JSON.stringify(detail).toLowerCase();
-  assert(!publicPayload.includes("mdq-200001") && !publicPayload.includes("sku"), "Public API exposed internal SKU");
+  assert(
+    !publicPayload.includes(`mdq-${inventory.products[0].id}`) && !publicPayload.includes("sku"),
+    "Public API exposed internal SKU",
+  );
   const featured = await prisma.product.findMany({
     where: { featured: true },
     orderBy: { featuredOrder: "asc" },
@@ -88,7 +91,7 @@ async function main() {
   });
   assert(
     JSON.stringify(featured.map(({ id }) => id)) === JSON.stringify(expectedFeaturedIds),
-    "Featured Product editorial order does not match the approved Acid Wash/Lentes/Relojes/Café sequence",
+    "Featured Product editorial order does not match the approved Acid Wash/Relojes/Café/Lentes sequence",
   );
   const homepageFeatured = await listFeaturedProducts(prisma, 8);
   assert(
@@ -98,7 +101,8 @@ async function main() {
 
   console.log(
     `Product publication PostgreSQL validation passed: ${products.length} published Products, ` +
-      "73 exact taxonomy leaves, 73 Base Variants/SKUs, 22 Featured in deterministic order, public contract protected",
+      `${products.length} exact taxonomy leaves, ${products.length} Base Variants/SKUs, ` +
+      `${expectedFeaturedIds.length} Featured in deterministic order, public contract protected`,
   );
 }
 
