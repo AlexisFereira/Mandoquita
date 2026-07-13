@@ -77,3 +77,24 @@ The proposal requires alignment between frontend, API, and data model to avoid e
 - Should the initial filter include only category and text, or also price range in V1?
 - Should we prioritize human-editable slugs or automatically derived slugs from product names?
 - Should related products be based on same-category affinity or editorial rules?
+
+## Category Taxonomy V1 UX Synchronization
+
+The flat Category exploration described by the initial catalog design is
+superseded by the approved Category Taxonomy V1 visitor hierarchy.
+
+- General Category discovery presents every eligible Category in approved order.
+- Category exploration presents eligible Subcategories before Products from the
+  complete Category branch.
+- Subcategory exploration presents only Products from the selected Subcategory
+  branch.
+- Product Type remains non-interactive classification context and is not an
+  independent filter or destination.
+- Empty and inactive branches are omitted from discovery choices.
+- Invalid or newly unavailable branches recover to general Category discovery.
+- Hierarchy context uses official Spanish names and preserves predictable parent
+  and browser-back navigation.
+
+The complete interaction, responsive, empty-state, and accessibility contract is
+defined by `openspec/changes/category-taxonomy-v1/ux-blueprint.md` and its
+approved `ui-design.md` presentation.

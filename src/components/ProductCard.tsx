@@ -40,7 +40,12 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
         </div>
 
         <div className="flex h-full flex-col gap-4 p-5">
-          <Badge variant="neutral">{product.category.name}</Badge>
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="neutral">{product.category.name}</Badge>
+            <span className="text-xs text-[rgb(var(--muted)/1)]">
+              {product.subcategory.name} · {product.productType.name}
+            </span>
+          </div>
           <div className="space-y-1.5">
             <h3 className="text-xl font-semibold tracking-[-0.02em] text-[rgb(var(--foreground)/1)]">
               {product.name}

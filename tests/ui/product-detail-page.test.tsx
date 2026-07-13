@@ -21,7 +21,9 @@ const unavailableProduct: ProductItem = {
   commerciallyAvailable: false,
   featured: true,
   featuredOrder: 1,
-  category: { id: 1, slug: "audio", name: "Audio" },
+  category: { id: "cat_audio", slug: "audio", name: "Audio" },
+  subcategory: { id: "sub_audio", slug: "audio", name: "Audio" },
+  productType: { name: "Audífonos" },
 };
 
 afterEach(cleanup);
@@ -37,5 +39,13 @@ describe("Product detail commercial availability", () => {
     expect(container.textContent).not.toMatch(/null|0\.00/);
 
     expect(createProductStructuredData(unavailableProduct).offers).toBeUndefined();
+    expect(screen.getAllByRole("link", { name: "Audio" }).some(
+      (link) => link.getAttribute("href") === "/categorias/audio",
+    )).toBe(true);
+    expect(screen.getAllByRole("link", { name: "Audio" }).some(
+      (link) => link.getAttribute("href") === "/categorias/audio/audio",
+    )).toBe(true);
+    expect(screen.getAllByText("Audífonos").length).toBeGreaterThan(0);
+    expect(screen.queryByRole("link", { name: "Audífonos" })).toBeNull();
   });
 });

@@ -36,7 +36,7 @@ describe("Header", () => {
       "/#destacados",
     );
     expect(screen.getByRole("link", { name: "Categorías" }).getAttribute("href")).toBe(
-      "/#categorias",
+      "/categorias",
     );
     expect(screen.queryByText(/carrito|checkout|comprar/i)).toBeNull();
   });

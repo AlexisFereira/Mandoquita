@@ -163,3 +163,21 @@ Scenario: Producto publicado sin media principal
 - proposal.md
 - design.md
 - tasks.md
+
+## Category Taxonomy V1 UX Synchronization
+
+Under Category Taxonomy V1, `Categoria Primaria` corresponds to the Product's
+single inherited Category. Product Detail preserves the same official hierarchy
+language used by discovery:
+
+- Category and eligible Subcategory provide understandable navigation context.
+- Product Type is presented as non-interactive leaf-classification context.
+- The hierarchy is ordered Category → Subcategory → Product Type and never
+  represented as three competing navigation systems.
+- A taxonomy destination is interactive only while it remains eligible for
+  public discovery.
+- Invalid or unavailable hierarchy destinations recover through the approved
+  general Category discovery experience.
+
+These UX rules do not change Product publication, commercial availability,
+related-Product eligibility, or the existing unavailable-Product outcome.

@@ -21,7 +21,7 @@ function percentile95(durations: number[]) {
   return sortedDurations[Math.ceil(sortedDurations.length * 0.95) - 1];
 }
 
-async function createPerformanceDataset(categoryId: number) {
+async function createPerformanceDataset(productTypeId: string) {
   for (let offset = 0; offset < PERFORMANCE_PRODUCT_COUNT; offset += INSERT_BATCH_SIZE) {
     const batchSize = Math.min(INSERT_BATCH_SIZE, PERFORMANCE_PRODUCT_COUNT - offset);
     await prisma.product.createMany({
@@ -39,7 +39,7 @@ async function createPerformanceDataset(categoryId: number) {
           published: true,
           commerciallyAvailable: position % 5 !== 0,
           featured: false,
-          categoryId,
+          productTypeId,
         };
       }),
     });
@@ -91,14 +91,16 @@ async function validatePerformance(targetSlug: string) {
 }
 
 async function main() {
-  const category = await prisma.category.create({
-    data: {
-      slug: runId,
-      name: "Lifecycle integration validation",
+  const productType = await prisma.productType.findFirst({
+    where: {
       active: true,
-      visible: true,
+      subcategory: {
+        active: true,
+        category: { active: true, visible: true, version: { status: "ACTIVE" } },
+      },
     },
   });
+  assert(productType, "Active taxonomy Product Type is required for integration validation");
 
   try {
     const baseProduct = {
@@ -108,7 +110,7 @@ async function main() {
       currency: "USD",
       imageUrl: "",
       featured: false,
-      categoryId: category.id,
+      productTypeId: productType.name,
     };
 
     await prisma.product.create({
@@ -184,7 +186,7 @@ async function main() {
       "Repeated detail queries produced different business results"
     );
 
-    await createPerformanceDataset(category.id);
+    await createPerformanceDataset(productType.name);
     const p95 = await validatePerformance(`${runId}-published-inactive`);
 
     console.log(
@@ -193,8 +195,7 @@ async function main() {
       `detail p95 ${p95.toFixed(2)} ms <= ${PERFORMANCE_P95_THRESHOLD_MS} ms`
     );
   } finally {
-    await prisma.product.deleteMany({ where: { categoryId: category.id } });
-    await prisma.category.delete({ where: { id: category.id } });
+    await prisma.product.deleteMany({ where: { slug: { startsWith: runId } } });
   }
 }
 

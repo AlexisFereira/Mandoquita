@@ -1,50 +1,85 @@
 Status: Active
 
-## ADDED Requirements
+## Product Catalog API Requirements
 
-### Requirement: Product listing API endpoint
+### Requirement: Published classified Product listing
 
-The system SHALL expose a products listing endpoint that supports category and text filters with pagination.
+The system SHALL expose `GET /api/products` with pagination and optional
+Category, Subcategory, and Product-name filters.
 
-#### Scenario: List products with default pagination
+#### Scenario: Default listing
 
-- **WHEN** a client requests GET /api/products without query parameters
-- **THEN** the system returns active products using default page and limit values
+- **WHEN** a client requests the listing without filters
+- **THEN** the system returns only Published Products with one approved Product
+  Type in an eligible branch of the Active taxonomy
+- **AND** returns default pagination metadata
 
-#### Scenario: List products filtered by category
+#### Scenario: Category branch filter
 
-- **WHEN** a client requests GET /api/products with a valid category slug
-- **THEN** the system returns only products that belong to the requested category
+- **WHEN** `category` contains an eligible official Category slug
+- **THEN** every returned Product inherits that Category through its Product Type
+- **AND** no Product outside that branch is returned
 
-#### Scenario: List products filtered by query text
+#### Scenario: Subcategory branch filter
 
-- **WHEN** a client requests GET /api/products with a text query parameter
-- **THEN** the system returns products whose names match the query text
+- **WHEN** `subcategory` contains an eligible official Subcategory slug
+- **THEN** every returned Product inherits that Subcategory through its Product Type
+- **AND** no Product outside that branch is returned
 
-### Requirement: Product detail API endpoint
+#### Scenario: Invalid query parameters
 
-The system SHALL expose a product detail endpoint by slug.
+- **WHEN** pagination or filter parameters violate the documented contract
+- **THEN** the API returns HTTP 400 without exposing implementation details
 
-#### Scenario: Get existing product detail
+### Requirement: Hierarchical Product response
 
-- **WHEN** a client requests GET /api/products/[slug] with an existing slug
-- **THEN** the system returns the product detail payload with category fields
+Every successful Product payload SHALL expose the authoritative Product Type
+and its inherited Subcategory and Category using official Spanish language and
+stable public slugs.
 
-#### Scenario: Get unknown product detail
+#### Scenario: Listing item classification
 
-- **WHEN** a client requests GET /api/products/[slug] with a non-existing slug
-- **THEN** the system returns a not found response
+- **WHEN** a Product listing succeeds
+- **THEN** each item includes `productType`, `subcategory`, and `category`
+- **AND** those values originate from one Product Type hierarchy
 
-### Requirement: Stable API response contract
+#### Scenario: Commercially unavailable Product
 
-The system SHALL return predictable JSON response shapes for both listing and detail endpoints.
+- **WHEN** a Published Product is not Commercially Available
+- **THEN** it remains eligible for discovery
+- **AND** public `price` and `currency` are null
 
-#### Scenario: Listing response shape
+### Requirement: Product detail by public slug
 
-- **WHEN** a client receives a successful listing response
-- **THEN** the response includes items, pagination metadata, and applied filter metadata
+The system SHALL expose `GET /api/products/[slug]` for eligible Published
+Products.
 
-#### Scenario: Detail response shape
+#### Scenario: Eligible Product detail
 
-- **WHEN** a client receives a successful detail response
-- **THEN** the response includes product core fields and category information
+- **WHEN** a client requests an eligible Product slug
+- **THEN** the API returns core Product fields, Product Type, inherited
+  Subcategory and Category, and at most four related Products
+
+#### Scenario: Unavailable Product detail
+
+- **WHEN** the slug is unknown, retired, unpublished, unclassified, or belongs
+  to an ineligible taxonomy branch
+- **THEN** the API returns the standard HTTP 404 result
+
+### Requirement: Taxonomy discovery
+
+The system SHALL expose `GET /api/categories` using the Active taxonomy.
+
+#### Scenario: Eligible hierarchy discovery
+
+- **WHEN** eligible Categories contain Published Products
+- **THEN** Categories are ordered by ascending `sortOrder`
+- **AND** eligible non-empty Subcategories are ordered by ascending `sourceOrder`
+- **AND** empty or inactive branches are omitted
+
+### Requirement: Stable response structures
+
+Listing responses SHALL contain `items`, pagination `metadata`, and applied
+`filters`. Detail responses SHALL contain `item` and `related`. Taxonomy
+responses SHALL contain the eligible ordered hierarchy and published Product
+counts.

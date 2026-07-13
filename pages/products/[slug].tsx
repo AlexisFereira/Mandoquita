@@ -101,10 +101,10 @@ export default function ProductDetailPage({
           <ol className="m-0 flex list-none flex-wrap gap-2 p-0">
             <li>
               <Link
-                href="/"
-                className="ds-text-muted underline underline-offset-4"
+                href="/categorias"
+                className="ds-text-muted inline-flex min-h-11 items-center underline underline-offset-4"
               >
-                Catalog
+                Categorías
               </Link>
             </li>
             <li aria-hidden="true" className="ds-text-muted">
@@ -112,10 +112,21 @@ export default function ProductDetailPage({
             </li>
             <li>
               <Link
-                href={`/?category=${item.category.slug}`}
-                className="ds-text-muted underline underline-offset-4"
+                href={`/categorias/${item.category.slug}`}
+                className="ds-text-muted inline-flex min-h-11 items-center underline underline-offset-4"
               >
                 {item.category.name}
+              </Link>
+            </li>
+            <li aria-hidden="true" className="ds-text-muted">
+              /
+            </li>
+            <li>
+              <Link
+                href={`/categorias/${item.category.slug}/${item.subcategory.slug}`}
+                className="ds-text-muted inline-flex min-h-11 items-center underline underline-offset-4"
+              >
+                {item.subcategory.name}
               </Link>
             </li>
             <li aria-hidden="true" className="ds-text-muted">
@@ -142,7 +153,7 @@ export default function ProductDetailPage({
           </div>
 
           <div className="flex self-start flex-col gap-5">
-            <span className="ds-eyebrow">{item.category.name}</span>
+            <span className="ds-eyebrow">{item.productType.name}</span>
 
             <h1 className="ds-heading ds-heading-lg">
               {item.name}
@@ -153,6 +164,21 @@ export default function ProductDetailPage({
             <p className="m-0 leading-7 text-[rgb(var(--foreground)/1)]">
               {item.description}
             </p>
+
+            <dl className="m-0 grid gap-2 text-sm">
+              <div className="flex flex-wrap gap-2">
+                <dt className="font-semibold">Categoría:</dt>
+                <dd className="m-0"><Link href={`/categorias/${item.category.slug}`} className="underline underline-offset-4">{item.category.name}</Link></dd>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <dt className="font-semibold">Subcategoría:</dt>
+                <dd className="m-0"><Link href={`/categorias/${item.category.slug}/${item.subcategory.slug}`} className="underline underline-offset-4">{item.subcategory.name}</Link></dd>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <dt className="font-semibold">Tipo de producto:</dt>
+                <dd className="m-0">{item.productType.name}</dd>
+              </div>
+            </dl>
           </div>
         </article>
 
@@ -162,7 +188,7 @@ export default function ProductDetailPage({
               id="related-heading"
               className="ds-heading ds-heading-md mb-6"
             >
-              Related products
+              Productos relacionados
             </h2>
             <div className="product-card-grid">
               {related.map((product) => (

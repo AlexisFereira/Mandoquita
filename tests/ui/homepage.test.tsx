@@ -19,13 +19,16 @@ const product: ProductItem = {
   commerciallyAvailable: true,
   featured: true,
   featuredOrder: 1,
-  category: { id: 1, slug: "audio", name: "Audio" },
+  category: { id: "cat_audio", slug: "audio", name: "Audio" },
+  subcategory: { id: "sub_audio", slug: "audio", name: "Audio" },
+  productType: { name: "Audífonos" },
 };
 
 const populatedPayload: HomepagePayload = {
   featuredProducts: [product],
   categories: [
     {
+      id: "cat_audio",
       slug: "audio",
       name: "Audio",
       imageUrl: "/images/banners/banner-2.svg",
@@ -88,6 +91,7 @@ describe("Homepage", () => {
 
   it("renders every eligible category supplied by the backend without a presentation cap", () => {
     const categories = Array.from({ length: 9 }, (_, index) => ({
+      id: `cat_${index + 1}`,
       slug: `categoria-${index + 1}`,
       name: `Categoría ${index + 1}`,
       productCount: index + 1,

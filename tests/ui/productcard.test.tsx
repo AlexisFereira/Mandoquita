@@ -26,7 +26,9 @@ describe("ProductCard", () => {
           commerciallyAvailable: true,
           featured: true,
           featuredOrder: 1,
-          category: { id: 10, slug: "furniture", name: "Furniture" },
+          category: { id: "cat_furniture", slug: "furniture", name: "Furniture" },
+          subcategory: { id: "sub_chairs", slug: "chairs", name: "Chairs" },
+          productType: { name: "Chair" },
         }}
       />,
     );
@@ -59,7 +61,9 @@ describe("ProductCard", () => {
           commerciallyAvailable: false,
           featured: true,
           featuredOrder: 2,
-          category: { id: 10, slug: "furniture", name: "Furniture" },
+          category: { id: "cat_furniture", slug: "furniture", name: "Furniture" },
+          subcategory: { id: "sub_chairs", slug: "chairs", name: "Chairs" },
+          productType: { name: "Chair" },
         }}
       />,
     );

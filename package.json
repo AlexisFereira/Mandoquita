@@ -8,6 +8,7 @@
     "start": "next start",
     "test": "vitest run --config vitest.config.ts",
     "test:integration:postgres": "tsx scripts/validate-product-lifecycle.ts",
+    "test:integration:taxonomy": "tsx scripts/validate-taxonomy.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init_catalog",
     "prisma:seed": "prisma db seed"

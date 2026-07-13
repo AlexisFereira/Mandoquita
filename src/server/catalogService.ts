@@ -1,4 +1,4 @@
-import type { PrismaClient, Product } from "@prisma/client";
+import type { Prisma, PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
 import type { ProductDetailResponse, ProductItem, ProductListResponse } from "@/types/catalog";
@@ -7,6 +7,7 @@ const listQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(50).default(12),
   category: z.string().trim().min(1).max(64).optional(),
+  subcategory: z.string().trim().min(1).max(64).optional(),
   q: z.string().trim().min(1).max(120).optional(),
 });
 
@@ -14,17 +15,63 @@ type ListQueryInput = {
   page?: string | string[];
   limit?: string | string[];
   category?: string | string[];
+  subcategory?: string | string[];
   q?: string | string[];
 };
 
+const classificationInclude = {
+  productType: {
+    include: {
+      subcategory: {
+        include: {
+          category: {
+            include: {
+              subcategories: {
+                where: { active: true },
+                include: {
+                  productTypes: { where: { active: true }, select: { name: true } },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+} as const;
+
+type ClassifiedProduct = Prisma.ProductGetPayload<{
+  include: typeof classificationInclude;
+}>;
+
 function toSingleValue(value: string | string[] | undefined): string | undefined {
-  if (Array.isArray(value)) {
-    return value[0];
-  }
-  return value;
+  return Array.isArray(value) ? value[0] : value;
 }
 
-function mapProduct(product: Product & { category: { id: number; slug: string; name: string } }): ProductItem {
+function publicClassificationWhere(category?: string, subcategory?: string) {
+  return {
+    is: {
+      active: true,
+      subcategory: {
+        active: true,
+        ...(subcategory ? { slug: subcategory } : {}),
+        category: {
+          active: true,
+          visible: true,
+          ...(category ? { slug: category } : {}),
+          version: { status: "ACTIVE" as const },
+        },
+      },
+    },
+  };
+}
+
+function mapProduct(product: ClassifiedProduct): ProductItem {
+  if (!product.productType) {
+    throw new Error("Published product is missing its approved Product Type");
+  }
+
+  const { subcategory } = product.productType;
   return {
     id: product.id,
     slug: product.slug,
@@ -40,37 +87,17 @@ function mapProduct(product: Product & { category: { id: number; slug: string; n
     featured: product.featured,
     featuredOrder: product.featuredOrder,
     category: {
-      id: product.category.id,
-      slug: product.category.slug,
-      name: product.category.name,
+      id: subcategory.category.id,
+      slug: subcategory.category.slug,
+      name: subcategory.category.name,
     },
+    subcategory: {
+      id: subcategory.id,
+      slug: subcategory.slug,
+      name: subcategory.name,
+    },
+    productType: { name: product.productType.name },
   };
-}
-
-export async function listFeaturedProducts(
-  prisma: PrismaClient,
-  limit: number
-): Promise<ProductItem[]> {
-  const products = await prisma.product.findMany({
-    where: {
-      active: true,
-      published: true,
-      featured: true,
-      category: {
-        active: true,
-        visible: true,
-      },
-    },
-    take: limit,
-    include: { category: true },
-    orderBy: [
-      { featuredOrder: { sort: "asc", nulls: "last" } },
-      { createdAt: "desc" },
-      { id: "asc" },
-    ],
-  });
-
-  return products.map(mapProduct);
 }
 
 export function parseListQuery(input: ListQueryInput) {
@@ -78,42 +105,47 @@ export function parseListQuery(input: ListQueryInput) {
     page: toSingleValue(input.page),
     limit: toSingleValue(input.limit),
     category: toSingleValue(input.category),
+    subcategory: toSingleValue(input.subcategory),
     q: toSingleValue(input.q),
   });
 }
 
+export async function listFeaturedProducts(prisma: PrismaClient, limit: number) {
+  const products = await prisma.product.findMany({
+    where: {
+      active: true,
+      published: true,
+      featured: true,
+      productType: publicClassificationWhere(),
+    },
+    take: limit,
+    include: classificationInclude,
+    orderBy: [
+      { featuredOrder: { sort: "asc", nulls: "last" } },
+      { createdAt: "desc" },
+      { id: "asc" },
+    ],
+  });
+  return products.map(mapProduct);
+}
+
 export async function listProducts(prisma: PrismaClient, rawQuery: ListQueryInput): Promise<ProductListResponse> {
   const query = parseListQuery(rawQuery);
-  const skip = (query.page - 1) * query.limit;
-
   const where = {
     published: true,
-    category: {
-      active: true,
-      visible: true,
-      ...(query.category ? { slug: query.category } : {}),
-    },
-    ...(query.q
-      ? {
-        name: {
-          contains: query.q,
-          mode: "insensitive" as const,
-        },
-      }
-      : {}),
+    productType: publicClassificationWhere(query.category, query.subcategory),
+    ...(query.q ? { name: { contains: query.q, mode: "insensitive" as const } } : {}),
   };
-
   const [items, totalItems] = await Promise.all([
     prisma.product.findMany({
       where,
-      skip,
+      skip: (query.page - 1) * query.limit,
       take: query.limit,
-      include: { category: true },
+      include: classificationInclude,
       orderBy: { createdAt: "desc" },
     }),
     prisma.product.count({ where }),
   ]);
-
   return {
     items: items.map(mapProduct),
     metadata: {
@@ -124,6 +156,7 @@ export async function listProducts(prisma: PrismaClient, rawQuery: ListQueryInpu
     },
     filters: {
       category: query.category ?? null,
+      subcategory: query.subcategory ?? null,
       q: query.q ?? null,
     },
   };
@@ -134,24 +167,21 @@ export async function getProductDetail(prisma: PrismaClient, slug: string): Prom
     where: {
       slug,
       published: true,
-      category: {
-        active: true,
-        visible: true,
-      },
+      productType: publicClassificationWhere(),
     },
-    include: { category: true },
+    include: classificationInclude,
   });
+  if (!item?.productType) return null;
 
-  if (!item) {
-    return null;
-  }
-
+  const categoryProductTypes = item.productType.subcategory.category.subcategories
+    .flatMap((subcategory) => subcategory.productTypes.map((productType) => productType.name));
   const related = await prisma.product.findMany({
     where: {
       published: true,
-      categoryId: item.categoryId,
       id: { not: item.id },
+      productTypeId: { in: categoryProductTypes },
     },
+    include: classificationInclude,
     orderBy: [
       { commerciallyAvailable: "desc" },
       { updatedAt: "desc" },
@@ -160,13 +190,5 @@ export async function getProductDetail(prisma: PrismaClient, slug: string): Prom
     take: 4,
   });
 
-  return {
-    item: mapProduct(item),
-    related: related.map((product) =>
-      mapProduct({
-        ...product,
-        category: item.category,
-      })
-    ),
-  };
+  return { item: mapProduct(item), related: related.map(mapProduct) };
 }

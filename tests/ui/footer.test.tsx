@@ -17,7 +17,7 @@ describe("Footer", () => {
     expect(destinations).toEqual([
       "/",
       "/#destacados",
-      "/#categorias",
+      "/categorias",
       "/#contacto",
     ]);
     expect(document.body.textContent).not.toMatch(/shipping|checkout|carrito|comprar/i);

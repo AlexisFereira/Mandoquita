@@ -211,6 +211,22 @@ graph LR
 
 ## 6. Governance Rules
 
+### Shared catalog taxonomy capability
+
+Category Taxonomy V1 is the reusable catalog-domain contract for Category,
+Subcategory, and Product Type. Homepage, Product Catalog, Category exploration,
+Product Detail, Search, Featured Products, and Related Products consume this
+contract and may not maintain a competing flat Category source.
+
+The authoritative leaf classification is Product Type. Subcategory and Category
+are inherited through the approved hierarchy. Taxonomy business specifications
+belong to the Product Catalog feature domain after the active change is
+released; visual, accessibility, and frontend-wide rules remain in Platform.
+
+Only one taxonomy version may be Active for public discovery. Changes to stable
+identifiers, slugs, hierarchy ownership, or Product Type meaning require a new
+reviewed change and coordinated compatibility decision.
+
 ### Project layers
 
 - Platform is the reusable foundation for design, interaction, accessibility, and frontend architecture.

@@ -2,78 +2,89 @@ Status: Approved
 
 Finalized: 2026-07-12
 
-# Context
+# Product Catalog API Design
 
-The project uses Next.js with Pages Router, TypeScript, Prisma, and PostgreSQL. The main need is to provide a modern, responsive, and fast product catalog for initial discovery while keeping the scope focused on product discovery.
+## Context
 
-The proposal requires alignment between frontend, API, and data model to avoid early technical debt and enable future evolution of filters and categories.
+The API uses Next.js Pages Router, TypeScript, Prisma, and PostgreSQL. Category
+Taxonomy V1 replaces the former flat Product-to-Category relation with the
+official hierarchy Category → Subcategory → Product Type.
 
-## Goals / Non-Goals
+## Domain Model
 
-**Goals:**
+- `TaxonomyVersion` owns locale, version, and lifecycle state. Exactly one
+  version is Active for public discovery.
+- `Category` owns a supplied stable ID, official Spanish name and slug,
+  description, business order, Active state, and Visible state.
+- `Subcategory` owns a supplied stable ID, official Spanish name and slug,
+  source sequence, Active state, and exactly one Category.
+- `ProductType` is the authoritative leaf classification, preserves source
+  sequence, and belongs to exactly one Subcategory.
+- `Product.productTypeId` is the only persisted Product classification.
+  Category and Subcategory are inherited and are never independently assigned.
 
-- Deliver a responsive catalog experience on desktop and mobile with clear navigation.
-- Serve catalog and detail pages using server-rendered or hybrid strategies for performance and SEO.
-- Define a product and category database model that supports category queries and basic filters.
-- Expose listing and detail API endpoints aligned with UI needs.
+PostgreSQL rejects a Published Product without a Product Type. Foreign keys,
+unique identifiers/slugs, positive order constraints, and restrictive deletes
+protect hierarchy integrity.
 
-**Non-Goals:**
+## Public Eligibility
 
-- Cart, checkout, or payments.
-- User sign-up, login, or profiles.
-- Advanced personalization based on user history.
+A Product returned through public catalog contracts must be Published and have
+an active Product Type inside an active Subcategory and an Active, Visible
+Category of the Active taxonomy version.
 
-## Decisions
+Commercial Availability does not control discovery. When it is false, the
+Product remains discoverable but public `price` and `currency` are `null`.
 
-1. Catalog and detail rendering: use SSR or hybrid strategies with Pages Router.
+## API Contracts
 
-- Rationale: improves SEO and Time To Content compared to a fully client-rendered approach.
-- Alternatives considered:
-  - Pure CSR: lower initial complexity, but weaker SEO and perceived performance.
-  - Full SSG: fast, but less flexible for dynamic filters and frequent stock changes.
+### `GET /api/products`
 
-2. Initial data model in Prisma/PostgreSQL.
+Supported query parameters:
 
-- Rationale: clear relational structure for products and categories with queryable filters.
-- Proposed schema:
-  - Product: id, unique slug, name, description, price, currency, imageUrl, active, categoryId, createdAt, updatedAt
-  - Category: id, unique slug, name, createdAt, updatedAt
-  - Indexes: Product(categoryId), Product(active), Product(slug)
-- Alternatives considered:
-  - Static JSON data: useful for quick mocks, but limits scalability and real filtering.
+- `page`: positive integer, default 1.
+- `limit`: integer from 1 through 50, default 12.
+- `category`: official eligible Category slug.
+- `subcategory`: official eligible Subcategory slug.
+- `q`: non-empty Product-name search text, maximum 120 characters.
 
-3. API in Next.js routes for listing and detail.
+Category filtering returns the complete selected branch. Subcategory filtering
+returns only the selected Subcategory branch. Results never cross the selected
+branch.
 
-- Rationale: keep backend integrated in the same app and speed up iteration.
-- Initial endpoints:
-  - GET /api/products?category=<slug>&q=<text>&page=<n>&limit=<n>
-  - GET /api/products/[slug]
-- Alternatives considered:
-  - Separate backend service: more decoupling, but higher initial overhead.
+The response contains `items`, pagination `metadata`, and normalized `filters`.
+Every Product item exposes its official Product Type plus inherited
+Subcategory and Category.
 
-4. Styling with Tailwind/Twind utilities and a breakpoint-based responsive layout system.
+### `GET /api/products/[slug]`
 
-- Rationale: implementation speed and visual consistency across components.
-- Alternatives considered:
-  - Fully modular CSS per component: more control, but slower delivery for the visual MVP.
+Returns one eligible Published Product and up to four related Products from the
+same inherited Category. Unknown, retired, unpublished, unclassified, or
+ineligible Products use the same 404 response without exposing internal state.
 
-## Risks / Trade-offs
+### `GET /api/categories`
 
-- [Slow listing queries as the catalog grows] -> Mitigation: initial indexes and default pagination.
-- [Scope drift toward full e-commerce] -> Mitigation: explicit non-goals in proposal and tasks.
-- [Mismatch between API contract and frontend consumption] -> Mitigation: shared typing and parameter validation.
-- [SSR overhead during traffic spikes] -> Mitigation: route caching and/or progressive hybridization with ISR.
+Returns every non-empty eligible Category in ascending business order. Each
+Category includes its eligible non-empty Subcategories in source sequence and
+published Product counts. Empty taxonomy branches remain valid data but are
+omitted from visitor discovery.
 
-## Migration Plan
+## Migration and Continuity
 
-- Create Prisma migration for Product and Category.
-- Seed minimum data to validate catalog and detail behavior.
-- Implement endpoints and then connect UI pages.
-- Deploy in phases: first API + listing, then detail, then responsive refinements.
-- Rollback: revert migration and keep a seed-data fallback in development if needed.
+Migration `202607120006_activate_category_taxonomy_v1` atomically retires the
+ten approved demonstration Products, removes flat classification, activates
+taxonomy 1.0.0, and installs the leaf-classification invariant.
 
-## Open Questions
+The discontinued `/categorias/audio`, `/categorias/computing`, and
+`/categorias/home-living` destinations permanently redirect to `/categorias`.
+Former demonstration Product slugs use the standard unavailable result.
 
-- Should the initial filter include only category and text, or also price range in V1?
-- Should we prioritize human-editable slugs or automatically derived slugs from product names?
-- Should related products be based on same-category affinity or editorial rules?
+Rollback is coordinated at the release boundary by restoring the
+pre-activation database backup and prior application artifact together.
+
+## Non-Goals
+
+- Cart, checkout, payment, authentication, profiles, inventory, or orders.
+- Automatic Product classification.
+- Product Type public pages or Product Type filters.
+- Free-form taxonomy synonyms or parallel flat Category fields.

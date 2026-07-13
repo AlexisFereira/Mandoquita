@@ -7,41 +7,93 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Category {
-  id        Int       @id @default(autoincrement())
-  slug      String    @unique
-  name      String
-  active    Boolean   @default(true)
-  visible   Boolean   @default(true)
-  products  Product[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+enum TaxonomyStatus {
+  PROPOSED
+  APPROVED
+  ACTIVE
+  SUPERSEDED
+}
 
-  @@index([active, visible])
+model TaxonomyVersion {
+  id         String         @id
+  version    String         @unique
+  locale     String
+  status     TaxonomyStatus
+  categories Category[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+model Category {
+  id            String          @id
+  slug          String          @unique
+  name          String
+  description   String?
+  sortOrder     Int
+  active        Boolean         @default(true)
+  visible       Boolean         @default(true)
+  versionId     String
+  version       TaxonomyVersion @relation(fields: [versionId], references: [id])
+  subcategories Subcategory[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@unique([versionId, sortOrder])
+  @@index([versionId, active, visible, sortOrder])
+}
+
+model Subcategory {
+  id           String        @id
+  slug         String        @unique
+  name         String
+  sourceOrder  Int
+  active       Boolean       @default(true)
+  categoryId   String
+  category     Category      @relation(fields: [categoryId], references: [id])
+  productTypes ProductType[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@unique([categoryId, sourceOrder])
+  @@index([categoryId, active, sourceOrder])
+}
+
+model ProductType {
+  name          String      @id
+  sourceOrder   Int
+  active        Boolean     @default(true)
+  subcategoryId String
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+  products      Product[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([subcategoryId, sourceOrder])
+  @@index([subcategoryId, active, sourceOrder])
 }
 
 model Product {
-  id                    Int      @id @default(autoincrement())
-  slug                  String   @unique
+  id                    Int          @id @default(autoincrement())
+  slug                  String       @unique
   name                  String
   description           String
-  price                 Decimal  @db.Decimal(10, 2)
-  currency              String   @default("USD")
+  price                 Decimal      @db.Decimal(10, 2)
+  currency              String       @default("USD")
   imageUrl              String
-  active                Boolean  @default(true)
-  editorialApproved     Boolean  @default(true)
-  published             Boolean  @default(true)
-  commerciallyAvailable Boolean  @default(true)
-  featured              Boolean  @default(false)
+  active                Boolean      @default(true)
+  editorialApproved     Boolean      @default(true)
+  published             Boolean      @default(true)
+  commerciallyAvailable Boolean      @default(true)
+  featured              Boolean      @default(false)
   featuredOrder         Int?
-  categoryId            Int
-  category              Category @relation(fields: [categoryId], references: [id])
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  productTypeId         String?
+  productType           ProductType? @relation(fields: [productTypeId], references: [name])
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
 
-  @@index([categoryId])
+  @@index([productTypeId])
   @@index([active])
-  @@index([published, categoryId])
+  @@index([published, productTypeId])
   @@index([active, featured, featuredOrder])
   @@index([slug])
 }

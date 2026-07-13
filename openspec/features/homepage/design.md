@@ -884,6 +884,18 @@ Success should be represented by clear navigation and continuation, not interrup
 - Navigation capability.
 - Existing component library: Header, Hero, Section, SectionHeader, ProductCard, CategoryCard, Button, Container, Footer.
 
+## Category Taxonomy V1 UX Synchronization
+
+- Homepage Category discovery consumes the same eligible Category collection as
+  general Category discovery and preserves approved business order.
+- Each Category action leads to its official Category destination.
+- Homepage does not expose Subcategories or Product Types as competing primary
+  choices; visitors narrow through the selected Category experience.
+- Empty or inactive taxonomy branches are omitted without disabled cards or
+  orphan section content.
+- Official Spanish Category names remain consistent across Homepage, Category,
+  Subcategory, and Product Detail experiences.
+
 ## Design Validation Checklist
 
 - [x] The page communicates what the business sells before asking the visitor to browse.

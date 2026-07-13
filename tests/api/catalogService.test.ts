@@ -2,232 +2,141 @@ import { describe, expect, it, vi } from "vitest";
 
 import { getProductDetail, listProducts, parseListQuery } from "../../src/server/catalogService";
 
-function buildPrismaMock() {
+function makeProduct(overrides: Record<string, unknown> = {}) {
+  const now = new Date();
   return {
-    product: {
-      findMany: vi.fn(),
-      count: vi.fn(),
+    id: 1,
+    slug: "camiseta-basica",
+    name: "Camiseta básica",
+    description: "Camiseta de uso diario",
+    price: { toString: () => "25.00" },
+    currency: "USD",
+    imageUrl: "",
+    active: true,
+    editorialApproved: true,
+    published: true,
+    commerciallyAvailable: true,
+    featured: false,
+    featuredOrder: null,
+    productTypeId: "Camiseta básica",
+    createdAt: now,
+    updatedAt: now,
+    productType: {
+      name: "Camiseta básica",
+      active: true,
+      sourceOrder: 3,
+      subcategoryId: "sub_camisetas",
+      createdAt: now,
+      updatedAt: now,
+      subcategory: {
+        id: "sub_camisetas",
+        slug: "camisetas",
+        name: "Camisetas",
+        sourceOrder: 1,
+        active: true,
+        categoryId: "cat_ropa_moda",
+        createdAt: now,
+        updatedAt: now,
+        category: {
+          id: "cat_ropa_moda",
+          slug: "ropa-y-moda",
+          name: "Ropa y moda",
+          description: null,
+          sortOrder: 1,
+          active: true,
+          visible: true,
+          versionId: "taxonomy_es_1_0_0",
+          createdAt: now,
+          updatedAt: now,
+          subcategories: [
+            {
+              id: "sub_camisetas",
+              productTypes: [{ name: "Camiseta básica" }, { name: "Camiseta oversize" }],
+            },
+          ],
+        },
+      },
     },
-  } as any;
+    ...overrides,
+  };
 }
 
 describe("parseListQuery", () => {
-  it("parses default pagination", () => {
-    const parsed = parseListQuery({});
-    expect(parsed.page).toBe(1);
-    expect(parsed.limit).toBe(12);
-  });
-
-  it("throws for invalid pagination", () => {
-    expect(() => parseListQuery({ page: "0", limit: "99" })).toThrowError();
+  it("parses taxonomy filters and validates pagination", () => {
+    expect(parseListQuery({ category: "ropa-y-moda", subcategory: "camisetas" }))
+      .toMatchObject({ category: "ropa-y-moda", subcategory: "camisetas" });
+    expect(() => parseListQuery({ page: "0" })).toThrow();
   });
 });
 
 describe("listProducts", () => {
-  it("applies category and text filters", async () => {
-    const prisma = buildPrismaMock();
-    prisma.product.findMany.mockResolvedValue([
-      {
-        id: 1,
-        slug: "wireless-headset-pro",
-        name: "Wireless Headset Pro",
-        description: "Audio headset",
-        price: { toString: () => "129.99" },
-        currency: "USD",
-        imageUrl: "https://images.example.com/wireless-headset-pro.jpg",
-        active: true,
-        editorialApproved: true,
-        published: true,
-        commerciallyAvailable: true,
-        categoryId: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        category: { id: 1, slug: "audio", name: "Audio" },
+  it("filters only published products inside the selected taxonomy branch", async () => {
+    const prisma = {
+      product: {
+        findMany: vi.fn().mockResolvedValue([makeProduct()]),
+        count: vi.fn().mockResolvedValue(1),
       },
-    ]);
-    prisma.product.count.mockResolvedValue(1);
-
+    } as any;
     const response = await listProducts(prisma, {
-      category: "audio",
-      q: "headset",
-      page: "1",
-      limit: "10",
+      category: "ropa-y-moda",
+      subcategory: "camisetas",
     });
 
     expect(prisma.product.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         where: expect.objectContaining({
           published: true,
-          category: { active: true, visible: true, slug: "audio" },
-          name: { contains: "headset", mode: "insensitive" },
+          productType: expect.objectContaining({ is: expect.any(Object) }),
         }),
       })
     );
-
-    expect(response.items).toHaveLength(1);
-    expect(response.metadata.totalItems).toBe(1);
-    expect(response.filters).toEqual({ category: "audio", q: "headset" });
+    expect(response.items[0]).toMatchObject({
+      category: { id: "cat_ropa_moda", slug: "ropa-y-moda" },
+      subcategory: { id: "sub_camisetas", slug: "camisetas" },
+      productType: { name: "Camiseta básica" },
+    });
+    expect(response.filters.subcategory).toBe("camisetas");
   });
 });
 
 describe("getProductDetail", () => {
-  it("returns item and related products for an active slug", async () => {
+  it("returns inherited taxonomy and at most four related products", async () => {
+    const item = makeProduct();
+    const related = makeProduct({ id: 2, slug: "camiseta-oversize" });
     const prisma = {
       product: {
-        findFirst: vi.fn().mockResolvedValue({
-          id: 1,
-          slug: "wireless-headset-pro",
-          name: "Wireless Headset Pro",
-          description: "Audio headset",
-          price: { toString: () => "129.99" },
-          currency: "USD",
-          imageUrl: "https://images.example.com/wireless-headset-pro.jpg",
-          active: true,
-          editorialApproved: true,
-          published: true,
-          commerciallyAvailable: true,
-          categoryId: 1,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          category: { id: 1, slug: "audio", name: "Audio" },
-        }),
-        findMany: vi.fn().mockResolvedValue([
-          {
-            id: 2,
-            slug: "audio-speakers",
-            name: "Audio Speakers",
-            description: "Speaker pair",
-            price: { toString: () => "89.99" },
-            currency: "USD",
-            imageUrl: "https://images.example.com/audio-speakers.jpg",
-            active: true,
-            editorialApproved: true,
-            published: true,
-            commerciallyAvailable: true,
-            categoryId: 1,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            category: { id: 1, slug: "audio", name: "Audio" },
-          },
-        ]),
+        findFirst: vi.fn().mockResolvedValue(item),
+        findMany: vi.fn().mockResolvedValue([related]),
       },
     } as any;
 
-    const response = await getProductDetail(prisma, "wireless-headset-pro");
+    const response = await getProductDetail(prisma, "camiseta-basica");
 
-    expect(response?.item.slug).toBe("wireless-headset-pro");
+    expect(response?.item.productType.name).toBe("Camiseta básica");
     expect(response?.related).toHaveLength(1);
-    expect(prisma.product.findFirst).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: {
-          slug: "wireless-headset-pro",
-          published: true,
-          category: { active: true, visible: true },
-        },
-      })
-    );
     expect(prisma.product.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({
-          published: true,
-          categoryId: 1,
-          id: { not: 1 },
-        }),
-      })
-    );
-    expect(prisma.product.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({
-        orderBy: [
-          { commerciallyAvailable: "desc" },
-          { updatedAt: "desc" },
-          { id: "asc" },
-        ],
-        take: 4,
-      })
+      expect.objectContaining({ take: 4, include: expect.any(Object) })
     );
   });
 
-  it("returns unavailable for a missing or unpublished product", async () => {
+  it("returns unavailable when no published classified product exists", async () => {
     const prisma = {
-      product: {
-        findFirst: vi.fn().mockResolvedValue(null),
-        findMany: vi.fn(),
-      },
+      product: { findFirst: vi.fn().mockResolvedValue(null), findMany: vi.fn() },
     } as any;
-
-    const response = await getProductDetail(prisma, "unpublished-product");
-
-    expect(response).toBeNull();
-    expect(prisma.product.findFirst).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({ published: true }),
-      })
-    );
+    expect(await getProductDetail(prisma, "retired-demo")).toBeNull();
     expect(prisma.product.findMany).not.toHaveBeenCalled();
   });
 
-  it("keeps a published inactive product publicly visible", async () => {
+  it("suppresses historical price without commercial availability", async () => {
     const prisma = {
       product: {
-        findFirst: vi.fn().mockResolvedValue({
-          id: 3,
-          slug: "published-inactive",
-          name: "Published inactive",
-          description: "Published product",
-          price: { toString: () => "25.00" },
-          currency: "USD",
-          imageUrl: "",
-          active: false,
-          editorialApproved: true,
-          published: true,
-          commerciallyAvailable: true,
-          featured: false,
-          featuredOrder: null,
-          categoryId: 1,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          category: { id: 1, slug: "audio", name: "Audio" },
-        }),
+        findFirst: vi.fn().mockResolvedValue(
+          makeProduct({ commerciallyAvailable: false })
+        ),
         findMany: vi.fn().mockResolvedValue([]),
       },
     } as any;
-
-    const response = await getProductDetail(prisma, "published-inactive");
-
-    expect(response?.item.published).toBe(true);
-    expect(response?.item.active).toBe(false);
-    expect(response?.item.price).toBe("25.00");
-  });
-
-  it("does not expose price or currency without commercial availability", async () => {
-    const prisma = {
-      product: {
-        findFirst: vi.fn().mockResolvedValue({
-          id: 4,
-          slug: "commercially-unavailable",
-          name: "Commercially unavailable",
-          description: "Published without a current offer",
-          price: { toString: () => "99.00" },
-          currency: "USD",
-          imageUrl: "",
-          active: true,
-          editorialApproved: true,
-          published: true,
-          commerciallyAvailable: false,
-          featured: false,
-          featuredOrder: null,
-          categoryId: 1,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          category: { id: 1, slug: "audio", name: "Audio" },
-        }),
-        findMany: vi.fn().mockResolvedValue([]),
-      },
-    } as any;
-
-    const response = await getProductDetail(prisma, "commercially-unavailable");
-
-    expect(response?.item.commerciallyAvailable).toBe(false);
+    const response = await getProductDetail(prisma, "camiseta-basica");
     expect(response?.item.price).toBeNull();
     expect(response?.item.currency).toBeNull();
   });

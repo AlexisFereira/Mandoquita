@@ -132,7 +132,7 @@ Scenario: Producto publicado sin media principal
 ## Dependencies
 
 - Depends On: Capacidad de catalogo de productos publicables.
-- Depends On: Dominio de categoria primaria de producto.
+- Depends On: Category Taxonomy V1; la Categoria Primaria se hereda del unico Product Type aprobado del Producto.
 - Depends On: Definicion de Estado Editorial, Estado de Publicacion y Disponibilidad Comercial.
 - Blocks: No bloquea checkout ni autenticacion por estar fuera de alcance.
 - Related Features: Descubrimiento de catalogo, busqueda, recomendaciones basicas por categoria.
@@ -151,7 +151,9 @@ Scenario: Producto publicado sin media principal
 - Disponibilidad Comercial: dimension que representa vigencia comercial de oferta y precio.
 - Producto Publicado: producto visible para personas visitantes segun Estado de Publicacion.
 - Identificador Publico: clave estable usada para consultar un producto en contexto de navegacion.
-- Categoria Primaria: clasificacion principal unica de un producto para navegacion y afinidad.
+- Categoria Primaria: Category unica heredada del Product Type aprobado del Producto; se usa para navegacion y afinidad.
+- Subcategoria: clasificacion intermedia unica heredada del Product Type aprobado.
+- Product Type: clasificacion hoja unica y autoritativa del Producto dentro de Category Taxonomy V1.
 - Producto Relacionado: producto alternativo o complementario elegible bajo reglas de categoria primaria.
 - Estado No Disponible: resultado de negocio para productos inexistentes o no publicables.
 
@@ -160,3 +162,9 @@ Scenario: Producto publicado sin media principal
 - proposal.md
 - design.md
 - tasks.md
+
+## Category Taxonomy V1 Synchronization
+
+Category Taxonomy V1 reemplaza cualquier interpretacion plana o independiente de Categoria Primaria. Cada Producto publicamente descubrible tiene un unico Product Type aprobado y hereda de este exactamente una Subcategoria y una Categoria Primaria.
+
+Product Detail conserva el mismo lenguaje oficial en espanol utilizado por Homepage y Product Catalog. Product Type es contexto de clasificacion y no crea por si solo un destino publico. Esta sincronizacion no modifica Estado Editorial, Estado de Publicacion, Disponibilidad Comercial ni las reglas de Productos Relacionados.

@@ -13,8 +13,16 @@ export type ProductItem = {
   featured: boolean;
   featuredOrder: number | null;
   category: {
-    id: number;
+    id: string;
     slug: string;
+    name: string;
+  };
+  subcategory: {
+    id: string;
+    slug: string;
+    name: string;
+  };
+  productType: {
     name: string;
   };
 };
@@ -29,6 +37,7 @@ export type ProductListResponse = {
   };
   filters: {
     category: string | null;
+    subcategory: string | null;
     q: string | null;
   };
 };
@@ -39,10 +48,23 @@ export type ProductDetailResponse = {
 };
 
 export type HomepageCategory = {
+  id: string;
   slug: string;
   name: string;
+  description?: string;
   imageUrl?: string;
   productCount: number;
+};
+
+export type TaxonomySubcategory = {
+  id: string;
+  slug: string;
+  name: string;
+  productCount: number;
+};
+
+export type TaxonomyCategory = HomepageCategory & {
+  subcategories: TaxonomySubcategory[];
 };
 
 export type HomepagePayload = {

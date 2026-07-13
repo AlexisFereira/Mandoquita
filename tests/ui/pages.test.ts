@@ -28,10 +28,46 @@ function makeProduct(overrides: Partial<{
     editorialApproved: true,
     published: true,
     commerciallyAvailable: true,
+    productTypeId: "Camiseta",
     categoryId,
     createdAt: new Date(),
     updatedAt: new Date(),
-    category: { id: categoryId, slug: categorySlug, name: "Audio" },
+    productType: {
+      name: "Camiseta",
+      active: true,
+      sourceOrder: 1,
+      subcategoryId: "sub_camisetas",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      subcategory: {
+        id: "sub_camisetas",
+        slug: "camisetas",
+        name: "Camisetas",
+        active: true,
+        sourceOrder: 1,
+        categoryId: "cat_ropa_moda",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        category: {
+          id: "cat_ropa_moda",
+          slug: categorySlug,
+          name: "Ropa y moda",
+          description: null,
+          sortOrder: 1,
+          active: true,
+          visible: true,
+          versionId: "taxonomy_es_1_0_0",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          subcategories: [
+            {
+              id: "sub_camisetas",
+              productTypes: [{ name: "Camiseta" }],
+            },
+          ],
+        },
+      },
+    },
   };
 }
 
