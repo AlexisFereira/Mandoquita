@@ -2,7 +2,7 @@
 
 Version: 1.0
 
-Status: Approved for Frontend Planning
+Status: Approved and Released
 
 Owner: Senior UI/UX Designer
 
