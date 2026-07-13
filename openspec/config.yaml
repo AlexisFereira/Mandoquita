@@ -1,0 +1,20 @@
+schema: spec-driven
+
+context: |
+  Tech stack: Next.js, React, Node.js, TypeScript, Twind/Tailwind, PostgreSQL, Prisma
+  Database: PostgreSQL for product catalog and queryable filters
+  Styling: Tailwind-compatible utility classes with Twind runtime support
+  Routing: Next.js Pages Router for main, categories, and product detail pages
+  API: Next.js API routes for product listing and detail endpoints
+  Language: TypeScript for type safety across frontend and API routes
+
+rules:
+  proposal:
+    - Keep proposals brief and focused on product discovery scope
+    - Explicitly include non-goals for cart, authentication, and payment
+  design:
+    - Prefer server-rendered or hybrid pages for catalog and product detail
+    - Specify database schema for products and category queries
+  tasks:
+    - Include setup tasks for Next.js, Twind, and PostgreSQL
+    - Keep tasks small and implement one page or API route at a time

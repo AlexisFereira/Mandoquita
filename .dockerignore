@@ -1,0 +1,6 @@
+node_modules
+.next
+.git
+openspec/changes
+coverage
+npm-debug.log

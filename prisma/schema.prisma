@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  slug      String    @unique
+  name      String
+  active    Boolean   @default(true)
+  visible   Boolean   @default(true)
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([active, visible])
+}
+
+model Product {
+  id                    Int      @id @default(autoincrement())
+  slug                  String   @unique
+  name                  String
+  description           String
+  price                 Decimal  @db.Decimal(10, 2)
+  currency              String   @default("USD")
+  imageUrl              String
+  active                Boolean  @default(true)
+  editorialApproved     Boolean  @default(true)
+  published             Boolean  @default(true)
+  commerciallyAvailable Boolean  @default(true)
+  featured              Boolean  @default(false)
+  featuredOrder         Int?
+  categoryId            Int
+  category              Category @relation(fields: [categoryId], references: [id])
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([active])
+  @@index([published, categoryId])
+  @@index([active, featured, featuredOrder])
+  @@index([slug])
+}

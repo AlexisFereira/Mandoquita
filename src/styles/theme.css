@@ -1,0 +1,76 @@
+:root {
+  color-scheme: light;
+  --background: 250 250 250;
+  --surface: 255 255 255;
+  --surface-muted: 248 243 238;
+  --foreground: 24 24 24;
+  --primary: 168 88 61;
+  --primary-hover: 135 70 50;
+  --primary-foreground: 255 255 255;
+  --border: 234 234 234;
+  --muted: 107 114 128;
+  --accent: 15 118 110;
+  --success: 21 128 61;
+  --warning: 180 83 9;
+  --danger: 185 28 28;
+  --focus: 15 118 110;
+  --inverse-surface: 24 18 15;
+  --inverse-foreground: 255 255 255;
+  --inverse-muted: 209 200 194;
+  --inverse-border: 99 86 78;
+  --shadow-sm: 0 1px 2px rgba(31, 26, 23, 0.08);
+  --shadow-md: 0 8px 24px rgba(31, 26, 23, 0.1);
+  --shadow-lg: 0 18px 48px rgba(31, 26, 23, 0.14);
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1120px;
+  --container-xl: 1280px;
+  --font-sans: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-display: Manrope, Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --line-height-body: 1.55;
+  --line-height-tight: 1.15;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  line-height: var(--line-height-body);
+  color: rgb(var(--foreground) / 1);
+  background:
+    radial-gradient(circle at top, rgb(var(--primary) / 0.08), transparent 34%),
+    linear-gradient(
+      180deg,
+      rgb(var(--background) / 1) 0%,
+      rgb(var(--background) / 1) 55%,
+      rgb(var(--surface) / 1) 100%
+    );
+}
+
+.ds-surface {
+  background: rgb(var(--surface) / 0.86);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgb(var(--border) / 1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.ds-card {
+  background: rgb(var(--surface) / 1);
+  border: 1px solid rgb(var(--border) / 1);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}

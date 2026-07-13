@@ -1,0 +1,210 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
+
+[id] {
+  scroll-margin-top: 88px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid rgb(var(--focus) / 1) !important;
+  outline-offset: 3px !important;
+}
+
+::selection {
+  background: rgb(var(--primary) / 0.2);
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 1100;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  color: rgb(var(--inverse-foreground) / 1);
+  background: rgb(var(--inverse-surface) / 1);
+  font-weight: 700;
+  transform: translateY(calc(-100% - var(--space-4)));
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 3px solid rgb(var(--focus) / 1);
+  outline-offset: 3px;
+}
+
+.site-header {
+  top: 0;
+}
+
+.ds-container {
+  width: min(100% - 2rem, var(--container-lg));
+  margin-inline: auto;
+}
+
+.ds-grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.ds-grid-2 {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ds-grid-3 {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ds-grid-4 {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.product-card-grid,
+.category-card-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+}
+
+@media (min-width: 640px) {
+  .product-card-grid,
+  .category-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .category-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .product-card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.ds-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.ds-eyebrow {
+  color: rgb(var(--primary-hover) / 1);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.77rem;
+  font-weight: 700;
+}
+
+.ds-heading {
+  margin: 0;
+  font-family: var(--font-display);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.02em;
+}
+
+.ds-heading-xl {
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+}
+
+.ds-heading-lg {
+  font-size: clamp(1.9rem, 4vw, 3rem);
+}
+
+.ds-heading-md {
+  font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+}
+
+.ds-text-muted {
+  color: rgb(var(--muted) / 1);
+}
+
+.desktop-nav {
+  display: flex;
+}
+
+.mobile-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .mobile-toggle {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ds-grid-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .ds-grid-2,
+  .ds-grid-3,
+  .ds-grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .ds-container {
+    width: min(100% - 1.25rem, var(--container-lg));
+  }
+}
