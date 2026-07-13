@@ -918,3 +918,13 @@ Success should be represented by clear navigation and continuation, not interrup
 - [x] Animation guidance is subtle and usability-driven.
 - [x] Visual consistency rules preserve spacing, card rhythm, CTA placement, and product focus.
 - [x] No React code, HTML, CSS, Tailwind classes, backend decisions, or new business requirements are included.
+
+## Product Content and Variants V1 Synchronization
+
+- Featured Product cards use Product-level identity and commercial information.
+- Card media uses Primary Image, otherwise first ordered Product Image, with the
+  approved missing-media outcome.
+- Short description is preferred for concise card content when present.
+- Variant choices, SKU, barcode and reference do not appear on Homepage.
+- Variant Active state does not redefine Featured eligibility, publication,
+  taxonomy or Commercial Availability.

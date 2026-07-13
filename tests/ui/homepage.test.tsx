@@ -13,6 +13,8 @@ const product: ProductItem = {
   price: "120.00",
   currency: "USD",
   imageUrl: "/images/banners/banner-1.svg",
+  images: [], shortDescription: null, brand: null, collection: null,
+  genderApplicability: null, tags: [], seo: { title: null, description: null },
   active: true,
   editorialApproved: true,
   published: true,

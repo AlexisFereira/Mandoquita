@@ -32,15 +32,14 @@ The proposal requires alignment between frontend, API, and data model to avoid e
   - Pure CSR: lower initial complexity, but weaker SEO and perceived performance.
   - Full SSG: fast, but less flexible for dynamic filters and frequent stock changes.
 
-2. Initial data model in Prisma/PostgreSQL.
+2. Active Product domain contract.
 
-- Rationale: clear relational structure for products and categories with queryable filters.
-- Proposed schema:
-  - Product: id, unique slug, name, description, price, currency, imageUrl, active, categoryId, createdAt, updatedAt
-  - Category: id, unique slug, name, createdAt, updatedAt
-  - Indexes: Product(categoryId), Product(active), Product(slug)
-- Alternatives considered:
-  - Static JSON data: useful for quick mocks, but limits scalability and real filtering.
+- Product Type is the authoritative classification leaf; Subcategory and Category are inherited through Taxonomy V1.
+- Product owns one or more governed Product Variants and zero or more ordered Product Images.
+- Product listing content may include short description, brand, collection, gender applicability and non-interactive tags.
+- Product cards use the Primary Image, otherwise the first ordered Image, and preserve the approved missing-media outcome.
+- Variant choices remain a Product Detail concern and never become automatic Catalog filters in V1.
+- Product-level price and Commercial Availability remain independent from Variant Active state.
 
 3. API in Next.js routes for listing and detail.
 
@@ -98,3 +97,15 @@ superseded by the approved Category Taxonomy V1 visitor hierarchy.
 The complete interaction, responsive, empty-state, and accessibility contract is
 defined by `openspec/changes/category-taxonomy-v1/ux-blueprint.md` and its
 approved `ui-design.md` presentation.
+
+## Product Content and Variants V1 Synchronization
+
+- Product cards prefer approved short description over complete description for concise discovery.
+- Primary Image, otherwise first ordered Image, supplies listing media and approved alternative text.
+- Missing Product Images do not invalidate Product discovery.
+- Brand, collection, gender applicability and tags remain supporting metadata and do not compete with taxonomy.
+- Variants, SKU, barcode and reference are not listing choices or filters in V1.
+- Product-level price, publication, Featured designation and Commercial Availability retain their existing meaning.
+
+The complete gallery, Variant-choice, responsive and accessibility contract is
+defined by `openspec/changes/product-content-variants-v1/ui-design.md`.

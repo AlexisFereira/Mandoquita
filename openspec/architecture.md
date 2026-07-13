@@ -227,6 +227,22 @@ Only one taxonomy version may be Active for public discovery. Changes to stable
 identifiers, slugs, hierarchy ownership, or Product Type meaning require a new
 reviewed change and coordinated compatibility decision.
 
+### Product content and Variant aggregate
+
+Product is the catalog aggregate boundary for Product Variants, Product Images,
+merchandising metadata and SEO content. Product Variant belongs to exactly one
+Product and owns its stable SKU and approved attributes. Product Image belongs to
+exactly one Product; Variant media association cannot cross Product ownership.
+
+Product Type remains the sole taxonomy leaf. Variant Active state remains
+independent from Product publication and Commercial Availability. Product-level
+price and currency remain authoritative in V1. Inventory, cost, supplier,
+warehouse, tax, logistics and Variant-level pricing require separate reviewed
+capabilities.
+
+Reusable gallery and option interaction belongs to Platform, while Product Image
+order, Variant resolution, vocabulary and business state remain feature-owned.
+
 ### Project layers
 
 - Platform is the reusable foundation for design, interaction, accessibility, and frontend architecture.

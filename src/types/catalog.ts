@@ -2,10 +2,20 @@ export type ProductItem = {
   id: number;
   slug: string;
   name: string;
-  description: string;
+  description: string | null;
+  shortDescription: string | null;
   price: string | null;
   currency: string | null;
   imageUrl: string;
+  images: ProductImageItem[];
+  brand: string | null;
+  collection: string | null;
+  genderApplicability: "mujer" | "hombre" | "unisex" | "no_aplica" | null;
+  tags: string[];
+  seo: {
+    title: string | null;
+    description: string | null;
+  };
   active: boolean;
   editorialApproved: boolean;
   published: boolean;
@@ -27,6 +37,30 @@ export type ProductItem = {
   };
 };
 
+export type ProductImageItem = {
+  id: string;
+  url: string;
+  altText: string;
+  position: number;
+  isPrimary: boolean;
+};
+
+export type ProductVariantAttributeItem = {
+  name: "Talla" | "Color" | "Material" | "Capacidad" | "Presentación";
+  value: string | number | boolean;
+};
+
+export type PublicProductVariantItem = {
+  id: string;
+  imageId: string | null;
+  attributes: ProductVariantAttributeItem[];
+};
+
+export type ProductVariantSelection = {
+  mode: "none" | "read_only" | "selectable" | "content_correction";
+  variants: PublicProductVariantItem[];
+};
+
 export type ProductListResponse = {
   items: ProductItem[];
   metadata: {
@@ -44,6 +78,7 @@ export type ProductListResponse = {
 
 export type ProductDetailResponse = {
   item: ProductItem;
+  variantSelection: ProductVariantSelection;
   related: ProductItem[];
 };
 

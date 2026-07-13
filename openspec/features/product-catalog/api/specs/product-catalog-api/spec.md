@@ -11,7 +11,7 @@ Category, Subcategory, and Product-name filters.
 
 - **WHEN** a client requests the listing without filters
 - **THEN** the system returns only Published Products with one approved Product
-  Type in an eligible branch of the Active taxonomy
+  Type in an eligible branch of the Active taxonomy and at least one Product Variant
 - **AND** returns default pagination metadata
 
 #### Scenario: Category branch filter
@@ -58,7 +58,33 @@ Products.
 
 - **WHEN** a client requests an eligible Product slug
 - **THEN** the API returns core Product fields, Product Type, inherited
-  Subcategory and Category, and at most four related Products
+  Subcategory and Category, ordered Images, optional content, Variant-selection
+  outcome, and at most four related Products
+
+#### Scenario: Base Variant
+
+- **WHEN** an eligible Product has one approved non-selectable Base Variant
+- **THEN** `variantSelection.mode` is `none`
+- **AND** no fabricated option, SKU, barcode, or reference is exposed
+
+#### Scenario: Meaningful Active Variants
+
+- **WHEN** two or more Active Variants are distinguishable by approved attributes
+- **THEN** `variantSelection.mode` is `selectable`
+- **AND** each public Variant contains only stable identity, approved attributes,
+  and optional Product Image association
+
+#### Scenario: Commercial protection across Variants
+
+- **WHEN** the Product is not Commercially Available
+- **THEN** Product-level `price` and `currency` remain null
+- **AND** no Variant exposes price, inventory, cost, supplier, or logistics data
+
+### Requirement: Product Image integrity
+
+Product Images SHALL follow ascending unique position, expose approved alternative
+text, and designate at most one Primary Image. A Variant Image association SHALL
+always reference an Image owned by the same Product. Zero Images is valid.
 
 #### Scenario: Unavailable Product detail
 
@@ -80,6 +106,7 @@ The system SHALL expose `GET /api/categories` using the Active taxonomy.
 ### Requirement: Stable response structures
 
 Listing responses SHALL contain `items`, pagination `metadata`, and applied
-`filters`. Detail responses SHALL contain `item` and `related`. Taxonomy
+`filters`. Detail responses SHALL contain `item`, `variantSelection`, and
+`related`. Taxonomy
 responses SHALL contain the eligible ordered hierarchy and published Product
 counts.

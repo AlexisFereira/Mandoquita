@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import Script from "next/script";
@@ -16,6 +16,10 @@ import { getProductDetail } from "../../src/server/catalogService";
 import type { ProductDetailResponse } from "../../src/types/catalog";
 import { APPLICATION_THEME_COLOR } from "../../src/design-system/metadata";
 import { Container } from "../../src/components/Container";
+import { Carousel } from "../../src/components/Carousel";
+import { Chip } from "../../src/components/Chip";
+import { ProductVariantOptions } from "../../src/components/ProductVariantOptions";
+import type { PublicProductVariantItem } from "../../src/types/catalog";
 
 type ProductDetailPageProps = ProductDetailResponse;
 
@@ -43,9 +47,12 @@ export function createProductStructuredData(item: ProductDetailResponse["item"])
     "@context": "https://schema.org",
     "@type": "Product",
     name: item.name,
-    description: item.description,
-    image: item.imageUrl,
+    description: item.shortDescription ?? item.description ?? undefined,
   };
+
+  if (item.images.length > 0) {
+    structuredData.image = item.images.map((image) => image.url);
+  }
 
   if (hasCurrentOffer(item)) {
     structuredData.offers = {
@@ -61,15 +68,42 @@ export function createProductStructuredData(item: ProductDetailResponse["item"])
 
 export default function ProductDetailPage({
   item,
+  variantSelection,
   related,
 }: ProductDetailPageProps) {
   const structuredData = createProductStructuredData(item);
+  const initialImageId = item.images.find((image) => image.isPrimary)?.id ?? item.images[0]?.id;
+  const [activeImageId, setActiveImageId] = useState(initialImageId);
+  const galleryItems = useMemo(() => item.images.map((image, index) => ({
+    id: image.id,
+    src: image.url,
+    alt: image.altText,
+    thumbnailSrc: image.url,
+    controlLabel: `Mostrar ${image.altText}, imagen ${index + 1} de ${item.images.length}`,
+  })), [item.images]);
+
+  useEffect(() => {
+    setActiveImageId(initialImageId);
+  }, [initialImageId, item.id]);
+
+  const handleVariantResolved = useCallback((variant: PublicProductVariantItem) => {
+    if (variant.imageId && item.images.some((image) => image.id === variant.imageId)) {
+      setActiveImageId(variant.imageId);
+    }
+  }, [item.images]);
+
+  const genderLabel = item.genderApplicability
+    ? ({ mujer: "Mujer", hombre: "Hombre", unisex: "Unisex", no_aplica: "No aplica" } as const)[item.genderApplicability]
+    : null;
+  const hasMerchandisingMetadata = Boolean(
+    item.brand || item.collection || genderLabel || item.tags.length > 0,
+  );
 
   return (
     <>
       <Head>
-        <title>{`${item.name} | Mandoquita`}</title>
-        <meta name="description" content={item.description} />
+        <title>{item.seo.title ?? `${item.name} | Mandoquita`}</title>
+        <meta name="description" content={item.seo.description ?? item.shortDescription ?? item.description ?? undefined} />
         <meta name="robots" content="index,follow" />
         <meta
           name="viewport"
@@ -77,9 +111,9 @@ export default function ProductDetailPage({
         />
         <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
         <link rel="canonical" href={`/products/${item.slug}`} />
-        <meta property="og:title" content={item.name} />
-        <meta property="og:description" content={item.description} />
-        <meta property="og:image" content={item.imageUrl} />
+        <meta property="og:title" content={item.seo.title ?? item.name} />
+        <meta property="og:description" content={item.seo.description ?? item.shortDescription ?? item.description ?? undefined} />
+        {item.imageUrl ? <meta property="og:image" content={item.imageUrl} /> : null}
         <meta property="og:type" content="product" />
       </Head>
 
@@ -132,25 +166,26 @@ export default function ProductDetailPage({
             <li aria-hidden="true" className="ds-text-muted">
               /
             </li>
+            <li className="ds-text-muted">{item.productType.name}</li>
+            <li aria-hidden="true" className="ds-text-muted">
+              /
+            </li>
             <li aria-current="page" className="ds-text-muted">
               {item.name}
             </li>
           </ol>
         </nav>
 
-        <article className="mb-12 grid gap-10 md:grid-cols-2">
-          <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-gradient-to-br from-[rgb(var(--primary)/0.12)] to-[rgb(var(--accent)/0.14)]">
-            <img
-              src={item.imageUrl}
-              alt={item.name}
-              width="800"
-              height="600"
-              onError={(event) => {
-                event.currentTarget.src = "/images/banners/default-banner.svg";
-              }}
-              className="h-full w-full object-cover"
-            />
-          </div>
+        <article className="mb-12 grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-12">
+          <Carousel
+            mode="gallery"
+            items={galleryItems}
+            activeItemId={activeImageId}
+            onActiveItemChange={setActiveImageId}
+            aria-label={`Galería de ${item.name}`}
+            missingMediaMessage="No hay imágenes disponibles para este producto."
+            failedMediaMessage="No pudimos mostrar esta imagen."
+          />
 
           <div className="flex self-start flex-col gap-5">
             <span className="ds-eyebrow">{item.productType.name}</span>
@@ -159,11 +194,19 @@ export default function ProductDetailPage({
               {item.name}
             </h1>
 
+            {item.shortDescription ? (
+              <p className="m-0 text-lg leading-7 text-[rgb(var(--foreground)/1)]">
+                {item.shortDescription}
+              </p>
+            ) : null}
+
             <ProductOffer product={item} emphasis="detail" />
 
-            <p className="m-0 leading-7 text-[rgb(var(--foreground)/1)]">
-              {item.description}
-            </p>
+            <ProductVariantOptions
+              key={item.id}
+              selection={variantSelection}
+              onVariantResolved={handleVariantResolved}
+            />
 
             <dl className="m-0 grid gap-2 text-sm">
               <div className="flex flex-wrap gap-2">
@@ -181,6 +224,37 @@ export default function ProductDetailPage({
             </dl>
           </div>
         </article>
+
+        {item.description ? (
+          <section aria-labelledby="product-description-heading" className="mb-10 max-w-3xl">
+            <h2 id="product-description-heading" className="ds-heading ds-heading-md mb-4">
+              Descripción
+            </h2>
+            <p className="m-0 leading-7 text-[rgb(var(--foreground)/1)]">
+              {item.description}
+            </p>
+          </section>
+        ) : null}
+
+        {hasMerchandisingMetadata ? (
+          <section aria-labelledby="product-metadata-heading" className="mb-10 max-w-3xl">
+            <h2 id="product-metadata-heading" className="ds-heading ds-heading-md mb-4">
+              Información del producto
+            </h2>
+            {item.brand || item.collection || genderLabel ? (
+              <dl className="m-0 grid gap-2 text-sm">
+                {item.brand ? <div className="flex flex-wrap gap-2"><dt className="font-semibold">Marca:</dt><dd className="m-0">{item.brand}</dd></div> : null}
+                {item.collection ? <div className="flex flex-wrap gap-2"><dt className="font-semibold">Colección:</dt><dd className="m-0">{item.collection}</dd></div> : null}
+                {genderLabel ? <div className="flex flex-wrap gap-2"><dt className="font-semibold">Aplicabilidad:</dt><dd className="m-0">{genderLabel}</dd></div> : null}
+              </dl>
+            ) : null}
+            {item.tags.length > 0 ? (
+              <div className="mt-4 flex flex-wrap gap-2" aria-label="Etiquetas del producto">
+                {item.tags.map((tag) => <Chip key={tag}>{tag}</Chip>)}
+              </div>
+            ) : null}
+          </section>
+        ) : null}
 
         {related.length > 0 && (
           <section aria-labelledby="related-heading" className="mt-8">

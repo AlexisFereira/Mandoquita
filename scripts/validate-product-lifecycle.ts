@@ -33,10 +33,9 @@ async function createPerformanceDataset(productTypeId: string) {
           description: "Temporary performance validation record",
           price: 100,
           currency: "USD",
-          imageUrl: "",
           active: true,
           editorialApproved: true,
-          published: true,
+          published: false,
           commerciallyAvailable: position % 5 !== 0,
           featured: false,
           productTypeId,
@@ -44,6 +43,22 @@ async function createPerformanceDataset(productTypeId: string) {
       }),
     });
   }
+  const products = await prisma.product.findMany({
+    where: { slug: { startsWith: `${runId}-performance-` } },
+    select: { id: true, slug: true },
+  });
+  await prisma.productVariant.createMany({
+    data: products.map((product) => ({
+      id: `${runId}-variant-${product.id}`,
+      productId: product.id,
+      sku: `${runId.toUpperCase()}-${product.id}`,
+      isBase: true,
+    })),
+  });
+  await prisma.product.updateMany({
+    where: { slug: { startsWith: `${runId}-performance-` } },
+    data: { published: true },
+  });
 }
 
 async function validatePerformance(targetSlug: string) {
@@ -108,10 +123,19 @@ async function main() {
       description: "Temporary integration validation record",
       price: 100,
       currency: "USD",
-      imageUrl: "",
       featured: false,
       productTypeId: productType.name,
     };
+
+    const withBaseVariant = (slug: string) => ({
+      variants: {
+        create: {
+          id: `${slug}-variant`,
+          sku: `${slug.toUpperCase()}-SKU`,
+          isBase: true,
+        },
+      },
+    });
 
     await prisma.product.create({
       data: {
@@ -121,6 +145,7 @@ async function main() {
         editorialApproved: true,
         published: false,
         commerciallyAvailable: true,
+        ...withBaseVariant(`${runId}-active-unpublished`),
       },
     });
 
@@ -135,6 +160,7 @@ async function main() {
         editorialApproved: true,
         published: true,
         commerciallyAvailable: true,
+        ...withBaseVariant(`${runId}-published-inactive`),
       },
     });
 
@@ -149,6 +175,7 @@ async function main() {
         editorialApproved: true,
         published: true,
         commerciallyAvailable: false,
+        ...withBaseVariant(`${runId}-commercially-unavailable`),
       },
     });
 
@@ -170,6 +197,7 @@ async function main() {
           editorialApproved: false,
           published: true,
           commerciallyAvailable: true,
+          ...withBaseVariant(`${runId}-unapproved-published`),
         },
       });
     } catch {

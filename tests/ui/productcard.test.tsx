@@ -20,6 +20,8 @@ describe("ProductCard", () => {
           price: "129.00",
           currency: "USD",
           imageUrl: "/images/banners/banner-1.svg",
+          images: [], shortDescription: null, brand: null, collection: null,
+          genderApplicability: null, tags: [], seo: { title: null, description: null },
           active: true,
           editorialApproved: true,
           published: true,
@@ -55,6 +57,8 @@ describe("ProductCard", () => {
           price: null,
           currency: null,
           imageUrl: "/images/banners/banner-1.svg",
+          images: [], shortDescription: null, brand: null, collection: null,
+          genderApplicability: null, tags: [], seo: { title: null, description: null },
           active: true,
           editorialApproved: true,
           published: true,
@@ -73,5 +77,40 @@ describe("ProductCard", () => {
     expect(
       screen.getByRole("link", { name: "Ver detalles de Archivo Editorial" }).getAttribute("href"),
     ).toBe("/products/archivo-editorial");
+  });
+
+  it("uses approved listing content and preserves a stable missing-media state", () => {
+    const base = {
+      id: 3,
+      slug: "producto-sin-imagen",
+      name: "Producto sin imagen",
+      description: "Descripción completa que no compite en la tarjeta.",
+      shortDescription: "Resumen aprobado para listados.",
+      price: "29.00",
+      currency: "COP",
+      imageUrl: "",
+      images: [],
+      brand: null,
+      collection: null,
+      genderApplicability: null,
+      tags: [],
+      seo: { title: null, description: null },
+      active: true,
+      editorialApproved: true,
+      published: true,
+      commerciallyAvailable: true,
+      featured: false,
+      featuredOrder: null,
+      category: { id: "cat_hogar", slug: "hogar", name: "Hogar" },
+      subcategory: { id: "sub_hogar", slug: "hogar", name: "Hogar" },
+      productType: { name: "Accesorio" },
+    };
+
+    render(<ProductCard product={base} />);
+
+    expect(screen.getByText("Resumen aprobado para listados.")).toBeTruthy();
+    expect(screen.queryByText(base.description)).toBeNull();
+    expect(screen.getByText("Sin imagen")).toBeTruthy();
+    expect(screen.queryByRole("img")).toBeNull();
   });
 });

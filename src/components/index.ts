@@ -14,3 +14,4 @@ export * from "./Section";
 export * from "./SectionHeader";
 export * from "./ProductCard";
 export * from "./ProductOffer";
+export * from "./PoliteStatus";

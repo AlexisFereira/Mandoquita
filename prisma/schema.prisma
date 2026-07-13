@@ -14,6 +14,27 @@ enum TaxonomyStatus {
   SUPERSEDED
 }
 
+enum GenderApplicability {
+  MUJER
+  HOMBRE
+  UNISEX
+  NO_APLICA
+}
+
+enum VariantAttributeName {
+  TALLA
+  COLOR
+  MATERIAL
+  CAPACIDAD
+  PRESENTACION
+}
+
+enum VariantAttributeValueType {
+  TEXT
+  NUMBER
+  BOOLEAN
+}
+
 model TaxonomyVersion {
   id         String         @id
   version    String         @unique
@@ -73,27 +94,96 @@ model ProductType {
 }
 
 model Product {
-  id                    Int          @id @default(autoincrement())
-  slug                  String       @unique
+  id                    Int                  @id @default(autoincrement())
+  slug                  String               @unique
   name                  String
-  description           String
-  price                 Decimal      @db.Decimal(10, 2)
-  currency              String       @default("USD")
-  imageUrl              String
-  active                Boolean      @default(true)
-  editorialApproved     Boolean      @default(true)
-  published             Boolean      @default(true)
-  commerciallyAvailable Boolean      @default(true)
-  featured              Boolean      @default(false)
+  description           String?
+  shortDescription      String?
+  brand                 String?
+  collection            String?
+  genderApplicability   GenderApplicability?
+  seoTitle              String?
+  seoDescription        String?
+  price                 Decimal              @db.Decimal(10, 2)
+  currency              String               @default("USD")
+  active                Boolean              @default(true)
+  editorialApproved     Boolean              @default(true)
+  published             Boolean              @default(true)
+  commerciallyAvailable Boolean              @default(true)
+  featured              Boolean              @default(false)
   featuredOrder         Int?
   productTypeId         String?
-  productType           ProductType? @relation(fields: [productTypeId], references: [name])
-  createdAt             DateTime     @default(now())
-  updatedAt             DateTime     @updatedAt
+  productType           ProductType?         @relation(fields: [productTypeId], references: [name])
+  variants              ProductVariant[]
+  images                ProductImage[]
+  tags                  ProductTag[]
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
 
   @@index([productTypeId])
   @@index([active])
   @@index([published, productTypeId])
   @@index([active, featured, featuredOrder])
   @@index([slug])
+}
+
+model ProductVariant {
+  id         String             @id @default(cuid())
+  productId  Int
+  product    Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku        String             @unique
+  reference  String?
+  barcode    String?
+  active     Boolean            @default(true)
+  isBase     Boolean            @default(false)
+  imageId    String?
+  image      ProductImage?      @relation(fields: [imageId, productId], references: [id, productId])
+  attributes VariantAttribute[]
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  @@index([productId, active])
+  @@index([imageId, productId])
+}
+
+model VariantAttribute {
+  id           String                    @id @default(cuid())
+  variantId    String
+  variant      ProductVariant            @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  name         VariantAttributeName
+  valueType    VariantAttributeValueType
+  textValue    String?
+  numberValue  Decimal?                  @db.Decimal(18, 4)
+  booleanValue Boolean?
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
+
+  @@unique([variantId, name])
+  @@index([name])
+}
+
+model ProductImage {
+  id        String           @id @default(cuid())
+  productId Int
+  product   Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  altText   String
+  position  Int
+  isPrimary Boolean          @default(false)
+  variants  ProductVariant[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@unique([id, productId])
+  @@unique([productId, position])
+  @@index([productId, isPrimary, position])
+}
+
+model ProductTag {
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  value     String
+
+  @@id([productId, value])
+  @@index([value])
 }

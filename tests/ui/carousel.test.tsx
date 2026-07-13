@@ -32,6 +32,11 @@ const slides = [
   },
 ];
 
+const galleryItems = [
+  { id: "front", src: "/front.jpg", alt: "Vista frontal", controlLabel: "Mostrar vista frontal" },
+  { id: "side", src: "/side.jpg", alt: "Vista lateral", controlLabel: "Mostrar vista lateral" },
+];
+
 function getTrackElement() {
   const section = screen.getByLabelText("Contenido destacado");
   return section.querySelector(":scope > div") as HTMLDivElement;
@@ -216,5 +221,56 @@ describe("Carousel", () => {
 
       unmount();
     }
+  });
+
+  it("supports uncontrolled direct gallery selection without autoplay", () => {
+    vi.useFakeTimers();
+    render(<Carousel mode="gallery" items={galleryItems} aria-label="Imágenes del producto" />);
+
+    const front = screen.getByRole("button", { name: /mostrar vista frontal/i });
+    const side = screen.getByRole("button", { name: /mostrar vista lateral/i });
+    expect(front).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("Imagen 1 de 2.")).toBeTruthy();
+
+    side.focus();
+    fireEvent.click(side);
+    expect(side).toHaveAttribute("aria-pressed", "true");
+    expect(document.activeElement).toBe(side);
+    expect(screen.getByText("Imagen 2 de 2.")).toBeTruthy();
+
+    act(() => vi.advanceTimersByTime(12000));
+    expect(side).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("supports controlled gallery selection without reciprocal changes", () => {
+    const onChange = vi.fn();
+    const { rerender } = render(
+      <Carousel mode="gallery" items={galleryItems} activeItemId="front" onActiveItemChange={onChange} />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /mostrar vista lateral/i }));
+    expect(onChange).toHaveBeenCalledWith("side");
+    expect(screen.getByRole("button", { name: /mostrar vista frontal/i })).toHaveAttribute("aria-pressed", "true");
+
+    rerender(<Carousel mode="gallery" items={galleryItems} activeItemId="side" onActiveItemChange={onChange} />);
+    expect(screen.getByRole("button", { name: /mostrar vista lateral/i })).toHaveAttribute("aria-pressed", "true");
+    expect(onChange).toHaveBeenCalledTimes(1);
+  });
+
+  it("preserves a stable non-interactive frame for missing gallery media", () => {
+    render(<Carousel mode="gallery" items={[]} missingMediaMessage="Producto sin imágenes" />);
+
+    expect(screen.getByLabelText("Galería de imágenes")).toBeTruthy();
+    expect(screen.getByText("Producto sin imágenes")).toBeTruthy();
+    expect(screen.queryByRole("button")).toBeNull();
+  });
+
+  it("keeps navigation available and announces a failed gallery item politely", () => {
+    render(<Carousel mode="gallery" items={galleryItems} />);
+
+    fireEvent.error(screen.getByRole("img", { name: "Vista frontal" }));
+    expect(screen.getAllByText("No pudimos mostrar esta imagen.")).toHaveLength(2);
+    expect(screen.getByRole("status")).toHaveTextContent("No pudimos mostrar esta imagen.");
+    expect(screen.getByRole("button", { name: /mostrar vista lateral/i })).toBeTruthy();
   });
 });

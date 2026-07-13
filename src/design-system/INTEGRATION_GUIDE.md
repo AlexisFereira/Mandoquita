@@ -61,6 +61,17 @@ Prefer composition and the documented props. A `className` extension must not re
 
 The application has no theme provider, selector, toggle, stored preference, or system-theme behavior. Components consume the single light semantic palette directly. Continue using semantic variables so components remain consistent, and never introduce `dark:`, `.dark`, a system color-scheme listener, or a feature-local palette.
 
+## 6. Gallery and option controls
+
+- Existing `<Carousel slides={slides} />` remains promotional and compatible.
+- Use `<Carousel mode="gallery" items={items} />` for ordered, non-autoplay media inspection.
+- A controlled gallery receives `activeItemId`; manual gallery navigation reports through `onActiveItemChange` but never changes domain selection itself.
+- Existing presentational and `removable` Chip modes remain compatible.
+- Compose `<Chip mode="option">` inside a labelled `fieldset`/`legend` or equivalent radiogroup. The parent owns the selected value and valid-combination resolution.
+- Use `PoliteStatus` for concise state changes that must not move keyboard focus.
+
+Never put Product IDs, Variant rules, inventory, pricing, taxonomy, or commercial logic inside these Platform components.
+
 ## Best practices
 
 - Use one official concept name.

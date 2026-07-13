@@ -11,8 +11,9 @@ Owner: Backend Architect
   business result, which API and SSR adapters translate to a uniform 404
   without internal metadata.
 - Task 3: media remains a presentation reference and is not part of the detail
-  eligibility predicate. The existing response accepts an empty media
-  reference and delegates fallback rendering to the UI.
+  eligibility predicate. Product media now comes from the ordered Product Image
+  collection; `imageUrl` is derived temporarily from Primary/first Image for
+  compatibility, and zero Images remains valid.
 - Task 4: `editorialApproved`, `published`, and
   `commerciallyAvailable` are persisted as independent product dimensions.
   Public visibility depends only on `published`.
@@ -64,3 +65,13 @@ reused to avoid a redundant relation join.
   errors, deterministic results, and temporary-data cleanup passed.
 - Traceability: Product Detail tasks 1-8 and 10 map to the service, migration,
   public contract, automated tests, and PostgreSQL validation documented here.
+
+## Product Content and Variants V1
+
+Migration 007 and the public detail service add governed Variants, typed approved
+attributes, ordered Images, optional merchandising/SEO content, and the explicit
+`variantSelection` outcome. Product-level taxonomy, lifecycle dimensions, price
+protection, related limit/order, and stable public slug remain unchanged. Internal
+SKU, barcode, reference and all deferred operational data are excluded from the
+visitor contract. Current post-migration benchmark evidence is p95 35.80 ms for
+1,000 detail queries at concurrency 20 over 10,000 Products.

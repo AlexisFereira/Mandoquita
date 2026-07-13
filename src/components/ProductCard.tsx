@@ -12,6 +12,9 @@ export type ProductCardProps = {
 };
 
 export function ProductCard({ product, featured = false }: ProductCardProps) {
+  const cardImage = product.images.find((image) => image.isPrimary) ?? product.images[0];
+  const summary = product.shortDescription ?? product.description;
+
   return (
     <Card
       as="article"
@@ -25,18 +28,24 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
         className="group grid h-full"
       >
         <div className="relative aspect-[4/3] overflow-hidden rounded-t-lg bg-[rgb(var(--background)/1)]">
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            width="800"
-            height="600"
-            sizes="(min-width: 1280px) 280px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-            loading="lazy"
-            onError={(event) => {
-              event.currentTarget.src = "/images/banners/default-banner.svg";
-            }}
-            className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02] motion-reduce:transition-none"
-          />
+          {product.imageUrl ? (
+            <img
+              src={product.imageUrl}
+              alt={cardImage?.altText ?? product.name}
+              width="800"
+              height="600"
+              sizes="(min-width: 1280px) 280px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+              loading="lazy"
+              onError={(event) => {
+                event.currentTarget.src = "/images/banners/default-banner.svg";
+              }}
+              className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.02] motion-reduce:transition-none"
+            />
+          ) : (
+            <span className="flex h-full items-center justify-center p-4 text-center text-sm text-[rgb(var(--muted)/1)]">
+              Sin imagen
+            </span>
+          )}
         </div>
 
         <div className="flex h-full flex-col gap-4 p-5">
@@ -50,9 +59,9 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
             <h3 className="text-xl font-semibold tracking-[-0.02em] text-[rgb(var(--foreground)/1)]">
               {product.name}
             </h3>
-            {product.description ? (
+            {summary ? (
               <p className="line-clamp-2 text-sm leading-6 text-[rgb(var(--muted)/1)]">
-                {product.description}
+                {summary}
               </p>
             ) : null}
           </div>

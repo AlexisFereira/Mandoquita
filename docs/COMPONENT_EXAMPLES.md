@@ -85,3 +85,53 @@ export function ProductInquiry() {
   );
 }
 ```
+
+## Carousel gallery mode
+
+```tsx
+const media = [
+  { id: "front", src: "/front.jpg", alt: "Vista frontal del producto" },
+  { id: "side", src: "/side.jpg", alt: "Vista lateral del producto" },
+];
+
+<Carousel
+  mode="gallery"
+  items={media}
+  defaultActiveItemId="front"
+  aria-label="Imágenes del producto"
+/>
+```
+
+Gallery mode never autoplays. Use `activeItemId` and `onActiveItemChange` when a
+feature owns selection. Stable media IDs are required; array indexes are not IDs.
+The gallery changes media presentation only and never resolves feature state.
+
+## Chip option mode and polite status
+
+```tsx
+const [color, setColor] = useState("azul");
+
+<fieldset>
+  <legend>Color</legend>
+  <div className="flex flex-wrap gap-2">
+    <Chip mode="option" value="azul" selected={color === "azul"} onSelect={setColor}>
+      Azul
+    </Chip>
+    <Chip
+      mode="option"
+      value="verde"
+      selected={color === "verde"}
+      unavailable
+      unavailableText="Esta combinación no está disponible."
+      onSelect={setColor}
+    >
+      Verde bosque
+    </Chip>
+  </div>
+</fieldset>
+<PoliteStatus>{`Color seleccionado: ${color}.`}</PoliteStatus>
+```
+
+The feature owns option resolution. Do not pass inactive values. `unavailable`
+means that a feature-defined combination cannot resolve; it never means stock,
+inventory, price, or commercial availability.

@@ -5,6 +5,7 @@ import type { TaxonomyCategory, TaxonomySubcategory } from "@/types/catalog";
 function publishedBranchWhere(categoryId: string, subcategoryId?: string) {
   return {
     published: true,
+    variants: { some: {} },
     productType: {
       is: {
         active: true,
@@ -55,7 +56,12 @@ export async function listDiscoverableTaxonomy(prisma: PrismaClient): Promise<Ta
         prisma.product.findFirst({
           where: publishedBranchWhere(category.id),
           orderBy: [{ createdAt: "desc" }, { id: "asc" }],
-          select: { imageUrl: true },
+          select: {
+            images: {
+              orderBy: { position: "asc" },
+              select: { url: true, isPrimary: true },
+            },
+          },
         }),
       ]);
       const subcategories: TaxonomySubcategory[] = await Promise.all(
@@ -73,7 +79,9 @@ export async function listDiscoverableTaxonomy(prisma: PrismaClient): Promise<Ta
         slug: category.slug,
         name: category.name,
         description: category.description ?? undefined,
-        imageUrl: representative?.imageUrl.trim() || undefined,
+        imageUrl: (
+          representative?.images?.find((image) => image.isPrimary) ?? representative?.images?.[0]
+        )?.url.trim() || undefined,
         productCount,
         subcategories,
       };

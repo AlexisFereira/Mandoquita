@@ -58,3 +58,12 @@ Exit condition: one light token source, no theme-selection path, no undocumented
 ## Rollback
 
 Each phase must remain independently reversible. Compatibility aliases are removed only in the final phase. If a shared-component regression appears, restore its last compatible mapping without reintroducing a new token family.
+
+## Gallery and option API migration
+
+- Promotional Carousel consumers require no change; omitted `mode` retains the existing `slides` behavior.
+- New galleries use `mode="gallery"` with stable media IDs. Do not translate promotional slides into gallery items unless the consuming feature owns that content decision.
+- Presentational Chip and legacy `removable` consumers require no change.
+- New single-selection choices use `mode="option"` inside a labelled group. Selection and unavailable-combination resolution stay in the consuming feature.
+- Status announcements migrate to `PoliteStatus`; updates must be concise and must not trigger focus movement.
+- Removing the compatibility forms requires a separate approved deprecation change.

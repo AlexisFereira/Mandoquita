@@ -181,3 +181,23 @@ language used by discovery:
 
 These UX rules do not change Product publication, commercial availability,
 related-Product eligibility, or the existing unavailable-Product outcome.
+
+## Product Content and Variants V1 Synchronization
+
+- Product Detail presents the ordered Product Image gallery using Primary Image,
+  otherwise first ordered Image, as its initial media.
+- Gallery navigation never changes Product Variant, price, taxonomy, publication
+  or Commercial Availability.
+- Meaningful choices appear only when two or more Active Variants are
+  distinguishable through approved attributes.
+- A Base Variant, inactive Variant or indistinguishable Variant collection does
+  not create a visitor selector.
+- Variant selection may expose approved attributes and focus an associated
+  Product Image without moving keyboard focus.
+- Short description, complete description and optional merchandising metadata
+  preserve the approved hierarchy; SEO content is not duplicated visually.
+- SKU, barcode, reference, inventory, cost, supplier, warehouse and logistics
+  remain absent from the visitor experience.
+
+The authoritative experience and presentation contracts are
+`openspec/changes/product-content-variants-v1/ux-blueprint.md` and `ui-design.md`.

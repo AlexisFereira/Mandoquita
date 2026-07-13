@@ -4,9 +4,11 @@ import type {
   ButtonProps,
   CardProps,
   CarouselProps,
+  ChipProps,
   ContainerProps,
   ProductCardProps,
   ProductOfferProps,
+  PoliteStatusProps,
   SearchInputProps,
   SectionProps,
 } from "../../src/components";
@@ -15,9 +17,11 @@ type PublicPropsContracts = [
   ButtonProps,
   CardProps,
   CarouselProps,
+  ChipProps,
   ContainerProps,
   ProductCardProps,
   ProductOfferProps,
+  PoliteStatusProps,
   SearchInputProps,
   SectionProps,
 ];

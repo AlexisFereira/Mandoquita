@@ -134,7 +134,6 @@ async function main() {
         description: "Must be rejected",
         price: 1,
         currency: "USD",
-        imageUrl: "",
         active: true,
         editorialApproved: true,
         published: true,

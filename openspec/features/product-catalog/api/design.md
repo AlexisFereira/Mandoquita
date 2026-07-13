@@ -22,8 +22,16 @@ official hierarchy Category → Subcategory → Product Type.
   sequence, and belongs to exactly one Subcategory.
 - `Product.productTypeId` is the only persisted Product classification.
   Category and Subcategory are inherited and are never independently assigned.
+- `Product` owns one or more `ProductVariant` records. Each Variant has an
+  immutable stable ID, globally unique non-empty SKU, independent Active state,
+  optional reference/barcode, and approved typed attributes.
+- `Product` owns zero or more ordered `ProductImage` records. Image position is
+  unique per Product, at most one Image is Primary, and the database prevents a
+  Variant from referencing an Image owned by another Product.
+- Product also owns optional short/complete descriptions, brand, collection,
+  controlled gender applicability, normalized unique tags, and SEO content.
 
-PostgreSQL rejects a Published Product without a Product Type. Foreign keys,
+PostgreSQL rejects a Published Product without a Product Type or Product Variant. Foreign keys,
 unique identifiers/slugs, positive order constraints, and restrictive deletes
 protect hierarchy integrity.
 
@@ -54,13 +62,22 @@ branch.
 
 The response contains `items`, pagination `metadata`, and normalized `filters`.
 Every Product item exposes its official Product Type plus inherited
-Subcategory and Category.
+Subcategory and Category; ordered Images; optional merchandising/SEO content;
+and a temporary `imageUrl` compatibility value derived from the Primary Image,
+or otherwise the first ordered Image. SKU, barcode, reference, Variant Active
+state, and deferred operational data are not exposed.
 
 ### `GET /api/products/[slug]`
 
 Returns one eligible Published Product and up to four related Products from the
 same inherited Category. Unknown, retired, unpublished, unclassified, or
 ineligible Products use the same 404 response without exposing internal state.
+
+Detail adds `variantSelection`. Its mode is `none` for a Base Variant,
+`read_only` for one meaningful Active Variant, `selectable` for two or more
+distinguishable Active Variants, or `content_correction` when Active Variants
+cannot form meaningful public choices. Public Variant entries contain only the
+stable Variant ID, approved attributes, and optional Product Image ID.
 
 ### `GET /api/categories`
 
@@ -82,9 +99,15 @@ Former demonstration Product slugs use the standard unavailable result.
 Rollback is coordinated at the release boundary by restoring the
 pre-activation database backup and prior application artifact together.
 
+Migration `202607120007_add_product_content_variants_v1` activates Product
+Variants, Images, content, and integrity constraints. Because the approved
+business migration inventory is empty, it refuses to run if Product rows exist;
+it never fabricates SKUs, attributes, or media dispositions.
+
 ## Non-Goals
 
-- Cart, checkout, payment, authentication, profiles, inventory, or orders.
+- Cart, checkout, payment, authentication, profiles, inventory, orders, cost,
+  supplier, warehouse, tax, shipping, or Variant-level pricing.
 - Automatic Product classification.
 - Product Type public pages or Product Type filters.
 - Free-form taxonomy synonyms or parallel flat Category fields.
