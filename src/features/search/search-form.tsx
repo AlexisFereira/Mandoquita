@@ -117,7 +117,11 @@ export function SearchForm({
             ) : null}
           />
         </div>
-        <Button type="submit" disabled={loading} className="w-full gap-2 sm:w-auto sm:min-w-28">
+        <Button
+          type="submit"
+          disabled={loading}
+          className="w-full gap-2 sm:mb-7 sm:w-auto sm:min-w-28"
+        >
           <Icon name="search" />
           <span>{loading ? "Buscando…" : "Buscar"}</span>
         </Button>

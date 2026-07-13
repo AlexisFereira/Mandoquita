@@ -44,6 +44,7 @@ describe("Search page", () => {
     expect(screen.getByRole("heading", { level: 1, name: "Buscar productos" })).toBeTruthy();
     expect(screen.getByRole("search")).toBeTruthy();
     expect(screen.getByLabelText("Buscar productos")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Buscar" }).className).toContain("sm:mb-7");
     expect(screen.queryByText(/productos encontrados/i)).toBeNull();
   });
 
