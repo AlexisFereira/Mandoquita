@@ -50,6 +50,8 @@ model Category {
   slug          String          @unique
   name          String
   description   String?
+  imagePath     String?
+  imageAltText  String?
   sortOrder     Int
   active        Boolean         @default(true)
   visible       Boolean         @default(true)
@@ -123,8 +125,14 @@ model Product {
   @@index([productTypeId])
   @@index([active])
   @@index([published, productTypeId])
+  @@index([productTypeId, published, commerciallyAvailable(sort: Desc), updatedAt(sort: Desc), id], map: "Product_related_by_type_idx")
   @@index([active, featured, featuredOrder])
   @@index([slug])
+  @@index([name(ops: raw("gin_trgm_ops"))], type: Gin, map: "Product_search_name_trgm_idx")
+  @@index([shortDescription(ops: raw("gin_trgm_ops"))], type: Gin, map: "Product_search_short_description_trgm_idx")
+  @@index([description(ops: raw("gin_trgm_ops"))], type: Gin, map: "Product_search_description_trgm_idx")
+  @@index([brand(ops: raw("gin_trgm_ops"))], type: Gin, map: "Product_search_brand_trgm_idx")
+  @@index([collection(ops: raw("gin_trgm_ops"))], type: Gin, map: "Product_search_collection_trgm_idx")
 }
 
 model ProductVariant {
@@ -186,4 +194,5 @@ model ProductTag {
 
   @@id([productId, value])
   @@index([value])
+  @@index([value(ops: raw("gin_trgm_ops"))], type: Gin, map: "ProductTag_search_value_trgm_idx")
 }

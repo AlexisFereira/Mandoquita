@@ -201,3 +201,16 @@ related-Product eligibility, or the existing unavailable-Product outcome.
 
 The authoritative experience and presentation contracts are
 `openspec/changes/product-content-variants-v1/ux-blueprint.md` and `ui-design.md`.
+
+## Discovery and Trust Experience V1 Synchronization
+
+- The complete `Productos relacionados` section may opt into the shared
+  `ScrollEntryMotion` primitive with `distance="sm"` and no stagger.
+- Individual related Product cards never animate independently.
+- Product identity, gallery, Variant controls, offer, price, Commercial
+  Availability, description, metadata, errors and required actions remain
+  immediately visible and outside motion.
+- SSR, no-script, unsupported observation, reduced motion, focus and hash-target
+  outcomes always render in the final visible state.
+- Governed Icons may support visible labels and metadata, but never replace
+  authoritative text or introduce Product/payment meaning.

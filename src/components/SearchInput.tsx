@@ -1,6 +1,7 @@
 import React, { useMemo, useState, type FormEvent } from "react";
 
 import { Input, type InputProps } from "./Input";
+import { Icon } from "./Icon";
 
 export type SearchInputProps = Omit<
   InputProps,
@@ -12,24 +13,6 @@ export type SearchInputProps = Omit<
   loading?: boolean;
   autoFocus?: boolean;
 };
-
-function SearchIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" className="h-4 w-4">
-      <path
-        d="M8.5 14a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M12.5 12.5 16 16"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
 
 function Spinner() {
   return (
@@ -100,19 +83,7 @@ export function SearchInput({
           onClear?.();
         }}
       >
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 20 20"
-          className="h-4 w-4"
-          fill="none"
-        >
-          <path
-            d="M5 5l10 10M15 5 5 15"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
+        <Icon name="close" size="sm" />
       </button>
     );
   }, [isControlled, loading, onClear, showClearButton]);
@@ -166,7 +137,7 @@ export function SearchInput({
         value={currentValue}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        leftIcon={<SearchIcon />}
+        leftIcon={<Icon name="search" size="sm" />}
         rightIcon={rightIcon}
       />
     </form>

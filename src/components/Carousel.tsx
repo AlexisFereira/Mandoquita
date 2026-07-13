@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { Button } from "./Button";
+import { Icon } from "./Icon";
 import { PoliteStatus } from "./PoliteStatus";
 
 export type CarouselSlide = {
@@ -148,8 +149,8 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
             ))}
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => goToSlide(activeIndex - 1)} aria-label="Diapositiva anterior" className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-inverse-surface/75 px-3 text-inverse-foreground"><span aria-hidden="true">‹</span><span className="sr-only sm:not-sr-only sm:ml-1">Anterior</span></button>
-            <button type="button" onClick={() => goToSlide(activeIndex + 1)} aria-label="Diapositiva siguiente" className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-inverse-surface/75 px-3 text-inverse-foreground"><span className="sr-only sm:not-sr-only sm:mr-1">Siguiente</span><span aria-hidden="true">›</span></button>
+            <button type="button" onClick={() => goToSlide(activeIndex - 1)} aria-label="Diapositiva anterior" className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-inverse-surface/75 px-3 text-inverse-foreground"><Icon name="previous" /><span className="sr-only sm:not-sr-only sm:ml-1">Anterior</span></button>
+            <button type="button" onClick={() => goToSlide(activeIndex + 1)} aria-label="Diapositiva siguiente" className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-inverse-surface/75 px-3 text-inverse-foreground"><span className="sr-only sm:not-sr-only sm:mr-1">Siguiente</span><Icon name="next" /></button>
           </div>
         </div>
       ) : null}

@@ -41,6 +41,16 @@ No demonstration Product is assigned to an unrelated Product Type.
 - Homepage Category discovery consumes the same taxonomy service.
 - Related Products remain Category-affine using inherited classification.
 
+## Category Media
+
+Migration `202607130009_add_category_media` assigns the seven approved PNG files
+and alternative texts to `Category.imagePath` and `Category.imageAltText`.
+PostgreSQL enforces an all-or-none media pair and a normalized relative
+`/images/categories/<slug>.png` path. The public contract exposes that relative
+path as `imageUrl`; `CategoryCard` resolves it through
+`NEXT_PUBLIC_ASSET_BASE_URL`, keeping database content independent from the local
+host, application prefix or CDN origin.
+
 ## Continuity
 
 Next.js permanent redirects send `/categorias/audio`, `/categorias/computing`,
@@ -69,4 +79,5 @@ artifact revision; production rollback must use the coordinated backup.
 - PostgreSQL lifecycle/performance validation: p95 29.81 ms <= 50 ms with
   10,000 Products, 1,000 queries, and concurrency 20.
 - Taxonomy PostgreSQL validation covers version uniqueness, 7/16/30 counts,
-  ordering, retired fixtures, publication invariant, and zero public orphans.
+  ordering, seven existing Category media assets, retired fixtures, publication
+  invariant, and zero public orphans.

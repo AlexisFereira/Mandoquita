@@ -66,6 +66,7 @@ Provide a homepage that introduces the product catalog, guides visitors toward c
 - Navigation toward catalog exploration.
 - Navigation toward product detail exploration.
 - Business contact availability.
+- Static accepted-payment information with external contact continuation.
 - Homepage content that supports product discovery.
 
 ### Excluded
@@ -114,6 +115,12 @@ The homepage shall not require authentication, account creation, cart usage, che
 
 The homepage shall present only products and categories that are eligible for visitor discovery.
 
+### FR-009: Informational Payment Methods
+
+The homepage may present only the approved Binance, Pago móvil, and Dólares en
+efectivo methods as static information and may continue to the existing external
+contact path without initiating a transaction.
+
 ## Business Rules
 
 ### BR-001: Discovery Scope
@@ -123,6 +130,9 @@ The homepage exists to support product discovery and business contact.
 ### BR-002: No Transactional Behavior
 
 The homepage shall not initiate or require cart, checkout, payment, authentication, or account creation behavior.
+
+Informational payment-method content is not transactional behavior: it cannot
+select, validate, calculate, capture, confirm, or complete payment.
 
 ### BR-003: Category Eligibility
 

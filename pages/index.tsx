@@ -13,8 +13,10 @@ import { Header } from "../src/components/Header";
 import { Hero } from "../src/components/Hero";
 import { ProductCard } from "../src/components/ProductCard";
 import { Section } from "../src/components/Section";
+import { ScrollEntryMotion } from "../src/components/ScrollEntryMotion";
 import { getHomepagePayload } from "../src/server/homepageService";
 import { useMediaQuery } from "../src/hooks/use-media-query";
+import { PaymentInformation } from "../src/features/homepage/payment-information";
 import type { HomepagePayload } from "../src/types/catalog";
 import { APPLICATION_THEME_COLOR } from "../src/design-system/metadata";
 
@@ -124,6 +126,7 @@ export default function HomePage({ featuredProducts, categories }: HomepagePaylo
         </div>
 
         {visibleFeaturedProducts.length > 0 ? (
+          <ScrollEntryMotion distance="sm" delayStep={0}>
           <Section id="destacados" tone="default" spacing="spacious">
             <Container size="xl" padding="lg" className="space-y-8">
               <div className="space-y-3">
@@ -144,9 +147,11 @@ export default function HomePage({ featuredProducts, categories }: HomepagePaylo
               </div>
             </Container>
           </Section>
+          </ScrollEntryMotion>
         ) : null}
 
         {categories.length > 0 ? (
+          <ScrollEntryMotion distance="sm" delayStep={0}>
           <Section id="categorias" tone="surface" spacing="spacious">
             <Container size="xl" padding="lg" className="space-y-8">
               <div className="space-y-3">
@@ -168,13 +173,17 @@ export default function HomePage({ featuredProducts, categories }: HomepagePaylo
                     href={`/categorias/${category.slug}`}
                     description={`Explora productos de ${category.name.toLowerCase()}.`}
                     imageUrl={category.imageUrl}
+                    imageAltText={category.imageAltText}
                     count={category.productCount}
                   />
                 ))}
               </div>
             </Container>
           </Section>
+          </ScrollEntryMotion>
         ) : null}
+
+        <PaymentInformation contactHref={whatsappUrl} />
 
         <Section id="contacto" tone="default" spacing="spacious">
           <Container size="xl" padding="lg">

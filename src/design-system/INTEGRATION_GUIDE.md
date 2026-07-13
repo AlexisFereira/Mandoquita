@@ -82,6 +82,31 @@ Never put Product IDs, Variant rules, inventory, pricing, taxonomy, or commercia
 - Respect reduced-motion preferences.
 - Add shared patterns to the platform only after review.
 
+## 7. Governed icons
+
+- Import `Icon` from the shared component barrel; never import `lucide-react` in
+  feature code.
+- Use the semantic `name` contract rather than a library glyph name.
+- Keep icons decorative inside controls and beside complete visible labels.
+- Use `decorative={false}` with a concise, non-empty `label` only when the icon
+  contributes approved information that is not already present in adjacent text.
+- Keep focus, accessible name, keyboard behavior and the 44px target on the
+  consuming Button, link or native control.
+- Apply semantic text-color roles to the wrapper; the glyph inherits `currentColor`.
+- Request Design System review instead of adding an unregistered name, inline SVG,
+  brand mark, emoji or payment-provider logo.
+
+## 8. Scroll-entry motion
+
+- Use `ScrollEntryMotion` only around a complete wrapper explicitly approved by UX/UI.
+- Keep SSR and default content visible; never add feature CSS that hides it.
+- Use only `distance="none" | "sm"` and `delayStep={0 | 40}`.
+- Never wrap navigation, forms, status/error content, focused targets, Product
+  availability or another required action/outcome.
+- Group collections instead of animating individual cards. The shared primitive
+  owns observation, reduced motion, cleanup and the 50-element performance guard.
+- Roll back by removing the opt-in wrapper, without changing content or DOM order.
+
 ## Common mistakes
 
 - Hardcoding a hex value in JSX.
@@ -119,3 +144,9 @@ This is a contract violation. Check for `.dark`, `dark:`, `prefers-color-scheme`
 ### Focus is difficult to see
 
 Do not create a local translucent ring. Use the shared focus token after task 3.9 of the homepage refresh is implemented and verify 3:1 contrast against adjacent surfaces.
+
+### An icon is announced twice
+
+If adjacent text or the parent control already owns the accessible name, use the
+default decorative mode and remove any icon label. Informative mode must not repeat
+visible text.

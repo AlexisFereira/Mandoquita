@@ -73,5 +73,5 @@ attributes, ordered Images, optional merchandising/SEO content, and the explicit
 `variantSelection` outcome. Product-level taxonomy, lifecycle dimensions, price
 protection, related limit/order, and stable public slug remain unchanged. Internal
 SKU, barcode, reference and all deferred operational data are excluded from the
-visitor contract. Current post-migration benchmark evidence is p95 35.80 ms for
+visitor contract. Current post-publication benchmark evidence is p95 35.24 ms for
 1,000 detail queries at concurrency 20 over 10,000 Products.

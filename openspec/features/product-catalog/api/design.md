@@ -15,7 +15,8 @@ official hierarchy Category → Subcategory → Product Type.
 - `TaxonomyVersion` owns locale, version, and lifecycle state. Exactly one
   version is Active for public discovery.
 - `Category` owns a supplied stable ID, official Spanish name and slug,
-  description, business order, Active state, and Visible state.
+  description, optional governed media path/alternative text, business order,
+  Active state, and Visible state.
 - `Subcategory` owns a supplied stable ID, official Spanish name and slug,
   source sequence, Active state, and exactly one Category.
 - `ProductType` is the authoritative leaf classification, preserves source
@@ -54,18 +55,26 @@ Supported query parameters:
 - `limit`: integer from 1 through 50, default 12.
 - `category`: official eligible Category slug.
 - `subcategory`: official eligible Subcategory slug.
-- `q`: non-empty Product-name search text, maximum 120 characters.
+- `q`: non-empty public Product search text, maximum 120 characters. Surrounding
+  whitespace is removed and matching ignores case across Product name, short
+  description, complete description, brand, collection, and tags only.
 
 Category filtering returns the complete selected branch. Subcategory filtering
 returns only the selected Subcategory branch. Results never cross the selected
 branch.
+
+Search results use deterministic `name ASC, id ASC` order. A requested page
+above the valid range resolves to the final valid page. Invalid or
+whitespace-only `q` returns HTTP 400 before Product data is queried; a valid
+query with no matches returns an empty successful collection.
 
 The response contains `items`, pagination `metadata`, and normalized `filters`.
 Every Product item exposes its official Product Type plus inherited
 Subcategory and Category; ordered Images; optional merchandising/SEO content;
 and a temporary `imageUrl` compatibility value derived from the Primary Image,
 or otherwise the first ordered Image. SKU, barcode, reference, Variant Active
-state, and deferred operational data are not exposed.
+state, matched-field identity, ranking scores, and deferred operational data are
+not exposed or searched.
 
 ### `GET /api/products/[slug]`
 
@@ -86,6 +95,11 @@ Category includes its eligible non-empty Subcategories in source sequence and
 published Product counts. Empty taxonomy branches remain valid data but are
 omitted from visitor discovery.
 
+Category `imageUrl` is a deployment-neutral relative path persisted as
+`Category.imagePath`; `imageAltText` carries the approved accessible description.
+Frontend resolves relative paths with `NEXT_PUBLIC_ASSET_BASE_URL`, which may be
+empty for Next.js `public/` assets or point to a CDN/application asset prefix.
+
 ## Migration and Continuity
 
 Migration `202607120006_activate_category_taxonomy_v1` atomically retires the
@@ -103,6 +117,11 @@ Migration `202607120007_add_product_content_variants_v1` activates Product
 Variants, Images, content, and integrity constraints. Because the approved
 business migration inventory is empty, it refuses to run if Product rows exist;
 it never fabricates SKUs, attributes, or media dispositions.
+
+Migration `202607130010_optimize_public_product_search` enables `pg_trgm` and
+adds GIN indexes only to the six approved Search fields. It changes no Product
+data or response shape and may be rolled back by dropping those indexes after
+the prior compatible application artifact is restored.
 
 ## Non-Goals
 

@@ -1,4 +1,6 @@
 import { PrismaClient } from "@prisma/client";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 
 const prisma = new PrismaClient();
 
@@ -49,6 +51,8 @@ async function main() {
         select: {
           id: true,
           slug: true,
+          imagePath: true,
+          imageAltText: true,
           sortOrder: true,
           active: true,
           subcategories: {
@@ -81,6 +85,14 @@ async function main() {
     "Category business order is not 1 through 7"
   );
   assert(categories.every((category) => category.active), "An approved Category is inactive");
+  assert(
+    categories.every((category) =>
+      category.imagePath === `/images/categories/${category.slug}.png` &&
+      Boolean(category.imageAltText?.trim()) &&
+      existsSync(join(process.cwd(), "public", category.imagePath)),
+    ),
+    "A Category media path, alternative text, or local asset is missing",
+  );
   assert(
     new Set(categories.map(({ id }) => id)).size === categories.length &&
       new Set(categories.map(({ slug }) => slug)).size === categories.length,
@@ -147,7 +159,7 @@ async function main() {
 
   console.log(
     "Taxonomy V1 PostgreSQL validation passed: 1 active version, 7 Categories, " +
-      "16 Subcategories, 30 Product Types, 0 published orphans"
+    "16 Subcategories, 30 Product Types, 7 Category images, 0 published orphans"
   );
 }
 

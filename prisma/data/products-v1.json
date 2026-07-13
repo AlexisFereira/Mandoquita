@@ -1,0 +1,2055 @@
+{
+  "version": "1.0.0",
+  "currencyAssumption": "USD",
+  "notes": [
+    "Cada fila/variante del inventario se exportó como un producto independiente porque el esquema actual no incluye variantes.",
+    "price usa el precio unitario del documento fuente.",
+    "Los productos quedan sin aprobación editorial y sin publicar hasta completar imágenes y revisión comercial."
+  ],
+  "products": [
+    {
+      "id": 200001,
+      "slug": "camiseta-acid-wash-oversize-xl-azul-navy-cwxl-aznv",
+      "name": "Camiseta Acid Wash Oversize XL - Azul navy",
+      "description": "Camiseta Acid Wash Oversize XL - Azul navy. Producto identificado en el inventario como: ACID WASH OV XL AZUL NAVY.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-acid-wash-oversize-xl-azul-navy-cwxl-aznv.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200002,
+      "slug": "camiseta-acid-wash-oversize-xl-mar-mojado-cwxl-marm",
+      "name": "Camiseta Acid Wash Oversize XL - Mar mojado",
+      "description": "Camiseta Acid Wash Oversize XL - Mar mojado. Producto identificado en el inventario como: ACID WASH OV XL MAR MOJADO.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-acid-wash-oversize-xl-mar-mojado-cwxl-marm.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200003,
+      "slug": "camiseta-acid-wash-oversize-xl-camel-cwxl-caml",
+      "name": "Camiseta Acid Wash Oversize XL - Camel",
+      "description": "Camiseta Acid Wash Oversize XL - Camel. Producto identificado en el inventario como: ACID WASH OV XL CAMEL.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-acid-wash-oversize-xl-camel-cwxl-caml.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200004,
+      "slug": "camiseta-acid-wash-oversize-xl-azul-claro-cwxl-azcl",
+      "name": "Camiseta Acid Wash Oversize XL - Azul claro",
+      "description": "Camiseta Acid Wash Oversize XL - Azul claro. Producto identificado en el inventario como: ACID WASH OV XL AZUL CLARO.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-acid-wash-oversize-xl-azul-claro-cwxl-azcl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200005,
+      "slug": "camiseta-acid-wash-oversize-l-camel-cwl-caml",
+      "name": "Camiseta Acid Wash Oversize L - Camel",
+      "description": "Camiseta Acid Wash Oversize L - Camel. Producto identificado en el inventario como: ACID WASH OV L CAMEL.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-acid-wash-oversize-l-camel-cwl-caml.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200006,
+      "slug": "camiseta-acid-wash-oversize-l-cafe-cwl-cafe",
+      "name": "Camiseta Acid Wash Oversize L - Café",
+      "description": "Camiseta Acid Wash Oversize L - Café. Producto identificado en el inventario como: ACID WASH OV L CAFÉ.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-acid-wash-oversize-l-cafe-cwl-cafe.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200007,
+      "slug": "camiseta-acid-wash-oversize-l-negro-cwl-negr",
+      "name": "Camiseta Acid Wash Oversize L - Negro",
+      "description": "Camiseta Acid Wash Oversize L - Negro. Producto identificado en el inventario como: ACID WASH OV L NEGRO.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-acid-wash-oversize-l-negro-cwl-negr.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200008,
+      "slug": "camiseta-acid-wash-oversize-l-lila-cwl-lila",
+      "name": "Camiseta Acid Wash Oversize L - Lila",
+      "description": "Camiseta Acid Wash Oversize L - Lila. Producto identificado en el inventario como: ACID WASH OV L LILA.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-acid-wash-oversize-l-lila-cwl-lila.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200009,
+      "slug": "camiseta-premium-xl-curuba-pd-xl",
+      "name": "Camiseta Premium XL - Curuba",
+      "description": "Camiseta Premium XL - Curuba. Producto identificado en el inventario como: PREMIUM XL CURUBA.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-premium-xl-curuba-pd-xl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200010,
+      "slug": "camiseta-premium-xl-rosado-oscuro-pr-xl",
+      "name": "Camiseta Premium XL - Rosado oscuro",
+      "description": "Camiseta Premium XL - Rosado oscuro. Producto identificado en el inventario como: PREMIUM XL ROSADO OSCURO.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-premium-xl-rosado-oscuro-pr-xl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200011,
+      "slug": "camiseta-premium-xl-blanco-hueso-pb-xl",
+      "name": "Camiseta Premium XL - Blanco hueso",
+      "description": "Camiseta Premium XL - Blanco hueso. Producto identificado en el inventario como: PREMIUM XL BLANCO HUESO.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-premium-xl-blanco-hueso-pb-xl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200012,
+      "slug": "camiseta-premium-xl-negro-pn-xl",
+      "name": "Camiseta Premium XL - Negro",
+      "description": "Camiseta Premium XL - Negro. Producto identificado en el inventario como: PREMIUM XL NEGRO.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-premium-xl-negro-pn-xl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200013,
+      "slug": "camiseta-premium-l-verde-oscuro-pv-xl",
+      "name": "Camiseta Premium L - Verde oscuro",
+      "description": "Camiseta Premium L - Verde oscuro. Producto identificado en el inventario como: PREMIUM L VERDE OSCURO.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-premium-l-verde-oscuro-pv-xl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200014,
+      "slug": "camiseta-premium-l-rosado-oscuro-pr-l",
+      "name": "Camiseta Premium L - Rosado oscuro",
+      "description": "Camiseta Premium L - Rosado oscuro. Producto identificado en el inventario como: PREMIUM L ROSADO OSCURO.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-premium-l-rosado-oscuro-pr-l.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200015,
+      "slug": "camiseta-premium-l-azul-celeste-pa-l",
+      "name": "Camiseta Premium L - Azul celeste",
+      "description": "Camiseta Premium L - Azul celeste. Producto identificado en el inventario como: PREMIUM L AZUL CELESTE.",
+      "price": "16.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-premium-l-azul-celeste-pa-l.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200016,
+      "slug": "camiseta-elite-l-chocolate-eel",
+      "name": "Camiseta Elite L - Chocolate",
+      "description": "Camiseta Elite L - Chocolate. Producto identificado en el inventario como: ELITE L CHOCOLATE.",
+      "price": "15.61",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-elite-l-chocolate-eel.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200017,
+      "slug": "camiseta-qatar-rib-talla-l-verde-esmeralda-qv-l",
+      "name": "Camiseta Qatar Rib talla L - Verde esmeralda",
+      "description": "Camiseta Qatar Rib talla L - Verde esmeralda. Producto identificado en el inventario como: QATAR RIB L VERDE ESMERALDA.",
+      "price": "14.75",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-qatar-rib-talla-l-verde-esmeralda-qv-l.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200018,
+      "slug": "camiseta-qatar-rib-talla-2xl-blanco-hueso-qxxl-b",
+      "name": "Camiseta Qatar Rib talla 2XL - Blanco hueso",
+      "description": "Camiseta Qatar Rib talla 2XL - Blanco hueso. Producto identificado en el inventario como: QATAR RIB GRANDE 2XL BLANCO HUESO.",
+      "price": "15.61",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-qatar-rib-talla-2xl-blanco-hueso-qxxl-b.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200019,
+      "slug": "camiseta-qatar-talla-2xl-negro-qxxl-n",
+      "name": "Camiseta Qatar talla 2XL - Negro",
+      "description": "Camiseta Qatar talla 2XL - Negro. Producto identificado en el inventario como: QATAR GRANDE 2XL NEGRO.",
+      "price": "14.75",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-qatar-talla-2xl-negro-qxxl-n.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200020,
+      "slug": "camiseta-peruana-talla-2xl-negro-pxxl-n",
+      "name": "Camiseta Peruana talla 2XL - Negro",
+      "description": "Camiseta Peruana talla 2XL - Negro. Producto identificado en el inventario como: PERUANA 2XL NEGRO.",
+      "price": "19.04",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-peruana-talla-2xl-negro-pxxl-n.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200021,
+      "slug": "camiseta-randy-200-g-talla-s-es",
+      "name": "Camiseta Randy 200 g talla S",
+      "description": "Camiseta Randy 200 g talla S. Producto identificado en el inventario como: CAMISETA RANDY 200 GRAMOS Talla S.",
+      "price": "11.75",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-randy-200-g-talla-s-es.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200022,
+      "slug": "camiseta-randy-200-g-talla-m-em",
+      "name": "Camiseta Randy 200 g talla M",
+      "description": "Camiseta Randy 200 g talla M. Producto identificado en el inventario como: CAMISETA RANDY 200 GRAMOS Talla M.",
+      "price": "11.75",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-randy-200-g-talla-m-em.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200023,
+      "slug": "conjunto-de-bermuda-pellizco-y-camiseta-para-mujer-talla-l-cb-l",
+      "name": "Conjunto de bermuda pellizco y camiseta para mujer talla L",
+      "description": "Conjunto de bermuda pellizco y camiseta para mujer talla L. Producto identificado en el inventario como: CONJUNTO BERMUDA PELLIZCO & CAMISETA DAMA (Ref. BK00108) L.",
+      "price": "17.33",
+      "currency": "USD",
+      "imageUrl": "/images/products/conjunto-de-bermuda-pellizco-y-camiseta-para-mujer-talla-l-cb-l.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "conjuntos-para-mujer",
+        "slug": "conjuntos-para-mujer",
+        "name": "Conjuntos para mujer"
+      },
+      "productType": {
+        "name": "Conjuntos"
+      }
+    },
+    {
+      "id": 200024,
+      "slug": "conjunto-de-bermuda-pellizco-y-camiseta-para-mujer-talla-xl-cb-xl",
+      "name": "Conjunto de bermuda pellizco y camiseta para mujer talla XL",
+      "description": "Conjunto de bermuda pellizco y camiseta para mujer talla XL. Producto identificado en el inventario como: CONJUNTO BERMUDA PELLIZCO & CAMISETA DAMA (Ref. BK00108) XL.",
+      "price": "17.33",
+      "currency": "USD",
+      "imageUrl": "/images/products/conjunto-de-bermuda-pellizco-y-camiseta-para-mujer-talla-xl-cb-xl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "conjuntos-para-mujer",
+        "slug": "conjuntos-para-mujer",
+        "name": "Conjuntos para mujer"
+      },
+      "productType": {
+        "name": "Conjuntos"
+      }
+    },
+    {
+      "id": 200025,
+      "slug": "conjunto-de-3-alforjas-y-bluson-burda-talla-l-cp-l",
+      "name": "Conjunto de 3 alforjas y blusón Burda talla L",
+      "description": "Conjunto de 3 alforjas y blusón Burda talla L. Producto identificado en el inventario como: CONJUNTO 3 ALFORJAS Y BLUSÓN BURDA (Ref. BK00137) L.",
+      "price": "20.33",
+      "currency": "USD",
+      "imageUrl": "/images/products/conjunto-de-3-alforjas-y-bluson-burda-talla-l-cp-l.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "conjuntos-para-mujer",
+        "slug": "conjuntos-para-mujer",
+        "name": "Conjuntos para mujer"
+      },
+      "productType": {
+        "name": "Conjuntos"
+      }
+    },
+    {
+      "id": 200026,
+      "slug": "conjunto-de-3-alforjas-y-bluson-burda-talla-xl-cp-xl",
+      "name": "Conjunto de 3 alforjas y blusón Burda talla XL",
+      "description": "Conjunto de 3 alforjas y blusón Burda talla XL. Producto identificado en el inventario como: CONJUNTO 3 ALFORJAS Y BLUSÓN BURDA (Ref. BK00137) XL.",
+      "price": "20.33",
+      "currency": "USD",
+      "imageUrl": "/images/products/conjunto-de-3-alforjas-y-bluson-burda-talla-xl-cp-xl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "conjuntos-para-mujer",
+        "slug": "conjuntos-para-mujer",
+        "name": "Conjuntos para mujer"
+      },
+      "productType": {
+        "name": "Conjuntos"
+      }
+    },
+    {
+      "id": 200027,
+      "slug": "conjunto-rib-de-blusa-y-pantalon-pellizco-talla-l-cr-l",
+      "name": "Conjunto rib de blusa y pantalón pellizco talla L",
+      "description": "Conjunto rib de blusa y pantalón pellizco talla L. Producto identificado en el inventario como: CONJUNTO RIB BLUSA Y PANTALÓN PELLIZCO (Ref. BK00146) L.",
+      "price": "28.04",
+      "currency": "USD",
+      "imageUrl": "/images/products/conjunto-rib-de-blusa-y-pantalon-pellizco-talla-l-cr-l.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "conjuntos-para-mujer",
+        "slug": "conjuntos-para-mujer",
+        "name": "Conjuntos para mujer"
+      },
+      "productType": {
+        "name": "Conjuntos"
+      }
+    },
+    {
+      "id": 200028,
+      "slug": "conjunto-rib-de-blusa-y-pantalon-pellizco-talla-xl-cr-xl",
+      "name": "Conjunto rib de blusa y pantalón pellizco talla XL",
+      "description": "Conjunto rib de blusa y pantalón pellizco talla XL. Producto identificado en el inventario como: CONJUNTO RIB BLUSA Y PANTALÓN PELLIZCO (Ref. BK00146) XL.",
+      "price": "28.04",
+      "currency": "USD",
+      "imageUrl": "/images/products/conjunto-rib-de-blusa-y-pantalon-pellizco-talla-xl-cr-xl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "conjuntos-para-mujer",
+        "slug": "conjuntos-para-mujer",
+        "name": "Conjuntos para mujer"
+      },
+      "productType": {
+        "name": "Conjuntos"
+      }
+    },
+    {
+      "id": 200029,
+      "slug": "body-en-rib-para-mujer-talla-l-b-l",
+      "name": "Body en rib para mujer talla L",
+      "description": "Body en rib para mujer talla L. Producto identificado en el inventario como: BODY EN RIB (Ref. BKR003) L.",
+      "price": "7.90",
+      "currency": "USD",
+      "imageUrl": "/images/products/body-en-rib-para-mujer-talla-l-b-l.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "bodys",
+        "slug": "bodys",
+        "name": "Bodys"
+      },
+      "productType": {
+        "name": "Bodys"
+      }
+    },
+    {
+      "id": 200030,
+      "slug": "body-en-rib-para-mujer-talla-xl-b-xl",
+      "name": "Body en rib para mujer talla XL",
+      "description": "Body en rib para mujer talla XL. Producto identificado en el inventario como: BODY EN RIB (Ref. BKR003) XL.",
+      "price": "7.90",
+      "currency": "USD",
+      "imageUrl": "/images/products/body-en-rib-para-mujer-talla-xl-b-xl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "bodys",
+        "slug": "bodys",
+        "name": "Bodys"
+      },
+      "productType": {
+        "name": "Bodys"
+      }
+    },
+    {
+      "id": 200031,
+      "slug": "reloj-curren-9084-oro-rosa-cr-9084-or-rs",
+      "name": "Reloj Curren 9084 - Oro / rosa",
+      "description": "Reloj Curren 9084 - Oro / rosa. Producto identificado en el inventario como: CURREN / Oro / rosa (CR-9084-OR-RS).",
+      "price": "43.90",
+      "currency": "USD",
+      "imageUrl": "/images/products/reloj-curren-9084-oro-rosa-cr-9084-or-rs.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "relojes",
+        "slug": "relojes",
+        "name": "Relojes"
+      },
+      "productType": {
+        "name": "Relojes"
+      }
+    },
+    {
+      "id": 200032,
+      "slug": "reloj-curren-8225-cafe-blanco-cr-8225-cf-bl",
+      "name": "Reloj Curren 8225 - Café / blanco",
+      "description": "Reloj Curren 8225 - Café / blanco. Producto identificado en el inventario como: CURREN / Café / blanco (CR-8225-CF-BL).",
+      "price": "43.90",
+      "currency": "USD",
+      "imageUrl": "/images/products/reloj-curren-8225-cafe-blanco-cr-8225-cf-bl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "relojes",
+        "slug": "relojes",
+        "name": "Relojes"
+      },
+      "productType": {
+        "name": "Relojes"
+      }
+    },
+    {
+      "id": 200033,
+      "slug": "reloj-curren-8250-cafe-oscuro-cr-8250-cf-os",
+      "name": "Reloj Curren 8250 - Café oscuro",
+      "description": "Reloj Curren 8250 - Café oscuro. Producto identificado en el inventario como: CURREN / Café oscuro (CR-8250-CF-OS).",
+      "price": "43.90",
+      "currency": "USD",
+      "imageUrl": "/images/products/reloj-curren-8250-cafe-oscuro-cr-8250-cf-os.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "relojes",
+        "slug": "relojes",
+        "name": "Relojes"
+      },
+      "productType": {
+        "name": "Relojes"
+      }
+    },
+    {
+      "id": 200034,
+      "slug": "reloj-curren-8442-naranja-cr-8442-nj",
+      "name": "Reloj Curren 8442 - Naranja",
+      "description": "Reloj Curren 8442 - Naranja. Producto identificado en el inventario como: CURREN / Naranja (CR-8442-NJ).",
+      "price": "61.04",
+      "currency": "USD",
+      "imageUrl": "/images/products/reloj-curren-8442-naranja-cr-8442-nj.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "relojes",
+        "slug": "relojes",
+        "name": "Relojes"
+      },
+      "productType": {
+        "name": "Relojes"
+      }
+    },
+    {
+      "id": 200035,
+      "slug": "reloj-curren-8395-plateado-cr-8395-pl",
+      "name": "Reloj Curren 8395 - Plateado",
+      "description": "Reloj Curren 8395 - Plateado. Producto identificado en el inventario como: CURREN / Plateado (CR-8395-PL).",
+      "price": "54.18",
+      "currency": "USD",
+      "imageUrl": "/images/products/reloj-curren-8395-plateado-cr-8395-pl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "relojes",
+        "slug": "relojes",
+        "name": "Relojes"
+      },
+      "productType": {
+        "name": "Relojes"
+      }
+    },
+    {
+      "id": 200036,
+      "slug": "reloj-curren-9095-dorado-plateado-cr-9095-dr-pl",
+      "name": "Reloj Curren 9095 - Dorado / plateado",
+      "description": "Reloj Curren 9095 - Dorado / plateado. Producto identificado en el inventario como: CURREN / Dorado / plateado (CR-9095-DR-PL).",
+      "price": "43.90",
+      "currency": "USD",
+      "imageUrl": "/images/products/reloj-curren-9095-dorado-plateado-cr-9095-dr-pl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "relojes",
+        "slug": "relojes",
+        "name": "Relojes"
+      },
+      "productType": {
+        "name": "Relojes"
+      }
+    },
+    {
+      "id": 200037,
+      "slug": "reloj-curren-9098-plateado-celeste-cr-9098-pl-cl",
+      "name": "Reloj Curren 9098 - Plateado / celeste",
+      "description": "Reloj Curren 9098 - Plateado / celeste. Producto identificado en el inventario como: CURREN / Plateado / celeste (CR-9098-PL-CL).",
+      "price": "39.90",
+      "currency": "USD",
+      "imageUrl": "/images/products/reloj-curren-9098-plateado-celeste-cr-9098-pl-cl.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "relojes",
+        "slug": "relojes",
+        "name": "Relojes"
+      },
+      "productType": {
+        "name": "Relojes"
+      }
+    },
+    {
+      "id": 200038,
+      "slug": "reloj-curren-8355-plateado-azul-cr-8355-pl-az",
+      "name": "Reloj Curren 8355 - Plateado / azul",
+      "description": "Reloj Curren 8355 - Plateado / azul. Producto identificado en el inventario como: CURREN / Plateado / azul (CR-8355-PL-AZ).",
+      "price": "52.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/reloj-curren-8355-plateado-azul-cr-8355-pl-az.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "relojes",
+        "slug": "relojes",
+        "name": "Relojes"
+      },
+      "productType": {
+        "name": "Relojes"
+      }
+    },
+    {
+      "id": 200039,
+      "slug": "lentes-para-hombre-l-10",
+      "name": "Lentes para hombre",
+      "description": "Lentes para hombre. Producto identificado en el inventario como: Lente caballero.",
+      "price": "5.75",
+      "currency": "USD",
+      "imageUrl": "/images/products/lentes-para-hombre-l-10.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "lentes",
+        "slug": "lentes",
+        "name": "Lentes"
+      },
+      "productType": {
+        "name": "Lentes"
+      }
+    },
+    {
+      "id": 200040,
+      "slug": "lentes-para-hombre-l-20",
+      "name": "Lentes para hombre",
+      "description": "Lentes para hombre. Producto identificado en el inventario como: Lente caballero.",
+      "price": "10.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/lentes-para-hombre-l-20.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "lentes",
+        "slug": "lentes",
+        "name": "Lentes"
+      },
+      "productType": {
+        "name": "Lentes"
+      }
+    },
+    {
+      "id": 200041,
+      "slug": "lentes-para-hombre-lm-25-cab",
+      "name": "Lentes para hombre",
+      "description": "Lentes para hombre. Producto identificado en el inventario como: Lente caballero.",
+      "price": "12.83",
+      "currency": "USD",
+      "imageUrl": "/images/products/lentes-para-hombre-lm-25-cab.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "lentes",
+        "slug": "lentes",
+        "name": "Lentes"
+      },
+      "productType": {
+        "name": "Lentes"
+      }
+    },
+    {
+      "id": 200042,
+      "slug": "lentes-para-mujer-lm-20",
+      "name": "Lentes para mujer",
+      "description": "Lentes para mujer. Producto identificado en el inventario como: Lente dama.",
+      "price": "10.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/lentes-para-mujer-lm-20.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "lentes",
+        "slug": "lentes",
+        "name": "Lentes"
+      },
+      "productType": {
+        "name": "Lentes"
+      }
+    },
+    {
+      "id": 200043,
+      "slug": "lentes-unisex-lu-20",
+      "name": "Lentes unisex",
+      "description": "Lentes unisex. Producto identificado en el inventario como: Lente Unisex.",
+      "price": "10.47",
+      "currency": "USD",
+      "imageUrl": "/images/products/lentes-unisex-lu-20.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "lentes",
+        "slug": "lentes",
+        "name": "Lentes"
+      },
+      "productType": {
+        "name": "Lentes"
+      }
+    },
+    {
+      "id": 200044,
+      "slug": "lentes-para-mujer-lm-25-dam",
+      "name": "Lentes para mujer",
+      "description": "Lentes para mujer. Producto identificado en el inventario como: Lente de Dama.",
+      "price": "12.83",
+      "currency": "USD",
+      "imageUrl": "/images/products/lentes-para-mujer-lm-25-dam.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "lentes",
+        "slug": "lentes",
+        "name": "Lentes"
+      },
+      "productType": {
+        "name": "Lentes"
+      }
+    },
+    {
+      "id": 200045,
+      "slug": "lentes-deportivos-d-deportivo",
+      "name": "Lentes deportivos",
+      "description": "Lentes deportivos. Producto identificado en el inventario como: Deportivo.",
+      "price": "8.11",
+      "currency": "USD",
+      "imageUrl": "/images/products/lentes-deportivos-d-deportivo.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "lentes",
+        "slug": "lentes",
+        "name": "Lentes"
+      },
+      "productType": {
+        "name": "Lentes"
+      }
+    },
+    {
+      "id": 200046,
+      "slug": "cafe-juan-valdez-cafe-jv",
+      "name": "Café Juan Valdez",
+      "description": "Café Juan Valdez. Producto identificado en el inventario como: Juan valdez.",
+      "price": "7.90",
+      "currency": "USD",
+      "imageUrl": "/images/products/cafe-juan-valdez-cafe-jv.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "alimentos-y-bebidas",
+        "slug": "alimentos-y-bebidas",
+        "name": "Alimentos y bebidas"
+      },
+      "subcategory": {
+        "id": "cafe",
+        "slug": "cafe",
+        "name": "Café"
+      },
+      "productType": {
+        "name": "Café"
+      }
+    },
+    {
+      "id": 200047,
+      "slug": "cafe-tostao-cafe-tostao",
+      "name": "Café Tostao",
+      "description": "Café Tostao. Producto identificado en el inventario como: Tostao.",
+      "price": "7.04",
+      "currency": "USD",
+      "imageUrl": "/images/products/cafe-tostao-cafe-tostao.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "alimentos-y-bebidas",
+        "slug": "alimentos-y-bebidas",
+        "name": "Alimentos y bebidas"
+      },
+      "subcategory": {
+        "id": "cafe",
+        "slug": "cafe",
+        "name": "Café"
+      },
+      "productType": {
+        "name": "Café"
+      }
+    },
+    {
+      "id": 200048,
+      "slug": "cafe-colcafe-cafe-colcafe",
+      "name": "Café Colcafé",
+      "description": "Café Colcafé. Producto identificado en el inventario como: colcafe.",
+      "price": "0.80",
+      "currency": "USD",
+      "imageUrl": "/images/products/cafe-colcafe-cafe-colcafe.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "alimentos-y-bebidas",
+        "slug": "alimentos-y-bebidas",
+        "name": "Alimentos y bebidas"
+      },
+      "subcategory": {
+        "id": "cafe",
+        "slug": "cafe",
+        "name": "Café"
+      },
+      "productType": {
+        "name": "Café"
+      }
+    },
+    {
+      "id": 200049,
+      "slug": "leggings-para-mujer-talla-unica-1041",
+      "name": "Leggings para mujer talla única",
+      "description": "Leggings para mujer talla única. Producto identificado en el inventario como: Leggins talla única / 1041.",
+      "price": "7.77",
+      "currency": "USD",
+      "imageUrl": "/images/products/leggings-para-mujer-talla-unica-1041.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "ropa-deportiva-para-mujer",
+        "slug": "ropa-deportiva-para-mujer",
+        "name": "Ropa deportiva para mujer"
+      },
+      "productType": {
+        "name": "Ropa deportiva"
+      }
+    },
+    {
+      "id": 200050,
+      "slug": "top-v-para-mujer-1055",
+      "name": "Top V para mujer",
+      "description": "Top V para mujer. Producto identificado en el inventario como: Top v / 1055.",
+      "price": "5.40",
+      "currency": "USD",
+      "imageUrl": "/images/products/top-v-para-mujer-1055.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "ropa-deportiva-para-mujer",
+        "slug": "ropa-deportiva-para-mujer",
+        "name": "Ropa deportiva para mujer"
+      },
+      "productType": {
+        "name": "Ropa deportiva"
+      }
+    },
+    {
+      "id": 200051,
+      "slug": "malla-corta-para-mujer-1036",
+      "name": "Malla corta para mujer",
+      "description": "Malla corta para mujer. Producto identificado en el inventario como: Maya corta dama / 1036.",
+      "price": "6.98",
+      "currency": "USD",
+      "imageUrl": "/images/products/malla-corta-para-mujer-1036.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "ropa-deportiva-para-mujer",
+        "slug": "ropa-deportiva-para-mujer",
+        "name": "Ropa deportiva para mujer"
+      },
+      "productType": {
+        "name": "Ropa deportiva"
+      }
+    },
+    {
+      "id": 200052,
+      "slug": "falda-short-para-mujer-1010",
+      "name": "Falda short para mujer",
+      "description": "Falda short para mujer. Producto identificado en el inventario como: Falda short dama / 1010.",
+      "price": "7.77",
+      "currency": "USD",
+      "imageUrl": "/images/products/falda-short-para-mujer-1010.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "ropa-deportiva-para-mujer",
+        "slug": "ropa-deportiva-para-mujer",
+        "name": "Ropa deportiva para mujer"
+      },
+      "productType": {
+        "name": "Ropa deportiva"
+      }
+    },
+    {
+      "id": 200053,
+      "slug": "top-amalia-para-mujer-1048",
+      "name": "Top Amalia para mujer",
+      "description": "Top Amalia para mujer. Producto identificado en el inventario como: Top amalia / 1048.",
+      "price": "6.98",
+      "currency": "USD",
+      "imageUrl": "/images/products/top-amalia-para-mujer-1048.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "ropa-deportiva-para-mujer",
+        "slug": "ropa-deportiva-para-mujer",
+        "name": "Ropa deportiva para mujer"
+      },
+      "productType": {
+        "name": "Ropa deportiva"
+      }
+    },
+    {
+      "id": 200054,
+      "slug": "camiseta-beisbolera-para-mujer-1038",
+      "name": "Camiseta beisbolera para mujer",
+      "description": "Camiseta beisbolera para mujer. Producto identificado en el inventario como: Beisbolera dama / 1038.",
+      "price": "7.77",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-beisbolera-para-mujer-1038.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "ropa-deportiva-para-mujer",
+        "slug": "ropa-deportiva-para-mujer",
+        "name": "Ropa deportiva para mujer"
+      },
+      "productType": {
+        "name": "Ropa deportiva"
+      }
+    },
+    {
+      "id": 200055,
+      "slug": "camiseta-basica-para-mujer-1009",
+      "name": "Camiseta básica para mujer",
+      "description": "Camiseta básica para mujer. Producto identificado en el inventario como: Camiseta bas dama / 1009.",
+      "price": "6.59",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-basica-para-mujer-1009.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "ropa-deportiva-para-mujer",
+        "slug": "ropa-deportiva-para-mujer",
+        "name": "Ropa deportiva para mujer"
+      },
+      "productType": {
+        "name": "Ropa deportiva"
+      }
+    },
+    {
+      "id": 200056,
+      "slug": "camiseta-qatar-talla-l-qatar-l",
+      "name": "Camiseta Qatar talla L",
+      "description": "Camiseta Qatar talla L. Producto identificado en el inventario como: QATAR / L.",
+      "price": "12.11",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-qatar-talla-l-qatar-l.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200057,
+      "slug": "camiseta-qatar-talla-m-qatar-m",
+      "name": "Camiseta Qatar talla M",
+      "description": "Camiseta Qatar talla M. Producto identificado en el inventario como: QATAR / M.",
+      "price": "12.11",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-qatar-talla-m-qatar-m.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200058,
+      "slug": "camiseta-premium-talla-m-premium-m",
+      "name": "Camiseta Premium talla M",
+      "description": "Camiseta Premium talla M. Producto identificado en el inventario como: PREMIUM / M.",
+      "price": "14.88",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-premium-talla-m-premium-m.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200059,
+      "slug": "camiseta-premium-talla-l-blanco-hueso-premium-l-blh",
+      "name": "Camiseta Premium talla L - Blanco hueso",
+      "description": "Camiseta Premium talla L - Blanco hueso. Producto identificado en el inventario como: PREMIUM / L / BLANCO HUESO.",
+      "price": "14.88",
+      "currency": "USD",
+      "imageUrl": "/images/products/camiseta-premium-talla-l-blanco-hueso-premium-l-blh.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "camisetas",
+        "slug": "camisetas",
+        "name": "Camisetas"
+      },
+      "productType": {
+        "name": "Camisetas"
+      }
+    },
+    {
+      "id": 200060,
+      "slug": "pantaloneta-perchada-pant-perch",
+      "name": "Pantaloneta perchada",
+      "description": "Pantaloneta perchada. Producto identificado en el inventario como: Pantaloneta Perchada.",
+      "price": "12.90",
+      "currency": "USD",
+      "imageUrl": "/images/products/pantaloneta-perchada-pant-perch.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "pantalonetas-y-bermudas",
+        "slug": "pantalonetas-y-bermudas",
+        "name": "Pantalonetas y bermudas"
+      },
+      "productType": {
+        "name": "Pantalonetas y bermudas"
+      }
+    },
+    {
+      "id": 200061,
+      "slug": "pantaloneta-burda-pant-burda",
+      "name": "Pantaloneta Burda",
+      "description": "Pantaloneta Burda. Producto identificado en el inventario como: Pantaloneta Burda.",
+      "price": "10.14",
+      "currency": "USD",
+      "imageUrl": "/images/products/pantaloneta-burda-pant-burda.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "pantalonetas-y-bermudas",
+        "slug": "pantalonetas-y-bermudas",
+        "name": "Pantalonetas y bermudas"
+      },
+      "productType": {
+        "name": "Pantalonetas y bermudas"
+      }
+    },
+    {
+      "id": 200062,
+      "slug": "pantaloneta-qatar-con-bolsillo-pant-qatar-bol",
+      "name": "Pantaloneta Qatar con bolsillo",
+      "description": "Pantaloneta Qatar con bolsillo. Producto identificado en el inventario como: Pantaloneta Qatar (Bolsillo).",
+      "price": "12.11",
+      "currency": "USD",
+      "imageUrl": "/images/products/pantaloneta-qatar-con-bolsillo-pant-qatar-bol.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "ropa-y-moda",
+        "slug": "ropa-y-moda",
+        "name": "Ropa y moda"
+      },
+      "subcategory": {
+        "id": "pantalonetas-y-bermudas",
+        "slug": "pantalonetas-y-bermudas",
+        "name": "Pantalonetas y bermudas"
+      },
+      "productType": {
+        "name": "Pantalonetas y bermudas"
+      }
+    },
+    {
+      "id": 200063,
+      "slug": "pasamontanas-balaclava-unisex-moto-balaclava",
+      "name": "Pasamontañas balaclava unisex",
+      "description": "Pasamontañas balaclava unisex. Producto identificado en el inventario como: Pasamontañas Balaclava Unisex.",
+      "price": "6.94",
+      "currency": "USD",
+      "imageUrl": "/images/products/pasamontanas-balaclava-unisex-moto-balaclava.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-para-moto",
+        "slug": "accesorios-para-moto",
+        "name": "Accesorios para moto"
+      },
+      "subcategory": {
+        "id": "proteccion-para-motociclista",
+        "slug": "proteccion-para-motociclista",
+        "name": "Protección para motociclista"
+      },
+      "productType": {
+        "name": "Protección para motociclista"
+      }
+    },
+    {
+      "id": 200064,
+      "slug": "protector-de-zapato-para-palanca-moto-prot-zap",
+      "name": "Protector de zapato para palanca",
+      "description": "Protector de zapato para palanca. Producto identificado en el inventario como: Protector De Zapato Para Palanca.",
+      "price": "7.73",
+      "currency": "USD",
+      "imageUrl": "/images/products/protector-de-zapato-para-palanca-moto-prot-zap.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-para-moto",
+        "slug": "accesorios-para-moto",
+        "name": "Accesorios para moto"
+      },
+      "subcategory": {
+        "id": "proteccion-para-motociclista",
+        "slug": "proteccion-para-motociclista",
+        "name": "Protección para motociclista"
+      },
+      "productType": {
+        "name": "Protección para motociclista"
+      }
+    },
+    {
+      "id": 200065,
+      "slug": "mangas-protectoras-para-brazos-moto-mangas",
+      "name": "Mangas protectoras para brazos",
+      "description": "Mangas protectoras para brazos. Producto identificado en el inventario como: Mangas Protectoras Para Brazos Ciclismo.",
+      "price": "6.98",
+      "currency": "USD",
+      "imageUrl": "/images/products/mangas-protectoras-para-brazos-moto-mangas.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-para-moto",
+        "slug": "accesorios-para-moto",
+        "name": "Accesorios para moto"
+      },
+      "subcategory": {
+        "id": "proteccion-para-motociclista",
+        "slug": "proteccion-para-motociclista",
+        "name": "Protección para motociclista"
+      },
+      "productType": {
+        "name": "Protección para motociclista"
+      }
+    },
+    {
+      "id": 200066,
+      "slug": "soporte-de-celular-para-moto-con-estuche-moto-sop-cel",
+      "name": "Soporte de celular para moto con estuche",
+      "description": "Soporte de celular para moto con estuche. Producto identificado en el inventario como: Soporte De Celular Para Moto Estuche.",
+      "price": "10.49",
+      "currency": "USD",
+      "imageUrl": "/images/products/soporte-de-celular-para-moto-con-estuche-moto-sop-cel.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-para-moto",
+        "slug": "accesorios-para-moto",
+        "name": "Accesorios para moto"
+      },
+      "subcategory": {
+        "id": "soportes-para-celular",
+        "slug": "soportes-para-celular",
+        "name": "Soportes para celular"
+      },
+      "productType": {
+        "name": "Soportes para celular"
+      }
+    },
+    {
+      "id": 200067,
+      "slug": "billetera-acc-billetera",
+      "name": "Billetera",
+      "description": "Billetera. Producto identificado en el inventario como: Billeteras.",
+      "price": "8.76",
+      "currency": "USD",
+      "imageUrl": "/images/products/billetera-acc-billetera.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "billeteras",
+        "slug": "billeteras",
+        "name": "Billeteras"
+      },
+      "productType": {
+        "name": "Billeteras"
+      }
+    },
+    {
+      "id": 200068,
+      "slug": "bolso-bandolera-antirrobo-fashion-acc-bandolera",
+      "name": "Bolso bandolera antirrobo Fashion",
+      "description": "Bolso bandolera antirrobo Fashion. Producto identificado en el inventario como: Bolso Bandolera Antirrobo Fashion.",
+      "price": "10.74",
+      "currency": "USD",
+      "imageUrl": "/images/products/bolso-bandolera-antirrobo-fashion-acc-bandolera.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "accesorios-de-moda",
+        "slug": "accesorios-de-moda",
+        "name": "Accesorios de moda"
+      },
+      "subcategory": {
+        "id": "bolsos",
+        "slug": "bolsos",
+        "name": "Bolsos"
+      },
+      "productType": {
+        "name": "Bolsos"
+      }
+    },
+    {
+      "id": 200069,
+      "slug": "encendedor-para-estufa-de-gas-hog-enc-gas",
+      "name": "Encendedor para estufa de gas",
+      "description": "Encendedor para estufa de gas. Producto identificado en el inventario como: Encendedor Estufa Gas Cocina.",
+      "price": "4.57",
+      "currency": "USD",
+      "imageUrl": "/images/products/encendedor-para-estufa-de-gas-hog-enc-gas.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "hogar-y-cocina",
+        "slug": "hogar-y-cocina",
+        "name": "Hogar y cocina"
+      },
+      "subcategory": {
+        "id": "encendedores-de-cocina",
+        "slug": "encendedores-de-cocina",
+        "name": "Encendedores de cocina"
+      },
+      "productType": {
+        "name": "Encendedores de cocina"
+      }
+    },
+    {
+      "id": 200070,
+      "slug": "maquina-de-afeitar-azul-cp-afeit-az",
+      "name": "Máquina de afeitar azul",
+      "description": "Máquina de afeitar azul. Producto identificado en el inventario como: Máquina Afeitadora Azul.",
+      "price": "9.70",
+      "currency": "USD",
+      "imageUrl": "/images/products/maquina-de-afeitar-azul-cp-afeit-az.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "belleza-y-cuidado-personal",
+        "slug": "belleza-y-cuidado-personal",
+        "name": "Belleza y cuidado personal"
+      },
+      "subcategory": {
+        "id": "maquinas-de-afeitar",
+        "slug": "maquinas-de-afeitar",
+        "name": "Máquinas de afeitar"
+      },
+      "productType": {
+        "name": "Máquinas de afeitar"
+      }
+    },
+    {
+      "id": 200071,
+      "slug": "maquina-de-afeitar-dorada-cp-afeit-do",
+      "name": "Máquina de afeitar dorada",
+      "description": "Máquina de afeitar dorada. Producto identificado en el inventario como: Maquina De Afeitar Dorada.",
+      "price": "10.08",
+      "currency": "USD",
+      "imageUrl": "/images/products/maquina-de-afeitar-dorada-cp-afeit-do.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "belleza-y-cuidado-personal",
+        "slug": "belleza-y-cuidado-personal",
+        "name": "Belleza y cuidado personal"
+      },
+      "subcategory": {
+        "id": "maquinas-de-afeitar",
+        "slug": "maquinas-de-afeitar",
+        "name": "Máquinas de afeitar"
+      },
+      "productType": {
+        "name": "Máquinas de afeitar"
+      }
+    },
+    {
+      "id": 200072,
+      "slug": "intercomunicador-con-auriculares-para-casco-moto-intercom",
+      "name": "Intercomunicador con auriculares para casco",
+      "description": "Intercomunicador con auriculares para casco. Producto identificado en el inventario como: Intercomunicador Auriculares Casco.",
+      "price": "16.02",
+      "currency": "USD",
+      "imageUrl": "/images/products/intercomunicador-con-auriculares-para-casco-moto-intercom.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "electronica-y-seguridad",
+        "slug": "electronica-y-seguridad",
+        "name": "Electrónica y seguridad"
+      },
+      "subcategory": {
+        "id": "comunicacion-para-casco",
+        "slug": "comunicacion-para-casco",
+        "name": "Comunicación para casco"
+      },
+      "productType": {
+        "name": "Intercomunicadores"
+      }
+    },
+    {
+      "id": 200073,
+      "slug": "camara-de-seguridad-360-tipo-bombillo-seg-cam-360",
+      "name": "Cámara de seguridad 360 tipo bombillo",
+      "description": "Cámara de seguridad 360 tipo bombillo. Producto identificado en el inventario como: Camara De Seguridad 360 Bombillo.",
+      "price": "12.92",
+      "currency": "USD",
+      "imageUrl": "/images/products/camara-de-seguridad-360-tipo-bombillo-seg-cam-360.webp",
+      "active": true,
+      "editorialApproved": false,
+      "published": false,
+      "commerciallyAvailable": true,
+      "featured": false,
+      "featuredOrder": 0,
+      "category": {
+        "id": "electronica-y-seguridad",
+        "slug": "electronica-y-seguridad",
+        "name": "Electrónica y seguridad"
+      },
+      "subcategory": {
+        "id": "camaras-de-seguridad",
+        "slug": "camaras-de-seguridad",
+        "name": "Cámaras de seguridad"
+      },
+      "productType": {
+        "name": "Cámaras de seguridad"
+      }
+    }
+  ]
+}

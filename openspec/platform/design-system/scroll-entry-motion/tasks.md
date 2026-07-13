@@ -1,0 +1,12 @@
+# Scroll-entry Motion — Tasks
+
+Status: Complete — Release Approved
+
+- [x] MOTION-001 Audit existing motion, reduced-motion, Carousel, hover, and focus contracts. Owner: Design System Architect.
+- [x] MOTION-002 Define progressive enhancement, once-per-view lifecycle, values, opt-in boundary, performance budget, compatibility, and rollback. Owner: Design System Architect.
+- [x] MOTION-003 Approve reduced-motion, focus, semantics, and assistive-technology contract. Owner: Accessibility Architect. — Approved in `accessibility-review.md`: visible-by-default rendering, immediate reduced-motion/focus resolution, semantic and reading-order stability, no announcements, reflow and assistive-technology independence satisfy the Platform accessibility boundary.
+- [x] MOTION-004 Approve Platform contract. Owner: Project Architect. — Approved in `architecture-review.md`; the reusable opt-in contract, progressive enhancement, bounded values, accessibility safeguards, performance guard, compatibility and rollback boundaries are accepted.
+- [x] MOTION-005 Implement primitive, shared observer, cleanup, reduced-motion bypass, documentation, and tests. Owner: React Frontend Architect. — `ScrollEntryMotion` implements visible SSR defaults, shared observation, once-only cleanup, the 50-element guard, bounded CSS, reduced-motion/focus/hash fallbacks, exports, documentation and automated coverage; see `frontend-implementation.md`.
+- [x] MOTION-006 Validate once-only behavior, unsupported/no-script outcome, focus, layout stability, reflow, performance, and reduced motion. Owner: Accessibility Architect with QA Engineer. — Accessibility and independent QA browser validation pass: 320/768/1440 px, CLS 0, no overflow, stable geometry, once-only reveal, no-script visibility, reduced-motion bypass and performance budget. See DTE `qa-progress.md`.
+- [x] MOTION-007 Review implementation against Design System contract. Owner: Design System Architect. — Approved in `design-system-review.md`; visible-default progressive enhancement, shared once-only observation, bounded values, cleanup, focus/reduced-motion fallbacks, performance guard, scoped adoption, TypeScript, and focused tests conform.
+- [x] MOTION-008 Approve Platform release. Owner: Project Architect. — Approved in `release-approval.md`; implementation, accessibility, QA, Design System, documentation, TypeScript, 26 files/148 tests and production build pass.

@@ -51,19 +51,9 @@ export async function listDiscoverableTaxonomy(prisma: PrismaClient): Promise<Ta
 
   return Promise.all(
     categories.map(async (category) => {
-      const [productCount, representative] = await Promise.all([
-        prisma.product.count({ where: publishedBranchWhere(category.id) }),
-        prisma.product.findFirst({
-          where: publishedBranchWhere(category.id),
-          orderBy: [{ createdAt: "desc" }, { id: "asc" }],
-          select: {
-            images: {
-              orderBy: { position: "asc" },
-              select: { url: true, isPrimary: true },
-            },
-          },
-        }),
-      ]);
+      const productCount = await prisma.product.count({
+        where: publishedBranchWhere(category.id),
+      });
       const subcategories: TaxonomySubcategory[] = await Promise.all(
         category.subcategories.map(async (subcategory) => ({
           id: subcategory.id,
@@ -74,14 +64,16 @@ export async function listDiscoverableTaxonomy(prisma: PrismaClient): Promise<Ta
           }),
         }))
       );
+      const description = category.description?.trim();
+      const imageUrl = category.imagePath?.trim();
+      const imageAltText = category.imageAltText?.trim();
       return {
         id: category.id,
         slug: category.slug,
         name: category.name,
-        description: category.description ?? undefined,
-        imageUrl: (
-          representative?.images?.find((image) => image.isPrimary) ?? representative?.images?.[0]
-        )?.url.trim() || undefined,
+        ...(description ? { description } : {}),
+        ...(imageUrl ? { imageUrl } : {}),
+        ...(imageAltText ? { imageAltText } : {}),
         productCount,
         subcategories,
       };

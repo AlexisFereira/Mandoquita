@@ -29,9 +29,9 @@ Execution order: PCV-008 first; PCV-009 and PCV-011 may proceed after Architectu
 - [x] PCV-013 Implement ordered Product Image ownership, Primary uniqueness, alternative text, and Variant Image integrity. Owner: Backend Architect. — Ordered positions, partial Primary uniqueness and composite same-Product Image reference are enforced in PostgreSQL.
 - [x] PCV-014 Implement short description, brand, collection, gender applicability, tags, and SEO content. Owner: Backend Architect. — Optional content and normalized Product-owned tags are persisted and exposed through safe public contracts.
 - [x] PCV-015 Preserve taxonomy inheritance and independent Product state contracts. Owner: Backend Architect. — Product Type remains the only classification leaf; Variant Active is independent and Commercial Availability still protects price/currency.
-- [x] PCV-016 Migrate every existing Product using only approved SKUs, attributes, and media dispositions. Owner: Backend Architect. — Approved inventory is empty; migration 007 refuses unexpected Product rows and generates no business data.
+- [x] PCV-016 Migrate every existing Product using only approved SKUs, attributes, and media dispositions. Owner: Backend Architect. — Migration 007 activated against the approved empty inventory without fabrication; the subsequent approved 73-row inventory seed and publication are recorded in `product-seed-review.md`.
 - [x] PCV-017 Synchronize public Product listing and detail contracts without exposing deferred operational data. Owner: Backend Architect. — Gallery, metadata, SEO and visitor-safe Variant outcomes are additive; SKU, barcode, reference and operational fields remain internal.
-- [x] PCV-018 Provide migration rollback, integrity, and performance evidence. Owner: Backend Architect. — See `backend-implementation.md` and `backend-review.md`; PostgreSQL validations and p95 35.80 ms benchmark pass.
+- [x] PCV-018 Provide migration rollback, integrity, and performance evidence. Owner: Backend Architect. — See `backend-implementation.md` and `backend-review.md`; PostgreSQL validations and post-publication p95 35.24 ms benchmark pass.
 
 Backend implementation is assigned but blocked until PCV-008 is approved. Visitor-facing contract work also depends on PCV-009 through PCV-011.
 

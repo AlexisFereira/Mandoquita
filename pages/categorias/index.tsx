@@ -11,6 +11,7 @@ import { Header } from "../../src/components/Header";
 import { listDiscoverableTaxonomy } from "../../src/server/taxonomyService";
 import type { TaxonomyCategory } from "../../src/types/catalog";
 import { APPLICATION_THEME_COLOR } from "../../src/design-system/metadata";
+import { Icon } from "../../src/components/Icon";
 
 export type CategoriesPageProps = {
   categories: TaxonomyCategory[];
@@ -49,6 +50,11 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
             </p>
           </div>
 
+          <Button variant="outline" href="/buscar?focus=1" className="gap-2 justify-self-start">
+            <Icon name="search" />
+            Buscar productos
+          </Button>
+
           {categories.length > 0 ? (
             <section aria-labelledby="available-categories" className="space-y-6">
               <h2 id="available-categories" className="ds-heading ds-heading-md">
@@ -62,6 +68,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
                     href={`/categorias/${category.slug}`}
                     description={category.description}
                     imageUrl={category.imageUrl}
+                    imageAltText={category.imageAltText}
                     count={category.productCount}
                   />
                 ))}

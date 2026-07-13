@@ -1,5 +1,20 @@
 # Design System Changelog
 
+## 2026-07-13 — Scroll-entry Motion
+
+- Added an opt-in, visible-by-default `ScrollEntryMotion` primitive.
+- Added shared once-only observation, cleanup and a 50-element guard.
+- Added reduced-motion, focus, hash-target and unsupported-observer fallbacks.
+- Added bounded opacity/8px translation CSS and approved feature adoption.
+
+## 2026-07-13 — Governed Icon System
+
+- Added a closed semantic `IconName` registry backed by named `lucide-react` imports.
+- Added discriminated decorative and informative accessibility modes.
+- Added governed 16px, 20px and 24px sizes, current-color inheritance and an
+  unfocusable inline composition contract.
+- Preserved existing arbitrary icon slots during incremental migration.
+
 All notable Design System contract and documentation changes are recorded here.
 
 ## Unreleased

@@ -3,12 +3,14 @@ import React from "react";
 
 import { Badge } from "./Badge";
 import { Card } from "./Card";
+import { resolvePublicAssetUrl } from "../lib/publicAssetUrl";
 
 export type CategoryCardProps = {
   title: string;
   href: string;
   description?: string;
   imageUrl?: string;
+  imageAltText?: string;
   count?: number;
   compact?: boolean;
   className?: string;
@@ -19,10 +21,12 @@ export function CategoryCard({
   href,
   description,
   imageUrl,
+  imageAltText,
   count,
   compact = false,
   className = "",
 }: CategoryCardProps) {
+  const resolvedImageUrl = resolvePublicAssetUrl(imageUrl);
   return (
     <Card
       as={Link}
@@ -35,12 +39,12 @@ export function CategoryCard({
         .join(" ")}
     >
       <div className="space-y-4">
-        {imageUrl ? (
+        {resolvedImageUrl ? (
           <div className="overflow-hidden rounded-md bg-[rgb(var(--background)/1)]">
             <div className={compact ? "aspect-[4/3]" : "aspect-[16/10]"}>
               <img
-                src={imageUrl}
-                alt={title}
+                src={resolvedImageUrl}
+                alt={imageAltText ?? title}
                 width="800"
                 height="500"
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"

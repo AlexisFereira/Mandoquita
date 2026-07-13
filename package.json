@@ -10,14 +10,18 @@
     "test:integration:postgres": "tsx scripts/validate-product-lifecycle.ts",
     "test:integration:taxonomy": "tsx scripts/validate-taxonomy.ts",
     "test:integration:product-content": "tsx scripts/validate-product-content-variants.ts",
+    "test:integration:product-seed": "tsx scripts/validate-product-seed.ts",
+    "test:integration:search": "tsx scripts/validate-public-search.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init_catalog",
-    "prisma:seed": "prisma db seed"
+    "prisma:seed": "prisma db seed",
+    "prisma:publish-products-v1": "tsx prisma/publish-products-v1.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.11.1",
     "autoprefixer": "^10.5.2",
     "dotenv": "^16.6.1",
+    "lucide-react": "1.24.0",
     "next": "^14.2.5",
     "postcss": "^8.5.16",
     "react": "^18.3.1",

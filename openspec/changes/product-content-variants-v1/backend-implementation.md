@@ -45,14 +45,15 @@ down migration would discard governed Variant/Image identity.
 
 ## Evidence
 
-- Migration status: 8 migrations applied; schema current.
+- Migration status: 9 migrations applied; schema current. Migration 008 restores
+  the related-Product composite index for the authoritative Product Type model.
 - PCV PostgreSQL validation: ownership, duplicate SKU, Primary uniqueness,
   cross-Product Image rejection, Base Variant, gallery order, content, public
   price protection and forbidden-field exclusion passed.
 - Taxonomy regression: 7 Categories, 16 Subcategories, 30 Product Types and zero
   Published taxonomy orphans passed.
 - Lifecycle/performance: 10,000 Products, 1,000 detail queries, concurrency 20,
-  p95 35.80 ms <= 50 ms; deterministic results and cleanup passed.
+  p95 35.24 ms <= 50 ms after publication; deterministic results and cleanup passed.
 - TypeScript, 23 test files / 116 tests and production build pass.
 
 PCV-012 through PCV-018 are complete. Frontend and QA remain downstream owners.

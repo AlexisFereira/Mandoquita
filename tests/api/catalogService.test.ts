@@ -87,6 +87,12 @@ describe("parseListQuery", () => {
       .toMatchObject({ category: "ropa-y-moda", subcategory: "camisetas" });
     expect(() => parseListQuery({ page: "0" })).toThrow();
   });
+
+  it("normalizes surrounding whitespace and rejects empty or overlong searches", () => {
+    expect(parseListQuery({ q: "  CaFé  " }).q).toBe("CaFé");
+    expect(() => parseListQuery({ q: "   " })).toThrow();
+    expect(() => parseListQuery({ q: "x".repeat(121) })).toThrow();
+  });
 });
 
 describe("listProducts", () => {
@@ -116,6 +122,81 @@ describe("listProducts", () => {
       productType: { name: "Camiseta básica" },
     });
     expect(response.filters.subcategory).toBe("camisetas");
+  });
+
+  it("matches only the six approved public fields and orders ties deterministically", async () => {
+    const prisma = {
+      product: {
+        count: vi.fn().mockResolvedValue(1),
+        findMany: vi.fn().mockResolvedValue([makeProduct()]),
+      },
+    } as any;
+
+    await listProducts(prisma, { q: "  verano  " });
+
+    const call = prisma.product.findMany.mock.calls[0][0];
+    expect(call.where.OR).toEqual([
+      { name: { contains: "verano", mode: "insensitive" } },
+      { shortDescription: { contains: "verano", mode: "insensitive" } },
+      { description: { contains: "verano", mode: "insensitive" } },
+      { brand: { contains: "verano", mode: "insensitive" } },
+      { collection: { contains: "verano", mode: "insensitive" } },
+      { tags: { some: { value: { contains: "verano", mode: "insensitive" } } } },
+    ]);
+    expect(JSON.stringify(call.where).toLowerCase()).not.toMatch(
+      /sku|barcode|reference|inventory|supplier|cost|warehouse|logistics/
+    );
+    expect(call.orderBy).toEqual([{ name: "asc" }, { id: "asc" }]);
+  });
+
+  it("does not query PostgreSQL for an empty search", async () => {
+    const prisma = {
+      product: { count: vi.fn(), findMany: vi.fn() },
+    } as any;
+
+    await expect(listProducts(prisma, { q: "   " })).rejects.toThrow();
+    expect(prisma.product.count).not.toHaveBeenCalled();
+    expect(prisma.product.findMany).not.toHaveBeenCalled();
+  });
+
+  it("recovers an out-of-range page to the nearest valid page", async () => {
+    const prisma = {
+      product: {
+        count: vi.fn().mockResolvedValue(13),
+        findMany: vi.fn().mockResolvedValue([makeProduct()]),
+      },
+    } as any;
+
+    const response = await listProducts(prisma, { q: "camiseta", page: "99", limit: "12" });
+
+    expect(response.metadata).toEqual({ page: 2, limit: 12, totalItems: 13, totalPages: 2 });
+    expect(prisma.product.findMany).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ skip: 1176, take: 12 })
+    );
+    expect(prisma.product.findMany).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ skip: 12, take: 12 })
+    );
+  });
+
+  it("keeps commercially unavailable matches but suppresses price and currency", async () => {
+    const prisma = {
+      product: {
+        count: vi.fn().mockResolvedValue(1),
+        findMany: vi.fn().mockResolvedValue([
+          makeProduct({ commerciallyAvailable: false }),
+        ]),
+      },
+    } as any;
+
+    const response = await listProducts(prisma, { q: "camiseta" });
+
+    expect(response.items[0]).toMatchObject({
+      commerciallyAvailable: false,
+      price: null,
+      currency: null,
+    });
   });
 });
 

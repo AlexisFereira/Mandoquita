@@ -10,6 +10,8 @@ const category = {
   slug: "ropa-y-moda",
   name: "Ropa y moda",
   description: "Prendas de vestir.",
+  imagePath: "/images/categories/ropa-y-moda.png",
+  imageAltText: "Prendas casuales en tonos cálidos.",
   sortOrder: 1,
   subcategories: [
     {
@@ -67,6 +69,8 @@ describe("taxonomy discovery service", () => {
     expect(result[0]).toMatchObject({
       id: "cat_ropa_moda",
       productCount: 1,
+      imageUrl: "/images/categories/ropa-y-moda.png",
+      imageAltText: "Prendas casuales en tonos cálidos.",
       subcategories: [{ id: "sub_camisetas", productCount: 1 }],
     });
   });
@@ -75,6 +79,21 @@ describe("taxonomy discovery service", () => {
     const prisma = prismaWith([]);
     await expect(listDiscoverableTaxonomy(prisma)).resolves.toEqual([]);
     expect(prisma.product.count).not.toHaveBeenCalled();
+  });
+
+  it("omits absent optional media and description from SSR-safe category payloads", async () => {
+    const prisma = prismaWith([{
+      ...category,
+      description: "",
+      imagePath: null,
+      imageAltText: null,
+    } as any]);
+    prisma.product.findFirst.mockResolvedValue({ images: [] });
+
+    const [result] = await listDiscoverableTaxonomy(prisma);
+
+    expect(result).not.toHaveProperty("description");
+    expect(result).not.toHaveProperty("imageUrl");
   });
 
   it("returns null for an invalid or unavailable category identifier", async () => {

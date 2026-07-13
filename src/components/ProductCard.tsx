@@ -5,6 +5,7 @@ import type { ProductItem } from "../types/catalog";
 import { Badge } from "./Badge";
 import { Card } from "./Card";
 import { ProductOffer } from "./ProductOffer";
+import { Icon } from "./Icon";
 
 export type ProductCardProps = {
   product: ProductItem;
@@ -42,8 +43,9 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
               className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.02] motion-reduce:transition-none"
             />
           ) : (
-            <span className="flex h-full items-center justify-center p-4 text-center text-sm text-[rgb(var(--muted)/1)]">
-              Sin imagen
+            <span className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center text-sm text-[rgb(var(--muted)/1)]">
+              <Icon name="image-unavailable" />
+              <span>Sin imagen</span>
             </span>
           )}
         </div>

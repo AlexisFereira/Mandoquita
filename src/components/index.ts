@@ -15,3 +15,5 @@ export * from "./SectionHeader";
 export * from "./ProductCard";
 export * from "./ProductOffer";
 export * from "./PoliteStatus";
+export * from "./Icon";
+export * from "./ScrollEntryMotion";

@@ -105,4 +105,10 @@ describe("theme stylesheet consolidation", () => {
     expect(globalStyles).toContain("outline: 3px solid rgb(var(--focus) / 1)");
     expect(globalStyles).toContain("prefers-reduced-motion: reduce");
   });
+
+  it("lets layout utilities own heading spacing", () => {
+    const headingRule = globalStyles.match(/\.ds-heading\s*\{([^}]*)\}/)?.[1] ?? "";
+
+    expect(headingRule).not.toMatch(/\bmargin(?:-[a-z]+)?\s*:/);
+  });
 });

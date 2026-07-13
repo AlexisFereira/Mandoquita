@@ -54,6 +54,7 @@ Current scope includes:
 - Product Filtering
 - Featured Products
 - Related Products
+- Informational accepted-payment methods with external contact continuation
 
 The following features are intentionally excluded:
 
@@ -73,6 +74,11 @@ These capabilities may be considered in future phases but are outside the curren
 The platform is a public Product Catalog, not a transactional e-commerce store.
 
 Product discovery, current commercial information, Category exploration, Product Detail, and external business contact are in scope. Authentication, cart, checkout, payment, orders, and purchase-completion behavior remain excluded until separately approved.
+
+Static accepted-payment information is presentation content, not an Online
+Payment capability. It may identify only business-approved methods and direct the
+visitor to external contact; it cannot select, validate, calculate, capture or
+complete a payment.
 
 ---
 

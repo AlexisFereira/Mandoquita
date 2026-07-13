@@ -67,3 +67,14 @@ Each phase must remain independently reversible. Compatibility aliases are remov
 - New single-selection choices use `mode="option"` inside a labelled group. Selection and unavailable-combination resolution stay in the consuming feature.
 - Status announcements migrate to `PoliteStatus`; updates must be concise and must not trigger focus movement.
 - Removing the compatibility forms requires a separate approved deprecation change.
+
+## Governed Icon migration
+
+- Feature code imports `Icon` from the shared barrel and uses only approved semantic names.
+- Replace an inline SVG only when its meaning has an exact registry match; otherwise request Design System review.
+- Preserve visible labels, control accessible names, keyboard behavior, focus and 44px targets.
+- Icons inside labelled controls and beside complete text remain decorative.
+- Existing `ReactNode` icon slots stay compatible until every consumer is migrated;
+  removing them requires a separate deprecation change.
+- Brand logos, payment-provider marks, arbitrary Lucide imports and copied SVG files
+  are not migration targets.

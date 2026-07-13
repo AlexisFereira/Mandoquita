@@ -10,7 +10,7 @@ The Homepage is the primary discovery entry point for the Product Catalog Platfo
 
 The interface direction is modern, premium, elegant, professional, minimal, trustworthy, and product-focused. The experience should feel closer to Apple, Stripe, Linear, Shopify, Vercel, and Notion than to Amazon, Mercado Libre, or Alibaba.
 
-The homepage is not an e-commerce storefront. It must not include or imply authentication, account creation, cart, checkout, payment, wishlist, product comparison, or order management.
+The homepage is not an e-commerce storefront. It must not include or imply authentication, account creation, cart, checkout, transactional payment, wishlist, product comparison, or order management. Static accepted-payment information may be shown only under the approved non-transactional contract.
 
 The Homepage uses the approved deterministic light presentation at every
 viewport. Dark inverse surfaces may be used for roles such as Header or Contact,
@@ -30,8 +30,9 @@ controls must not change the Homepage presentation.
 5. The visitor selects a featured product to continue to product detail exploration, or continues scrolling.
 6. The visitor scans available categories to understand catalog breadth.
 7. The visitor selects a category to continue to category-based product exploration, or continues scrolling.
-8. The visitor reaches contact and can communicate with the business without entering a transaction flow.
-9. The visitor exits the homepage by navigating deeper into the catalog, using contact, using global navigation, or leaving the site.
+8. The visitor reads the accepted payment methods as static information and may continue through the existing external contact path.
+9. The visitor reaches contact and can communicate with the business without entering a transaction flow.
+10. The visitor exits the homepage by navigating deeper into the catalog, using contact, using global navigation, or leaving the site.
 
 ## Information Architecture
 
@@ -42,8 +43,9 @@ The information hierarchy must be:
 3. Primary discovery CTAs.
 4. Featured products.
 5. Product categories.
-6. Contact.
-7. Footer support content.
+6. Payment Information.
+7. Contact.
+8. Footer support content.
 
 The user should discover:
 
@@ -80,8 +82,9 @@ The homepage must use this section order:
 2. Hero / Business Offering
 3. Featured Products
 4. Product Categories
-5. Contact
-6. Footer
+5. Payment Information
+6. Contact
+7. Footer
 
 This order is mandatory for the first complete homepage design. Promotional content remains out of scope unless the business proposal is updated.
 
@@ -110,7 +113,7 @@ Contact must remain important but must not visually behave like checkout or purc
 
 ### Reading Order
 
-Reading order must follow the page structure: header, hero, featured products, categories, contact, footer.
+Reading order must follow the page structure: header, hero, featured products, categories, Payment Information, contact, footer.
 
 ## Visual Hierarchy
 
@@ -158,6 +161,7 @@ Large whitespace must separate major sections. Internal spacing should create cl
 - Supporting business/catalog context.
 - Featured products.
 - Product categories.
+- Accepted payment methods: Binance, Pago móvil, and Dólares en efectivo.
 - Contact prompt.
 - Approved contact method.
 - Footer support content.
@@ -182,6 +186,7 @@ Use existing platform components and compose them in this order:
 - SectionHeader.
 - ProductCard.
 - CategoryCard.
+- PaymentInformation feature composition.
 - Footer.
 
 No new reusable component is required for the approved homepage scope. If an existing component cannot satisfy the design spec, that must be escalated to Design System review before implementation.
@@ -436,6 +441,26 @@ Expose eligible categories so visitors can choose a browsing direction.
 - Category actions must identify destination.
 - Category layout must not depend on position alone to communicate meaning.
 - Ineligible categories must not be rendered as choices.
+
+### Payment Information
+
+#### Purpose
+
+Communicate the approved accepted methods without introducing selection,
+checkout, payment capture, status, totals, fees, or Product/Variant state.
+
+#### Content and composition
+
+- Heading: `Medios de pago`.
+- Supporting copy and method order remain exactly as approved by the Discovery
+  and Trust Experience V1 decision record.
+- Methods render as one static list: Binance, Pago móvil, Dólares en efectivo.
+- A labelled `Consultar por WhatsApp` continuation may use the existing external
+  contact URL; its absence never removes the informational list.
+- Governed icons are decorative and domain-neutral. No provider or card logo is
+  authorized.
+- The complete section precedes Contact, reflows to one column at narrow widths,
+  and remains outside Scroll-entry Motion.
 
 ### Contact
 
@@ -853,6 +878,10 @@ Success should be represented by clear navigation and continuation, not interrup
 - Respect user motion preferences where applicable.
 - Loading transitions should reduce perceived abruptness without delaying access to content.
 - Hover/focus feedback should feel immediate and calm.
+- Scroll-entry Motion is allowed only for the complete Featured Products and
+  Product Categories sections, once per page view, using the shared Platform
+  primitive. Hero, Payment Information, Contact, navigation and required outcomes
+  remain immediately visible.
 
 ## Visual Consistency Rules
 

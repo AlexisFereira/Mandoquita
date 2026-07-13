@@ -5,7 +5,7 @@ Status: Active
 ### Requirement: Published classified Product listing
 
 The system SHALL expose `GET /api/products` with pagination and optional
-Category, Subcategory, and Product-name filters.
+Category, Subcategory, and public Product Search filters.
 
 #### Scenario: Default listing
 
@@ -30,6 +30,34 @@ Category, Subcategory, and Product-name filters.
 
 - **WHEN** pagination or filter parameters violate the documented contract
 - **THEN** the API returns HTTP 400 without exposing implementation details
+
+### Requirement: Canonical public Product Search
+
+When `q` is present, the listing SHALL match case-insensitively across Product
+name, short description, complete description, brand, collection, and tags.
+It SHALL reuse catalog eligibility and SHALL NOT search or expose SKU, barcode,
+reference, inventory, supplier, cost, warehouse, logistics, match fields, or
+ranking scores.
+
+#### Scenario: Approved public field matches
+
+- **WHEN** a normalized non-empty `q` matches any approved public Search field
+- **THEN** the eligible Product appears in deterministic `name ASC, id ASC` order
+
+#### Scenario: Empty or invalid Search query
+
+- **WHEN** `q` is whitespace-only, over 120 characters, or otherwise invalid
+- **THEN** the API returns HTTP 400 before executing a Product query
+
+#### Scenario: Search has no matches
+
+- **WHEN** a valid `q` matches no eligible Product
+- **THEN** the API returns HTTP 200 with an empty collection
+
+#### Scenario: Search page is outside the valid range
+
+- **WHEN** `page` exceeds the final page for a valid Search collection
+- **THEN** the response resolves to the final valid page without fabricating Products
 
 ### Requirement: Hierarchical Product response
 

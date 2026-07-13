@@ -25,6 +25,7 @@ describe("Header", () => {
     expect(navigation.textContent).toContain("Inicio");
     expect(navigation.textContent).toContain("Destacados");
     expect(navigation.textContent).toContain("Categorías");
+    expect(navigation.textContent).toContain("Buscar");
     expect(navigation.textContent).toContain("Contacto");
   });
 
@@ -37,6 +38,9 @@ describe("Header", () => {
     );
     expect(screen.getByRole("link", { name: "Categorías" }).getAttribute("href")).toBe(
       "/categorias",
+    );
+    expect(screen.getByRole("link", { name: "Buscar" }).getAttribute("href")).toBe(
+      "/buscar?focus=1",
     );
     expect(screen.queryByText(/carrito|checkout|comprar/i)).toBeNull();
   });

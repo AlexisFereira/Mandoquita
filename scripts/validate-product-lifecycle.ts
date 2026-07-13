@@ -215,6 +215,11 @@ async function main() {
     );
 
     await createPerformanceDataset(productType.name);
+    // The benchmark must not depend on whether autovacuum happens to analyze the
+    // temporary 10k-row dataset before measurement. Refresh planner statistics
+    // explicitly so repeated runs evaluate the same query plan.
+    await prisma.$executeRawUnsafe('ANALYZE "Product"');
+    await prisma.$executeRawUnsafe('ANALYZE "ProductVariant"');
     const p95 = await validatePerformance(`${runId}-published-inactive`);
 
     console.log(

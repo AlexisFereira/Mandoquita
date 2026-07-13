@@ -20,6 +20,8 @@ import { Carousel } from "../../src/components/Carousel";
 import { Chip } from "../../src/components/Chip";
 import { ProductVariantOptions } from "../../src/components/ProductVariantOptions";
 import type { PublicProductVariantItem } from "../../src/types/catalog";
+import { ScrollEntryMotion } from "../../src/components/ScrollEntryMotion";
+import { Icon } from "../../src/components/Icon";
 
 type ProductDetailPageProps = ProductDetailResponse;
 
@@ -249,14 +251,21 @@ export default function ProductDetailPage({
               </dl>
             ) : null}
             {item.tags.length > 0 ? (
-              <div className="mt-4 flex flex-wrap gap-2" aria-label="Etiquetas del producto">
-                {item.tags.map((tag) => <Chip key={tag}>{tag}</Chip>)}
+              <div className="mt-4 space-y-2">
+                <p className="flex items-center gap-2 text-sm font-semibold">
+                  <Icon name="tag" size="sm" />
+                  Etiquetas
+                </p>
+                <div className="flex flex-wrap gap-2" aria-label="Etiquetas del producto">
+                  {item.tags.map((tag) => <Chip key={tag}>{tag}</Chip>)}
+                </div>
               </div>
             ) : null}
           </section>
         ) : null}
 
         {related.length > 0 && (
+          <ScrollEntryMotion distance="sm" delayStep={0}>
           <section aria-labelledby="related-heading" className="mt-8">
             <h2
               id="related-heading"
@@ -270,6 +279,7 @@ export default function ProductDetailPage({
               ))}
             </div>
           </section>
+          </ScrollEntryMotion>
         )}
         </Container>
       </main>

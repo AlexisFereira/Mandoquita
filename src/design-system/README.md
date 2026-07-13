@@ -1,6 +1,6 @@
 # Mandoquita Design System
 
-This directory contains the typed foundations, theme runtime, layout values, documentation, decisions, and migration guidance for the shared visual system.
+This directory contains the typed foundations, fixed light theme, layout values, governed Icon and Motion contracts, documentation, decisions, and migration guidance for the shared visual system.
 
 ## Start here
 
@@ -17,6 +17,9 @@ This directory contains the typed foundations, theme runtime, layout values, doc
 - [Homepage component contracts](../../openspec/platform/design-system/homepage-component-contracts.md)
 - [Current Design System review](../../openspec/platform/design-system/homepage-design-system-review.md)
 - [Frontend remediation handoff](../../openspec/platform/design-system/homepage-frontend-remediation-tasks.md)
+- [Governed Icon System](../../openspec/platform/design-system/icon-system/proposal.md)
+- [Scroll-entry Motion](../../openspec/platform/design-system/scroll-entry-motion/proposal.md)
+- [Product Gallery and Option Controls](../../openspec/platform/design-system/product-gallery-variant-controls/proposal.md)
 
 ## Source files
 
@@ -26,6 +29,12 @@ This directory contains the typed foundations, theme runtime, layout values, doc
 
 ## Current status
 
-The frontend runtime is fixed to light and normalizes legacy dark/system preferences. Final homepage Design System approval remains pending QA evidence for responsive visual regression, keyboard focus traversal, hydration, and contrast review in the supported light theme.
+The runtime is fixed to one light semantic palette with no theme selector,
+preference persistence, or system-theme behavior. Product Gallery, Scroll-entry
+Motion, and Governed Icon System have passed Design System review. The neutral
+payment-information glyph remediation recorded as `ICON-DS-001` is complete.
 
-New work must use semantic roles, preserve accessibility behavior, and follow the migration plan. Do not add deprecated `--color-*` aliases or feature-specific token families.
+New work must use semantic roles, governed component APIs, preserve accessibility
+behavior, and follow the migration plan. Do not add deprecated `--color-*` aliases,
+feature-specific token families, direct `lucide-react` feature imports, or local
+viewport-observation logic.

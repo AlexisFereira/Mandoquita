@@ -95,6 +95,28 @@ function publicClassificationWhere(category?: string, subcategory?: string) {
   };
 }
 
+function publicProductWhere(category?: string, subcategory?: string): Prisma.ProductWhereInput {
+  return {
+    published: true,
+    variants: { some: {} },
+    productType: publicClassificationWhere(category, subcategory),
+  };
+}
+
+function publicSearchWhere(query: string): Prisma.ProductWhereInput {
+  const contains = { contains: query, mode: "insensitive" as const };
+  return {
+    OR: [
+      { name: contains },
+      { shortDescription: contains },
+      { description: contains },
+      { brand: contains },
+      { collection: contains },
+      { tags: { some: { value: contains } } },
+    ],
+  };
+}
+
 function mapProduct(product: PublicProduct): ProductItem {
   if (!product.productType) {
     throw new Error("Published product is missing its approved Product Type");
@@ -224,29 +246,41 @@ export async function listFeaturedProducts(prisma: PrismaClient, limit: number) 
 
 export async function listProducts(prisma: PrismaClient, rawQuery: ListQueryInput): Promise<ProductListResponse> {
   const query = parseListQuery(rawQuery);
-  const where = {
-    published: true,
-    variants: { some: {} },
-    productType: publicClassificationWhere(query.category, query.subcategory),
-    ...(query.q ? { name: { contains: query.q, mode: "insensitive" as const } } : {}),
+  const where: Prisma.ProductWhereInput = {
+    ...publicProductWhere(query.category, query.subcategory),
+    ...(query.q ? publicSearchWhere(query.q) : {}),
   };
-  const [items, totalItems] = await Promise.all([
+  const orderBy: Prisma.ProductOrderByWithRelationInput[] = query.q
+    ? [{ name: "asc" }, { id: "asc" }]
+    : [{ createdAt: "desc" }, { id: "asc" }];
+  const [requestedItems, totalItems] = await Promise.all([
     prisma.product.findMany({
       where,
       skip: (query.page - 1) * query.limit,
       take: query.limit,
       include: relatedProductInclude,
-      orderBy: { createdAt: "desc" },
+      orderBy,
     }),
     prisma.product.count({ where }),
   ]);
+  const totalPages = Math.max(1, Math.ceil(totalItems / query.limit));
+  const page = Math.min(query.page, totalPages);
+  const items = page === query.page
+    ? requestedItems
+    : await prisma.product.findMany({
+        where,
+        skip: (page - 1) * query.limit,
+        take: query.limit,
+        include: relatedProductInclude,
+        orderBy,
+      });
   return {
     items: items.map(mapProduct),
     metadata: {
-      page: query.page,
+      page,
       limit: query.limit,
       totalItems,
-      totalPages: Math.max(1, Math.ceil(totalItems / query.limit)),
+      totalPages,
     },
     filters: {
       category: query.category ?? null,

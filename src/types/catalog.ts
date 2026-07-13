@@ -88,6 +88,7 @@ export type HomepageCategory = {
   name: string;
   description?: string;
   imageUrl?: string;
+  imageAltText?: string;
   productCount: number;
 };
 

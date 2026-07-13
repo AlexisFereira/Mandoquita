@@ -70,6 +70,48 @@ textarea {
   top: 0;
 }
 
+.scroll-entry-motion {
+  opacity: 1;
+  transform: none;
+}
+
+.scroll-entry-motion[data-motion-state="prepared"] {
+  opacity: 0;
+  transform: translateY(0);
+  pointer-events: auto;
+  will-change: opacity, transform;
+}
+
+.scroll-entry-motion[data-motion-state="prepared"][data-motion-distance="sm"] {
+  transform: translateY(8px);
+}
+
+.scroll-entry-motion[data-motion-state="entering"] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition:
+    opacity 220ms ease-out,
+    transform 220ms ease-out;
+  transition-delay: 0ms;
+  will-change: opacity, transform;
+}
+
+.scroll-entry-motion[data-motion-state="entering"][data-motion-delay="40"] {
+  transition-delay: 40ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-entry-motion,
+  .scroll-entry-motion[data-motion-state="prepared"],
+  .scroll-entry-motion[data-motion-state="entering"] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}
+
 .ds-container {
   width: min(100% - 2rem, var(--container-lg));
   margin-inline: auto;
@@ -139,7 +181,6 @@ textarea {
 }
 
 .ds-heading {
-  margin: 0;
   font-family: var(--font-display);
   line-height: var(--line-height-tight);
   letter-spacing: -0.02em;

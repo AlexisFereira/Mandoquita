@@ -3,6 +3,7 @@ import { ZodError } from "zod";
 
 import { handleProductsList } from "../../pages/api/products/index";
 import { handleProductDetail } from "../../pages/api/products/[slug]";
+import { listProducts } from "../../src/server/catalogService";
 
 function createRes() {
   const res: any = {
@@ -55,6 +56,21 @@ describe("products API routes", () => {
     await handleProductsList(req, res, { prismaClient: {} as any, listProductsFn: listProductsMock as any });
 
     expect(res.statusCode).toBe(400);
+  });
+
+  it("returns 400 without touching the database for whitespace-only search", async () => {
+    const prismaClient = {
+      product: { count: vi.fn(), findMany: vi.fn() },
+    } as any;
+    const req: any = { method: "GET", query: { q: "   " } };
+    const res = createRes();
+
+    await handleProductsList(req, res, { prismaClient, listProductsFn: listProducts });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toEqual({ error: "Invalid query parameters" });
+    expect(prismaClient.product.count).not.toHaveBeenCalled();
+    expect(prismaClient.product.findMany).not.toHaveBeenCalled();
   });
 
   it("returns 404 for unknown product slug", async () => {

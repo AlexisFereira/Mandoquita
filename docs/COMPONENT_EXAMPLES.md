@@ -2,6 +2,20 @@
 
 These examples reflect the current typed APIs. Visual values continue to be consolidated; avoid copying internal class strings from component source.
 
+## Scroll-entry Motion
+
+```tsx
+<ScrollEntryMotion distance="sm" delayStep={0}>
+  <Section id="related" title="Productos relacionados">
+    {content}
+  </Section>
+</ScrollEntryMotion>
+```
+
+Use this wrapper only for a complete UX/UI-approved, non-critical section below
+the initial viewport. Never use it for individual cards, forms, navigation,
+status/error content, payment/contact actions or Product availability.
+
 ## Button
 
 ```tsx
@@ -135,3 +149,22 @@ const [color, setColor] = useState("azul");
 The feature owns option resolution. Do not pass inactive values. `unavailable`
 means that a feature-defined combination cannot resolve; it never means stock,
 inventory, price, or commercial availability.
+
+## Icon
+
+```tsx
+<button type="button" aria-label="Limpiar búsqueda">
+  <Icon name="close" />
+</button>
+
+<Icon
+  name="information"
+  decorative={false}
+  label="Información adicional"
+/>
+```
+
+Use only approved semantic `IconName` values. Icons inside labelled controls or
+beside complete visible text are decorative. Informative mode is reserved for a
+unique approved textual equivalent and requires a non-empty `label`. Icon size
+never replaces the consuming control's 44px target.

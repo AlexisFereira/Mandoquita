@@ -3,6 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import HomePage, { selectVisibleFeaturedProducts } from "../../pages/index";
+import { PaymentInformation } from "../../src/features/homepage/payment-information";
 import type { HomepagePayload, ProductItem } from "../../src/types/catalog";
 
 const product: ProductItem = {
@@ -158,7 +159,58 @@ describe("Homepage", () => {
     expect(contact.getAttribute("target")).toBe("_blank");
 
     const pageText = document.body.textContent ?? "";
-    expect(pageText).not.toMatch(/carrito|checkout|pago|comprar ahora/i);
+    expect(pageText).not.toMatch(
+      /carrito|checkout|comprar ahora|finalizar compra|procesar pago/i,
+    );
+  });
+
+  it("renders approved payment information as static content before contact", () => {
+    render(<HomePage {...populatedPayload} />);
+
+    const heading = screen.getByRole("heading", { name: "Medios de pago" });
+    const paymentSection = heading.closest("section");
+    const contactHeading = screen.getByRole("heading", {
+      name: /quieres conocer mejor un producto/i,
+    });
+    const contactSection = contactHeading.closest("section");
+    const methods = paymentSection?.querySelectorAll("li");
+
+    expect(paymentSection?.id).toBe("medios-de-pago");
+    expect(methods ? Array.from(methods, (method) => method.textContent) : []).toEqual([
+      "Binance",
+      "Pago móvil",
+      "Dólares en efectivo",
+    ]);
+    expect(
+      screen.getByText(
+        "Aceptamos Binance, pago móvil y dólares en efectivo. Confirma los detalles del pago directamente con Mandoquita.",
+      ),
+    ).toBeTruthy();
+    expect(
+      paymentSection && contactSection
+        ? paymentSection.compareDocumentPosition(contactSection) & Node.DOCUMENT_POSITION_FOLLOWING
+        : 0,
+    ).toBeTruthy();
+
+    const continuation = screen.getByRole("link", { name: "Consultar por WhatsApp" });
+    expect(continuation.getAttribute("href")).toContain("https://wa.me/573506928681");
+    expect(continuation.getAttribute("target")).toBe("_blank");
+    expect(paymentSection?.querySelectorAll("a, button")).toHaveLength(1);
+    expect(paymentSection?.querySelectorAll("[data-icon]"))?.toHaveLength(2);
+    for (const icon of paymentSection?.querySelectorAll("[data-icon] svg") ?? []) {
+      expect(icon.getAttribute("aria-hidden")).toBe("true");
+      expect(icon.getAttribute("focusable")).toBe("false");
+    }
+  });
+
+  it("keeps payment information readable and non-transactional without a contact URL", () => {
+    render(<PaymentInformation />);
+
+    const section = screen.getByRole("heading", { name: "Medios de pago" }).closest("section");
+    expect(section?.querySelectorAll("li")).toHaveLength(3);
+    expect(section?.querySelectorAll("a, button, input, select")).toHaveLength(0);
+    expect(screen.queryByRole("link", { name: "Consultar por WhatsApp" })).toBeNull();
+    expect(document.body.textContent).not.toMatch(/checkout|pagar ahora|orden|transacción/i);
   });
 
   it("uses semantic landmarks and a logical heading hierarchy", () => {

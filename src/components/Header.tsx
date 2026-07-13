@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import Link from "next/link";
 
 import { Container } from "./Container";
+import { Icon } from "./Icon";
 
 const navigation = [
   { label: "Inicio", href: "/" },
   { label: "Destacados", href: "/#destacados" },
   { label: "Categorías", href: "/categorias" },
+  { label: "Buscar", href: "/buscar?focus=1", icon: "search" as const },
   { label: "Contacto", href: "/#contacto" },
 ];
 
@@ -47,6 +49,7 @@ export function Header() {
               href={item.href}
               className="inline-flex min-h-11 items-center border-b-2 border-transparent px-1 text-sm font-semibold text-[rgb(var(--inverse-muted)/1)] transition-colors hover:border-[rgb(var(--inverse-foreground)/1)] hover:text-[rgb(var(--inverse-foreground)/1)]"
             >
+              {item.icon ? <Icon name={item.icon} className="mr-2" /> : null}
               {item.label}
             </Link>
           ))}
@@ -60,6 +63,7 @@ export function Header() {
           onClick={() => setOpen((value) => !value)}
           className="mobile-toggle min-h-11 min-w-11 rounded-md border border-[rgb(var(--inverse-border)/1)] bg-transparent px-3 text-sm font-semibold text-[rgb(var(--inverse-foreground)/1)]"
         >
+          <Icon name={open ? "close" : "menu"} className="mr-2" />
           {open ? "Cerrar" : "Menú"}
         </button>
       </Container>
@@ -78,6 +82,7 @@ export function Header() {
                 onClick={() => setOpen(false)}
                 className="flex min-h-11 items-center rounded-md px-3 font-semibold text-[rgb(var(--inverse-muted)/1)] hover:bg-[rgb(var(--inverse-foreground)/0.1)] hover:text-[rgb(var(--inverse-foreground)/1)]"
               >
+                {item.icon ? <Icon name={item.icon} className="mr-2" /> : null}
                 {item.label}
               </Link>
             ))}

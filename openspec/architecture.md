@@ -163,6 +163,8 @@ graph LR
     Docs[design-system-documentation]
     A11y[accessibility]
     Frontend[frontend-architecture]
+    Icons[governed-icon-system]
+    Motion[scroll-entry-motion]
   end
 
   subgraph Features
@@ -181,6 +183,8 @@ graph LR
   A11y --> Tokens
   Frontend --> Theme
   Frontend --> Library
+  Icons --> Library
+  Motion --> Library
 
   Home --> Library
   Home --> Theme
@@ -198,7 +202,7 @@ graph LR
   classDef platform fill:#eef6ff,stroke:#3b82f6,color:#0f172a;
   classDef feature fill:#ecfdf3,stroke:#10b981,color:#0f172a;
 
-  class Tokens,Theme,Library,Docs,A11y,Frontend platform;
+  class Tokens,Theme,Library,Docs,A11y,Frontend,Icons,Motion platform;
   class Home,Nav,CatalogUI,CatalogAPI,Detail,Search feature;
 ```
 
@@ -210,6 +214,18 @@ graph LR
 - If a spec needs shared behavior, the reusable behavior must be extracted into platform rather than duplicated in multiple features.
 
 ## 6. Governance Rules
+
+### Discovery and trust presentation capabilities
+
+Governed Icons and Scroll-entry Motion are reusable Design System Platform
+capabilities. Feature code consumes the closed semantic Icon registry and the
+opt-in visible-by-default motion primitive; it may not import glyph sources or
+create local viewport observers as competing contracts.
+
+Search remains a Product Catalog Feature capability using the canonical public
+Product collection. Payment Information remains static Homepage content and
+introduces no Backend, Product, checkout, order or transaction state. These
+Feature meanings never flow into the Icon or Motion Platform APIs.
 
 ### Shared catalog taxonomy capability
 
