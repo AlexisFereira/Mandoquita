@@ -1,12 +1,16 @@
 # Homepage Visual Foundations
 
-Version: 1.0
+Version: 1.1
 
 Status: Active
 
 Owner: Design System Architect
 
 Applies To: Homepage visual refresh and shared components consumed by the homepage
+
+Canonical companion: `public-catalog-visual-contract.md`. If this audit history
+or migration guidance conflicts with that contract, the public catalog contract
+takes precedence.
 
 ---
 
@@ -134,7 +138,8 @@ The palette remains warm and restrained:
 - terracotta primary brand color;
 - teal accent reserved for secondary emphasis and information;
 - semantic green, amber, and red reserved for status meaning;
-- dark brown inverse surfaces for Header, contact, and other deliberately high-contrast regions.
+- dark brown inverse roles for local media overlays, contact, and other
+  deliberately bounded high-contrast regions; Header remains a light surface.
 
 Products and their imagery remain more visually prominent than decorative color.
 
@@ -148,7 +153,9 @@ The approved light semantic palette applies from first paint through hydration a
 
 No dark palette, theme selector, system-theme listener, or partial dark-mode override belongs to the active contract.
 
-Inverse Header and contact surfaces may remain visually dark. They consume inverse semantic roles governed by the single light-theme system and do not constitute dark mode.
+Header and mobile navigation use the light surface roles. Deliberately bounded
+contact or media-overlay regions may use inverse semantic roles for contrast;
+they do not constitute dark mode.
 
 ---
 
@@ -187,12 +194,12 @@ Homepage layout follows these rules:
 - grid gaps based on the shared 16, 24, and 32 CSS-pixel steps;
 - no viewport width may introduce horizontal overflow.
 
-The V1 default Homepage maximum was 1280 CSS pixels. Homepage Merchandising
-Layout V2 now opts into the additive `Container size="wide"` maximum of 1400 CSS
-pixels; existing Container defaults and unrelated consumers remain unchanged.
-Readable text blocks remain narrower through composition rather than a second
-nested page container. The reusable boundary and 2/3/4/6 grid are canonical in
-`merchandising-layout-contract/`.
+The V1 default Homepage maximum of 1280 CSS pixels is historical. Current public
+Header, Footer, Homepage sections, Category, Subcategory, Search and Product
+Detail use `Container size="wide"`: a centered 1400 CSS-pixel maximum with the
+shared large gutter. Full-bleed media may span the viewport while meaningful
+content stays aligned to this boundary. Readable text blocks remain narrower
+through composition rather than a second nested page container.
 
 ---
 
@@ -252,14 +259,14 @@ The shared duration roles are:
 
 - Fast: 150 milliseconds for color, underline, and focus-adjacent feedback.
 - Standard: 220 milliseconds for opacity and small transforms.
-- Slow: 320 milliseconds for carousel slide transitions.
+- Slow: 320 milliseconds for carousel opacity-fade transitions.
 
 The default easing is a standard ease-out curve. Decorative entrance animation is not required for the homepage.
 
 When `prefers-reduced-motion: reduce` is active:
 
 - carousel autoplay is disabled;
-- carousel track and image-opacity transitions are disabled;
+- carousel and image-opacity transitions are disabled;
 - hover translation and image scaling are disabled;
 - smooth scrolling becomes immediate;
 - content remains available without animation.
@@ -290,19 +297,31 @@ Primitive palette scales may remain as implementation-independent references onl
 
 ## Header
 
-Use inverse surface roles, no floating-card elevation, a restrained divider, and the shared focus contract. The identity may fall back to plain text without a decorative gradient.
+Use the light standard surface, no floating-card elevation, a restrained
+divider, the shared 1400px boundary and the shared focus contract. Display the
+logo at 50px high with automatic width and preserved aspect ratio; identity may
+fall back to plain text.
 
 ## Hero and Carousel
 
-Hero media uses the large radius and no more than small elevation. Carousel overlays and controls consume inverse roles. Only calculated widths and transforms qualify as inline runtime values.
+The promotional Carousel is full bleed while copy and controls align to the
+1400px boundary. It uses fade-only slide changes and responsive heights of
+200/250/300/350/400px at base/640/768/1024/1280. Overlays and controls consume
+inverse roles. Horizontal track transforms are not part of the active contract.
 
 ## ProductCard
 
-Default elevation is none. Image, name, supporting information, and one detail affordance establish hierarchy. Featured state must not change elevation or position.
+Default elevation is none, outer radius is 8px and edge-to-edge media has no
+padding. Name, compact commercial/taxonomy information and one detail affordance
+establish hierarchy; collection cards omit the product description. Featured
+state must not change elevation or position.
 
-## CategoryCard
+## Homepage CategoryLink
 
-Use a distinct media proportion and lower information density than ProductCard. Count is supporting metadata, not a promotional badge.
+Homepage categories are not cards. Use one 100px circular image and a centered
+name, with no description or count, in a single 30px-gap rail. Overflow resolves
+through the `Ver todas` destination. Rich Category cards remain valid outside
+the Homepage rail.
 
 ## Contact
 
@@ -340,10 +359,12 @@ The visual foundation is correctly implemented when:
 - the resolved theme controls the entire page without an independent partial override;
 - Tailwind semantic utilities resolve to CSS variables;
 - homepage components contain no static color, spacing, radius, shadow, or duration literals;
-- only calculated carousel widths and transforms remain inline;
+- only genuinely calculated runtime values remain inline; promotional carousel
+  track transforms are absent;
 - focus-visible treatment is consistent across standard and inverse surfaces;
 - reduced-motion behavior covers autoplay, scrolling, transforms, and opacity transitions;
-- the Homepage and Product Detail pass light-theme visual review across standard and inverse surfaces;
+- the public catalog passes deterministic light-theme visual review across
+  standard surfaces and any bounded inverse overlays;
 - WCAG AA contrast is verified for primary text, muted text, actions, controls, and focus indicators.
 
 ---

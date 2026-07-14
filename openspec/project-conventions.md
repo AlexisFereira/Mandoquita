@@ -1,6 +1,6 @@
 # Project Conventions
 
-Version: 1.0
+Version: 1.1
 
 Status: Active
 
@@ -21,6 +21,24 @@ Its purpose is to ensure that every engineer and AI agent produces code and docu
 These conventions are mandatory.
 
 When a convention conflicts with personal preference, the project convention takes precedence.
+
+## Documentation precedence
+
+Repository documents do not all have the same authority. When guidance
+conflicts, use this order:
+
+1. `project-context.md`, `project-conventions.md` and Platform governance.
+2. Active canonical Platform contracts.
+3. Active canonical Feature amendments.
+4. Active change artifacts.
+5. Completed tasks, release evidence and superseded designs as historical
+   context only.
+
+Public catalog visual work must consume
+`platform/design-system/public-catalog-visual-contract.md`. A future artifact
+must not revive a historical value or pattern without explicitly superseding
+that contract and recording Design System approval, accessibility impact and a
+migration plan.
 
 ---
 

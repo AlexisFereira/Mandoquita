@@ -20,7 +20,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
       as="article"
       padding="none"
       elevation="none"
-      className="h-full overflow-hidden !rounded-[8px]"
+      className="@container h-full overflow-hidden !rounded-[8px]"
     >
       <Link
         href={`/products/${product.slug}`}
@@ -51,8 +51,12 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
 
         <div className="flex h-full flex-col gap-4 p-5">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="neutral">{product.category.name}</Badge>
-            <span className="text-xs text-[rgb(var(--muted)/1)]">
+            <Badge variant="neutral" className="max-w-full min-w-0">
+              <span className="block truncate" title={product.category.name}>
+                {product.category.name}
+              </span>
+            </Badge>
+            <span className="hidden text-xs text-[rgb(var(--muted)/1)] @min-[280px]:inline">
               {product.subcategory.name} · {product.productType.name}
             </span>
           </div>
@@ -62,7 +66,10 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
             </h3>
           </div>
 
-          <div className="mt-auto flex items-center justify-between gap-4 pt-2">
+          <div
+            data-product-card-offer-row="true"
+            className="mt-auto flex flex-col items-start gap-3 pt-2 @min-[280px]:flex-row @min-[280px]:items-center @min-[280px]:justify-between @min-[280px]:gap-4"
+          >
             <ProductOffer product={product} />
             <span className="text-sm font-semibold text-[rgb(var(--foreground)/1)] underline decoration-transparent underline-offset-4 transition group-hover:decoration-current">
               Ver detalles

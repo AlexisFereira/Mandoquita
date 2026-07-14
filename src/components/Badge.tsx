@@ -48,7 +48,7 @@ export function Badge({
           {icon}
         </span>
       ) : null}
-      <span>{children}</span>
+      <span className="min-w-0">{children}</span>
     </span>
   );
 }

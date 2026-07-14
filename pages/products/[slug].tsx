@@ -180,9 +180,9 @@ export default function ProductDetailPage({
 
       <main id="main-content" className="py-8 sm:py-12">
         <Container size="wide" padding="lg">
-          <nav aria-label="Breadcrumb" className="mb-6">
-            <ol className="m-0 flex list-none flex-wrap gap-2 p-0">
-              <li>
+          <nav aria-label="Breadcrumb" className="mb-6 overflow-hidden">
+            <ol className="m-0 flex min-w-0 list-none flex-nowrap items-center gap-2 overflow-hidden whitespace-nowrap p-0">
+              <li className="shrink-0">
                 <Link
                   href="/categorias"
                   className="ds-text-muted inline-flex min-h-11 items-center underline underline-offset-4"
@@ -190,36 +190,44 @@ export default function ProductDetailPage({
                   Categorías
                 </Link>
               </li>
-              <li aria-hidden="true" className="ds-text-muted">
+              <li aria-hidden="true" className="ds-text-muted shrink-0">
                 /
               </li>
-              <li>
+              <li className="min-w-0">
                 <Link
                   href={`/categorias/${item.category.slug}`}
-                  className="ds-text-muted inline-flex min-h-11 items-center underline underline-offset-4"
+                  title={item.category.name}
+                  className="ds-text-muted flex min-h-11 min-w-0 items-center overflow-hidden text-ellipsis whitespace-nowrap underline underline-offset-4"
                 >
                   {item.category.name}
                 </Link>
               </li>
-              <li aria-hidden="true" className="ds-text-muted">
+              <li aria-hidden="true" className="ds-text-muted shrink-0">
                 /
               </li>
-              <li>
+              <li className="min-w-0">
                 <Link
                   href={`/categorias/${item.category.slug}/${item.subcategory.slug}`}
-                  className="ds-text-muted inline-flex min-h-11 items-center underline underline-offset-4"
+                  title={item.subcategory.name}
+                  className="ds-text-muted flex min-h-11 min-w-0 items-center overflow-hidden text-ellipsis whitespace-nowrap underline underline-offset-4"
                 >
                   {item.subcategory.name}
                 </Link>
               </li>
-              <li aria-hidden="true" className="ds-text-muted">
+              <li aria-hidden="true" className="ds-text-muted shrink-0">
                 /
               </li>
-              <li className="ds-text-muted">{item.productType.name}</li>
-              <li aria-hidden="true" className="ds-text-muted">
+              <li className="ds-text-muted min-w-0 overflow-hidden text-ellipsis" title={item.productType.name}>
+                {item.productType.name}
+              </li>
+              <li aria-hidden="true" className="ds-text-muted shrink-0">
                 /
               </li>
-              <li aria-current="page" className="ds-text-muted">
+              <li
+                aria-current="page"
+                title={item.name}
+                className="ds-text-muted min-w-0 overflow-hidden text-ellipsis"
+              >
                 {item.name}
               </li>
             </ol>

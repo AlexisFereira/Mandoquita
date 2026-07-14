@@ -71,6 +71,15 @@ Includes:
 
 These documents are mandatory references.
 
+Public catalog proposals and implementations must also read:
+
+- `platform/design-system/public-catalog-visual-contract.md`
+
+That contract owns the current light theme, 1400px public content boundary,
+responsive component presentation and visual accessibility rules. Completed
+tasks and superseded feature designs are historical evidence, not authority for
+new visual decisions.
+
 ---
 
 ## agents/

@@ -6,9 +6,10 @@ Finalized: 2026-07-12
 
 > **Active structural amendment (2026-07-14):** Homepage Merchandising Layout V2
 > supersedes the V1 section order, separate Hero and 1280px Homepage composition.
-> The active contract is `merchandising-layout-v2.md`. V1 business scope,
-> eligibility, Featured limits, uncapped Categories, Contact and non-transactional
-> boundaries remain authoritative where the amendment does not supersede them.
+> The active contracts are `merchandising-layout-v2.md` and
+> `../../platform/design-system/public-catalog-visual-contract.md`. V1 business
+> scope, eligibility and non-transactional boundaries remain authoritative;
+> historical visual limits and category compositions do not.
 
 ## Summary
 

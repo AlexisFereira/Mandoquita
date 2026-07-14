@@ -4,6 +4,12 @@ Status: Approved
 
 Finalized: 2026-07-12
 
+> **Public catalog amendment (2026-07-14):**
+> `../public-catalog-visual-contract.md` governs surface assignment. Header,
+> mobile navigation and Footer now use light standard surfaces; inverse roles
+> remain available only for bounded contrast regions such as overlays or
+> Contact.
+
 ## Overview
 
 The platform exposes one deterministic light theme. Semantic tokens remain the styling interface, but they resolve to a single palette. Theme selection is no longer an interaction or user preference.
@@ -29,7 +35,9 @@ No navigation changes.
 - `color-scheme` remains `light`.
 - No `.dark` palette is shipped as an active application contract.
 - Components continue consuming semantic roles.
-- Persistent inverse surfaces such as Header and contact remain allowed; they are component surface roles, not dark mode.
+- Header, mobile navigation and Footer use light standard surfaces. Bounded
+  inverse regions such as contact or media overlays remain component roles, not
+  dark mode.
 
 ## Interaction Flow
 

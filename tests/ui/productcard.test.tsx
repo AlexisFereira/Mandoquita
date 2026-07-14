@@ -50,6 +50,16 @@ describe("ProductCard", () => {
     expect(image.className).toContain("w-full");
     expect(image.className).toContain("object-cover");
     expect(image.className).not.toContain("object-contain");
+    expect(card.className).toContain("@container");
+    expect(
+      card.querySelector('[data-product-card-offer-row="true"]')?.className,
+    ).toContain("flex-col");
+    expect(
+      card.querySelector('[data-product-card-offer-row="true"]')?.className,
+    ).toContain("@min-[280px]:flex-row");
+    expect(screen.getByText("Furniture").className).toContain("truncate");
+    expect(screen.getByText("Chairs · Chair").className).toContain("hidden");
+    expect(screen.getByText("Chairs · Chair").className).toContain("@min-[280px]:inline");
   });
 
   it("keeps an unavailable product navigable without exposing commercial values", () => {

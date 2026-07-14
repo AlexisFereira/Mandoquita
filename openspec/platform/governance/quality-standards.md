@@ -1,6 +1,6 @@
 # Quality Standards
 
-Version: 1.0
+Version: 1.1
 
 Status: Active
 
@@ -147,6 +147,13 @@ The Design System must ensure:
 - Clear hierarchy
 - Appropriate spacing
 - Predictable interactions
+
+For public catalog surfaces, visual QA must also verify the canonical contract
+in `../design-system/public-catalog-visual-contract.md`: deterministic light
+presentation, shared 1400px content alignment, responsive/reflow checkpoints,
+reduced motion, keyboard focus/order, media alternatives and
+non-transactional language. Release evidence must name any approved
+supersession rather than silently accepting implementation drift.
 
 Every new component must justify its existence.
 

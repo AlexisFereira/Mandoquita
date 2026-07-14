@@ -1,6 +1,6 @@
 # Specification Principles
 
-Version: 1.0
+Version: 1.1
 
 Status: Active
 
@@ -29,6 +29,12 @@ Specifications define the expected system behavior.
 Implementation must follow specifications.
 
 Specifications must never be changed to match an implementation.
+
+Canonical specifications and contracts are the source of truth; completed
+tasks, release evidence and sections explicitly marked as superseded are not
+normative. Every amendment must identify what it supersedes and link to the new
+canonical source so future artifacts do not merge incompatible generations of
+the design.
 
 ---
 
@@ -374,6 +380,11 @@ Responsible for:
 - Responsive behavior
 
 Must not change business rules.
+
+For the public catalog, every new visual artifact must reference
+`platform/design-system/public-catalog-visual-contract.md`. A deviation requires
+an explicit contract amendment before implementation; copying values from a
+historical change does not constitute approval.
 
 ---
 

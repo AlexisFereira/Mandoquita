@@ -1,6 +1,6 @@
 # Project Context
 
-Version: 1.0
+Version: 1.1
 
 Status: Active
 
@@ -83,8 +83,10 @@ complete a payment.
 Homepage Merchandising Layout V2 uses this active discovery order: full-width
 Banner Slider, all eligible Categories, Featured Products, informational Payment
 Methods Banner, up to six Products from one anonymous deterministic daily
-Category, then Contact and Footer. Non-Banner content opts into a 1400px maximum
-and Category/Product collections use 2/3/4/6 columns at 320/640/1024/1400px.
+Category, then Contact and Footer. Public page content uses the shared centered
+1400px maximum. Homepage Categories use a compact circular one-row rail with a
+`Ver todas` overflow destination; Featured Products use one responsive
+2/3/4/6-item row and continue at `/destacados`.
 Selection uses the Bogotá business date on the server and is neither visitor
 personalization nor client-side randomness.
 
@@ -102,7 +104,13 @@ The public application uses one deterministic light visual theme across every su
 
 Operating-system color preference, stored browser preferences, or client-side controls shall not activate a dark theme or change the approved palette.
 
-High-contrast inverse surfaces may be used for specific regions such as navigation or contact. An inverse surface is a component role and does not constitute a second application theme.
+Header, mobile navigation and Footer use light surfaces. High-contrast inverse
+roles may be used only in deliberately bounded regions such as media overlays or
+contact. An inverse surface is a component role and does not constitute a second
+application theme.
+
+The canonical visual rules for every public catalog surface are defined in
+`platform/design-system/public-catalog-visual-contract.md`.
 
 ---
 

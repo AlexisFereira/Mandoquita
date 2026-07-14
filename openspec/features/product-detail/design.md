@@ -8,6 +8,10 @@ Finalized: 2026-07-12
 > Product Detail gallery integration, WhatsApp inquiry, native Share and
 > copy/manual-link recovery. It adds no Product state, transaction or media model.
 
+> **Active visual contract (2026-07-14):** Product Detail uses the shared
+> centered 1400px public content boundary and the presentation/accessibility
+> rules in `../../platform/design-system/public-catalog-visual-contract.md`.
+
 ## Business Problem
 
 La capacidad de detalle de producto requiere reglas de negocio mas estrictas para evitar interpretaciones divergentes sobre publicacion, disponibilidad comercial, manejo de media faltante y resultados de relacionados.

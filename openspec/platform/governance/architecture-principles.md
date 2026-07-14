@@ -1,6 +1,6 @@
 # Architecture Principles
 
-Version: 1.0
+Version: 1.1
 
 Status: Active
 
@@ -357,6 +357,13 @@ If a feature requires a new reusable component:
 5. Consume it from the feature.
 
 Never duplicate components.
+
+Public catalog architecture must consume
+`../design-system/public-catalog-visual-contract.md` for theme, public content
+boundaries, responsive composition and visual accessibility. Feature artifacts
+may define content and business behavior but must not fork those platform rules.
+Any intended deviation begins as an explicit Design System contract amendment,
+not as an implementation exception.
 
 ---
 

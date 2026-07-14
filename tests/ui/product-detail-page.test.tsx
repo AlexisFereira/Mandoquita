@@ -67,6 +67,11 @@ describe("Product detail commercial availability", () => {
     )).toBe(true);
     expect(screen.getAllByText("Audífonos").length).toBeGreaterThan(0);
     expect(screen.queryByRole("link", { name: "Audífonos" })).toBeNull();
+
+    const breadcrumb = screen.getByRole("navigation", { name: "Breadcrumb" });
+    expect(breadcrumb.className).toContain("overflow-hidden");
+    expect(breadcrumb.querySelector("ol")?.className).toContain("flex-nowrap");
+    expect(breadcrumb.querySelector('[aria-current="page"]')?.className).toContain("text-ellipsis");
   });
 
   it("integrates ordered gallery, meaningful options and variant-associated media", () => {

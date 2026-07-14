@@ -6,6 +6,9 @@ Owner: Homepage / Project Architecture
 
 Last synchronized: 2026-07-14
 
+Visual authority:
+`../../platform/design-system/public-catalog-visual-contract.md`.
+
 ## Supersession
 
 This amendment supersedes the V1 Homepage section order, separate Hero and
@@ -32,18 +35,27 @@ separate Hero is removed and is not a fallback.
 
 - The existing three presentation-owned slides remain the inventory; zero/one/
   multiple states preserve released omission/static/Carousel behavior.
-- Banner media is full width with content-safe semantic copy and stable geometry.
+- Banner media is full width; semantic copy and controls align to the 1400px
+  content boundary. Heights are 200/250/300/350/400px at
+  base/640/768/1024/1280 and slide changes use fade only.
 - Payment contains exactly Binance, Pago móvil and Dólares en efectivo. It has
-  no selector, amount, contact CTA or transaction state.
+  no selector, amount, contact CTA or transaction state. Title and description
+  are HTML overlaid inside the 8px-radius banner, whose heights are
+  160/220/300/350px at base/640/1024/1280.
 
 ## Collections and Layout
 
-- Non-Banner content explicitly uses `Container size="wide"` at a 1400px maximum.
-- Category and Product collections use one `CollectionGrid` list with 2 columns
-  at 320/base, 3 at 640px, 4 at 1024px and 6 at 1400px.
-- Categories remain uncapped. Featured retains maximum eight at ≥1280px and four
-  below. The selected Category contributes a stable maximum six Products at
-  every viewport; narrower grids wrap and never hide membership.
+- Public section content uses `Container size="wide"` at a 1400px maximum.
+- Homepage Categories remain one ordered, non-wrapping rail of 100px circular
+  links with centered names, a 30px gap and no descriptions/counts. Responsive
+  overflow ends in the `/categorias` `Ver todas` destination.
+- Featured uses one responsive row of 2/3/4/6 cards at
+  base/640/1024/1400px and exposes `/destacados` through
+  `Ver más destacados`. Its server result remains canonically ordered.
+- The selected Category contributes a stable maximum six Products at every
+  viewport and uses the shared wrapping `CollectionGrid`.
+- Product Cards use an 8px clipped radius, edge-to-edge unpadded media and omit
+  card descriptions.
 
 ## Daily Category
 
@@ -59,8 +71,10 @@ separate Hero is removed and is not a fallback.
 ## Platform Contract
 
 The reusable `wide` Container and `CollectionGrid` are owned by
-`../../platform/design-system/merchandising-layout-contract/`. They are additive
-and do not migrate existing consumers or own feature collection limits.
+`../../platform/design-system/merchandising-layout-contract/`. The wide boundary
+is canonical across public catalog pages; `CollectionGrid` remains the wrapping
+collection primitive and does not own feature limits. The Homepage Category
+rail is intentionally not a `CollectionGrid`.
 
 ## Evidence
 

@@ -4,11 +4,11 @@ Status: Approved
 
 Finalized: 2026-07-12
 
-> **Active UX amendment (2026-07-14):** `merchandising-layout-v2.md` and
-> `../../changes/homepage-merchandising-layout-v2/ux-blueprint.md` supersede the
-> V1 section order and Hero journey below. The active journey begins with the
-> full-width Banner Slider, then Categories, Featured Products, Payment Methods,
-> daily selected-Category Products and Contact.
+> **Active UX amendment (2026-07-14):** All V1 visual, responsive and component
+> composition guidance below is historical. `merchandising-layout-v2.md` and
+> `../../platform/design-system/public-catalog-visual-contract.md` govern the
+> active journey and presentation: Banner Slider, Categories, Featured Products,
+> Payment Methods, daily selected-Category Products and Contact.
 
 ## Feature Goal
 
@@ -359,10 +359,10 @@ Mitigation:
   purchase or checkout action.
 - Contact is reachable from the header and from the dedicated in-page contact
   section so visitors can access help without completing the discovery journey.
-- The homepage presents a maximum of eight featured products on desktop and four
-  on tablet and mobile, following the approved business rule.
-- Featured products appear before categories because they provide the first
-  concrete product proof after the business offering.
+- The homepage presents one responsive 2/3/4/6-item Featured row and continues
+  the expanded collection through `Ver más destacados`.
+- Categories appear before Featured Products under the active merchandising
+  hierarchy.
 - The visitor-facing label is "Productos destacados". Supporting copy describes
   a selection by Mandoquita and does not imply a discount or promotion.
 - Promotional content remains outside the homepage until explicitly approved in
@@ -371,12 +371,12 @@ Mitigation:
   an orphan heading, divider, or spacing artifact.
 - When no categories are eligible, the section is omitted without leaving an
   orphan heading, divider, or spacing artifact.
-- Every category satisfying the approved eligibility rule remains available on
-  the homepage. The experience does not impose a presentation-only category cap.
+- Every eligible category remains reachable. The compact one-row rail may hide
+  overflow visually only when its final visible item is `Ver todas`.
 - The Homepage uses the approved deterministic light presentation at every
-  viewport. Dark inverse surfaces are component roles within that presentation,
-  not an alternative theme; operating-system preference, stored state, and user
-  controls do not change the experience.
+  viewport. Header/navigation remain light; bounded inverse overlays are
+  component roles, not an alternative theme. Operating-system preference,
+  stored state, and user controls do not change the experience.
 
 ## UX Validation Checklist
 

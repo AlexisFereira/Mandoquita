@@ -1,11 +1,14 @@
 import React from "react";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { Header } from "../../src/components/Header";
 
 describe("Header", () => {
-  afterEach(() => cleanup());
+  afterEach(() => {
+    cleanup();
+    vi.unstubAllGlobals();
+  });
 
   it("renders the approved identity and Spanish navigation", () => {
     render(<Header />);
@@ -64,5 +67,32 @@ describe("Header", () => {
     expect(screen.getByRole("navigation", { name: "Navegación móvil" }).className).toContain(
       "var(--surface)",
     );
+  });
+
+  it("hides while scrolling down on mobile and reveals while scrolling up", () => {
+    vi.stubGlobal("matchMedia", () => ({
+      matches: true,
+      media: "(max-width: 768px)",
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+    Object.defineProperty(window, "scrollY", { configurable: true, writable: true, value: 0 });
+
+    render(<Header />);
+    const header = screen.getByRole("banner");
+
+    window.scrollY = 160;
+    fireEvent.scroll(window);
+    expect(header.getAttribute("data-mobile-scroll-state")).toBe("hidden");
+    expect(header.className).toContain("-translate-y-full");
+
+    window.scrollY = 100;
+    fireEvent.scroll(window);
+    expect(header.getAttribute("data-mobile-scroll-state")).toBe("visible");
+    expect(header.className).toContain("translate-y-0");
   });
 });

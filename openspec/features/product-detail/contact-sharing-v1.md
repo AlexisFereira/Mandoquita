@@ -6,6 +6,9 @@ Owner: Product Detail / Project Architecture
 
 Last synchronized: 2026-07-14
 
+Visual authority:
+`../../platform/design-system/public-catalog-visual-contract.md`.
+
 ## Capability
 
 Product Detail consumes the complete released ordered Image gallery and adds one
@@ -24,8 +27,10 @@ Product mutation, transaction, stored lead, visitor account or analytics event.
 
 - The recipient is the same Business-approved number used by Homepage and is
   provided through server-only `WHATSAPP_BUSINESS_NUMBER` configuration.
-- Exact message: `Hola, vi “{Product name}” en Mandoquita y quisiera recibir
-  información. {canonical Product URL}`.
+- The inquiry region uses heading `¿Te interesa este producto?` and action
+  `Preguntar por este producto`.
+- Exact message: `Hola, estoy interesado en este producto: “{Product name}”.
+  {canonical Product URL}`.
 - Missing/invalid configuration omits the action. External navigation never
   claims message delivery, response, availability or transaction completion.
 - Price, currency, SKU, Variant, visitor, referrer, session and Admin data are

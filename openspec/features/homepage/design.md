@@ -4,11 +4,11 @@ Status: Approved
 
 Finalized: 2026-07-12
 
-> **Active design amendment (2026-07-14):** The section hierarchy, separate Hero,
-> Container width and grid descriptions below are retained as V1 history and are
-> superseded by `merchandising-layout-v2.md` plus the active change UX/UI and
-> Accessibility reviews. Shared light-only, Card, Contact, eligibility and
-> non-transactional rules remain in force.
+> **Active design amendment (2026-07-14):** All visual, component, responsive,
+> spacing, theme and section-layout descriptions below are retained as V1
+> history. They are superseded by `merchandising-layout-v2.md` and
+> `../../platform/design-system/public-catalog-visual-contract.md`. Business
+> eligibility, non-transactional scope and content meaning remain in force.
 
 ## Overview
 
@@ -19,8 +19,8 @@ The interface direction is modern, premium, elegant, professional, minimal, trus
 The homepage is not an e-commerce storefront. It must not include or imply authentication, account creation, cart, checkout, transactional payment, wishlist, product comparison, or order management. Static accepted-payment information may be shown only under the approved non-transactional contract.
 
 The Homepage uses the approved deterministic light presentation at every
-viewport. Dark inverse surfaces may be used for roles such as Header or Contact,
-but they remain parts of the light presentation and do not represent an
+viewport. Header, mobile navigation and Footer remain light. Bounded inverse
+roles may support contrast over media or inside Contact, but do not represent an
 alternative theme. Operating-system preference, stored theme state, and user
 controls must not change the Homepage presentation.
 

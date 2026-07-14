@@ -6,17 +6,23 @@ Owner: Design System Architect
 
 Date: 2026-07-13
 
+Current public-catalog usage is governed by
+`../public-catalog-visual-contract.md`. This document remains authoritative for
+the reusable `Container` and `CollectionGrid` primitives; older feature
+composition examples do not override the current visual contract.
+
 ## Container extension
 
 Add `wide: 1400` to the shared container layout token and `wide` to
 `ContainerSize`. `Container size="wide"` resolves to a centered maximum width of
 1400 CSS pixels and retains the component's existing padding and centering API.
 
-Compatibility is mandatory:
+Compatibility is mandatory at component API level:
 
 - the default remains `size="lg"`;
 - `sm`, `md`, `lg` and `xl` retain their current values;
-- no current consumer is migrated implicitly; and
+- public catalog consumers migrate explicitly under the current canonical
+  visual contract; unrelated consumers are not migrated implicitly; and
 - the existing global/Tailwind `xl` or `2xl` breakpoint names are not redefined.
 
 `wide` is a content boundary, not a viewport breakpoint. The collection contract
@@ -73,9 +79,11 @@ and may be aligned to the `wide` content boundary by an internal wrapper.
 - One valid slide is static and renders no controls.
 - Multiple valid slides retain the released six-second interval, pause on hover
   and focus, manual controls and reduced-motion behavior.
-- Use the existing 16:9 Banner source ratio and reserve the released responsive
-  media frame before loading. `object-cover` crop is allowed only for decorative
-  imagery with focal-safe margins.
+- Reserve responsive heights of 200/250/300/350/400px at
+  base/640/768/1024/1280 before loading. `object-cover` crop is allowed only for
+  decorative imagery with focal-safe margins.
+- Multiple slides transition by opacity fade only; horizontal track movement is
+  not allowed.
 - Titles, descriptions, logos containing required meaning and actions must not
   be baked into pixels or placed in crop-risk zones.
 - Overlay contrast uses inverse semantic roles and the existing gradient; text
@@ -89,8 +97,8 @@ by Platform.
 
 ## Theme and accessibility
 
-- The contracts consume only the deterministic light theme and semantic inverse
-  roles already released.
+- The contracts consume only the deterministic light theme. Header/navigation
+  stay light; semantic inverse roles are limited to bounded contrast overlays.
 - Focus order follows DOM order; responsive changes never move focus.
 - At 320 CSS pixels and 200% zoom, Cards, Banner content and controls reflow
   without page-level horizontal overflow.

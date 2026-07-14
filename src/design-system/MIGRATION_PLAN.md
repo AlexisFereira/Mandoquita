@@ -1,5 +1,10 @@
 # Design System Migration Plan
 
+> Historical migration sequence. Current public-catalog rules are governed by
+> `openspec/platform/design-system/public-catalog-visual-contract.md`; examples
+> below must not be used to restore superseded Header, Carousel, Category or
+> ProductCard presentation.
+
 ## Goal
 
 Move existing consumers to one semantic token and theme contract without breaking the homepage, Product Detail, or shared component states.

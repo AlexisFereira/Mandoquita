@@ -6,11 +6,11 @@ Owner: React Frontend Architect
 
 Last Reviewed: 2026-07-12
 
-> **V2 synchronization (2026-07-14):** This file remains V1 release history.
-> Homepage Merchandising Layout V2 is implemented and its active Backend/
-> Frontend evidence lives under
-> `../../changes/homepage-merchandising-layout-v2/`. HML QA and Release gates are
-> still open; this V1 completion status does not close them.
+> **Current synchronization (2026-07-14):** This file is V1 release history and
+> contains no active blocker or visual authority. Current presentation is
+> governed by `merchandising-layout-v2.md` and
+> `../../platform/design-system/public-catalog-visual-contract.md`. HML QA and
+> Release are complete.
 
 ## Resolved Decisions
 
@@ -20,28 +20,21 @@ work:
 - Primary contact: WhatsApp using the approved number and message.
 - Featured eligibility: active products explicitly marked `featured`.
 - Featured ordering: `featuredOrder ASC`, then `createdAt DESC`.
-- Featured density: maximum eight on desktop and four on tablet/mobile.
+- Featured density (V1 historical): maximum eight on desktop and four on
+  tablet/mobile; superseded by the current responsive row and `/destacados`.
 - Category exploration: dedicated `/categorias/[slug]` route.
 - Empty featured and category collections: omit the complete section.
 
 ## Current Frontend Resolution
 
-The homepage payload may contain up to eight eligible featured products. React
-selects the visible subset before rendering ProductCard nodes:
+The canonical ordered Featured result feeds one responsive row: 2 items below
+640px, 3 from 640px, 4 from 1024px and 6 from 1400px. The complete expanded
+destination is `/destacados`; no hidden duplicate card collection is created.
 
-- viewport below 1280 CSS pixels: maximum four;
-- viewport at or above 1280 CSS pixels: maximum eight.
-
-The server snapshot renders the compact four-item subset. Wider clients enhance
-to the eight-item composition after media-query evaluation. Additional products
-are not inserted as hidden duplicate DOM content, so keyboard and assistive
-technology traversal only reaches visible cards.
-
-The backend now returns every category satisfying the approved eligibility
-contract (`active`, `visible`, and containing an active product). React renders
-the complete category collection without applying a presentation cap. Automated
-homepage coverage verifies a collection larger than six remains fully
-discoverable through dedicated Category Page links.
+The backend returns every category satisfying the approved eligibility contract
+(`active`, `visible`, and containing an active product). Homepage presents the
+ordered circular-link rail and guarantees access to overflow through
+`/categorias` as its final `Ver todas` destination.
 
 Published Featured Products without a current commercial offer remain in the
 same discovery and detail paths. Shared ProductCard and Product Detail

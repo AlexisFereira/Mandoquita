@@ -2,6 +2,9 @@
 
 Source of truth: `src/design-system/tokens.ts`.
 
+Public catalog composition and component usage are governed by
+`openspec/platform/design-system/public-catalog-visual-contract.md`.
+
 The approved runtime contains one light semantic palette. Component styling must use semantic CSS variables. Do not copy hexadecimal values into components or introduce alternative theme palettes.
 
 ## Semantic surfaces
@@ -16,7 +19,7 @@ The approved runtime contains one light semantic palette. Component styling must
 | Primary action | `#A8583D` | `--primary` | Accessible brand action |
 | Primary hover | `#874632` | `--primary-hover` | Primary action hover |
 | Focus | `#0F766E` | `--focus` | Universal focus cue |
-| Inverse surface | `#18120F` | `--inverse-surface` | Header, contact, and overlays |
+| Inverse surface | `#18120F` | `--inverse-surface` | Bounded contact and media overlays; never the public Header |
 | Inverse foreground | `#FFFFFF` | `--inverse-foreground` | Content on inverse surfaces |
 
 White text on primary action `#A8583D` has a contrast ratio of 5.09:1 and is the approved normal-text action pair.
@@ -102,7 +105,7 @@ Caption uses the body family at `0.75rem`, line height `1.4`, weight 500.
 | Token | Value | Use |
 | --- | --- | --- |
 | `radii.sm` | `10px` | Compact controls |
-| `radii.md` | `16px` | Standard cards |
+| `radii.md` | `16px` | Standard cards; ProductCard uses its governed 8px component radius |
 | `radii.lg` | `24px` | Hero media and large surfaces |
 | `radii.xl` | `32px` | Exceptional high-emphasis surfaces |
 
@@ -123,6 +126,7 @@ Full radius is reserved for circular controls and intentional pills.
 | Containers | 640 | 768 | 1120 | 1280 | 1400 |
 | Breakpoints | 640 | 768 | 1024 | 1280 | — |
 
-Values are CSS pixels. `wide` is an opt-in content boundary exposed as
+Values are CSS pixels. `wide` is exposed as
 `DESIGN_TOKENS.layout.containers.wide` and `--container-wide`; it is not a
-viewport breakpoint.
+viewport breakpoint. It is the canonical boundary for public catalog page
+content while remaining an explicit component size for unrelated consumers.

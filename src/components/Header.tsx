@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 import { Container } from "./Container";
@@ -15,9 +15,55 @@ const navigation = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const [logoFailed, setLogoFailed] = useState(false);
+  const [hiddenOnMobileScroll, setHiddenOnMobileScroll] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+
+    const mobileViewport = window.matchMedia("(max-width: 768px)");
+    let previousScrollY = window.scrollY;
+
+    function revealHeader() {
+      setHiddenOnMobileScroll(false);
+      previousScrollY = window.scrollY;
+    }
+
+    function handleViewportChange() {
+      if (!mobileViewport.matches) revealHeader();
+    }
+
+    function handleScroll() {
+      const currentScrollY = window.scrollY;
+      const delta = currentScrollY - previousScrollY;
+
+      if (!mobileViewport.matches || open || currentScrollY <= 8) {
+        setHiddenOnMobileScroll(false);
+      } else if (delta > 6 && currentScrollY > 72) {
+        setHiddenOnMobileScroll(true);
+      } else if (delta < -6) {
+        setHiddenOnMobileScroll(false);
+      }
+
+      previousScrollY = currentScrollY;
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    mobileViewport.addEventListener?.("change", handleViewportChange);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      mobileViewport.removeEventListener?.("change", handleViewportChange);
+    };
+  }, [open]);
 
   return (
-    <header className="site-header sticky z-[1000] w-full border-b border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] text-[rgb(var(--foreground)/1)] shadow-sm">
+    <header
+      ref={headerRef}
+      onFocusCapture={() => setHiddenOnMobileScroll(false)}
+      data-mobile-scroll-state={hiddenOnMobileScroll ? "hidden" : "visible"}
+      className={`site-header sticky z-[1000] w-full border-b border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] text-[rgb(var(--foreground)/1)] shadow-sm transition-transform duration-300 ease-out motion-reduce:transition-none ${hiddenOnMobileScroll ? "-translate-y-full" : "translate-y-0"}`}
+    >
       <Container
         size="wide"
         padding="lg"
@@ -63,11 +109,13 @@ export function Header() {
           aria-label={open ? "Cerrar navegación" : "Abrir navegación"}
           aria-expanded={open}
           aria-controls="mobile-navigation"
-          onClick={() => setOpen((value) => !value)}
-          className="mobile-toggle min-h-11 min-w-11 rounded-md border border-[rgb(var(--border)/1)] bg-transparent px-3 text-sm font-semibold text-[rgb(var(--foreground)/1)]"
+          onClick={() => {
+            setHiddenOnMobileScroll(false);
+            setOpen((value) => !value);
+          }}
+          className="mobile-toggle inline-flex h-11 w-11 items-center justify-center rounded-md border border-[rgb(var(--border)/1)] bg-transparent text-[rgb(var(--foreground)/1)]"
         >
-          <Icon name={open ? "close" : "menu"} className="mr-2" />
-          {open ? "Cerrar" : "Menú"}
+          <Icon name={open ? "close" : "menu"} />
         </button>
       </Container>
 
