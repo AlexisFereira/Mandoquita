@@ -13,6 +13,8 @@
     "test:integration:product-seed": "tsx scripts/validate-product-seed.ts",
     "test:integration:search": "tsx scripts/validate-public-search.ts",
     "test:integration:product-admin": "tsx scripts/validate-product-admin.ts",
+    "test:integration:catalog-media": "tsx scripts/validate-catalog-media-admin.ts",
+    "catalog-media:cleanup": "tsx scripts/cleanup-catalog-media.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init_catalog",
     "prisma:seed": "prisma db seed",
@@ -29,6 +31,7 @@
     "postcss": "^8.5.16",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "sharp": "^0.35.3",
     "tailwindcss": "^4.3.2",
     "zod": "^3.23.8"
   },

@@ -22,16 +22,19 @@ Optional configuration:
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `AWS_S3_IMAGE_PREFIX` | `images/products` | Object-key namespace. |
+| `AWS_S3_CATEGORY_IMAGE_PREFIX` | `images/categories` | Category media object-key namespace. |
 | `AWS_S3_IMAGE_MAX_BYTES` | `5242880` | Maximum bytes per file; hard ceiling is 20 MiB. |
 | `AWS_S3_KMS_KEY_ID` | unset | KMS key ID/ARN/alias; when absent S3 AES-256 is used. |
 | `AWS_ACCESS_KEY_ID` | credential chain | Static credential only when the runtime has no IAM Role. |
 | `AWS_SECRET_ACCESS_KEY` | credential chain | Secret paired with the static access key. |
 | `AWS_SESSION_TOKEN` | unset | Required only for temporary static credentials. |
 
-Production should use an IAM Role rather than persisted access keys. The role
-needs `s3:PutObject` only for
-`arn:aws:s3:::<AWS_S3_BUCKET>/<AWS_S3_IMAGE_PREFIX>/*`. When KMS is enabled it
-also needs the key permissions required to encrypt objects, normally
+Production should use an IAM Role rather than persisted access keys. The media
+administration and cleanup runtime needs scoped `s3:PutObject` and
+`s3:DeleteObject` for the Product and Category prefixes; it does not require
+bucket listing. The separately deployed upload-only operator may retain only
+`s3:PutObject`. When KMS is enabled the applicable runtime also needs the key
+permissions required to encrypt objects, normally
 `kms:Encrypt` and `kms:GenerateDataKey` under the key policy.
 
 ## Request
@@ -72,3 +75,10 @@ curl --request POST http://localhost:3000/api/internal/images \
 The returned URL is not attached to a Product automatically. Product association
 must additionally supply approved alternative text, gallery position, Primary
 status, and Product ownership through a separate API contract.
+
+Catalog Media Admin uses the same server-side storage configuration behind its
+session-authorized two-phase contract. It decodes/re-encodes media to remove
+metadata and normalize orientation, records dimensions/checksum, uses separate
+immutable Product/Category prefixes and persists cleanup work. Its browser
+responses never expose S3 object keys or internal operator authorization. See
+`../../../changes/catalog-media-admin-v1/backend-contract.md`.

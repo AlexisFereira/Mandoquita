@@ -46,20 +46,26 @@ model TaxonomyVersion {
 }
 
 model Category {
-  id            String          @id
-  slug          String          @unique
-  name          String
-  description   String?
-  imagePath     String?
-  imageAltText  String?
-  sortOrder     Int
-  active        Boolean         @default(true)
-  visible       Boolean         @default(true)
-  versionId     String
-  version       TaxonomyVersion @relation(fields: [versionId], references: [id])
-  subcategories Subcategory[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id               String          @id
+  slug             String          @unique
+  name             String
+  description      String?
+  imagePath        String?
+  imageAltText     String?
+  imageObjectKey   String?
+  imageContentType String?
+  imageWidth       Int?
+  imageHeight      Int?
+  imageSize        Int?
+  imageChecksum    String?
+  sortOrder        Int
+  active           Boolean         @default(true)
+  visible          Boolean         @default(true)
+  versionId        String
+  version          TaxonomyVersion @relation(fields: [versionId], references: [id])
+  subcategories    Subcategory[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
 
   @@unique([versionId, sortOrder])
   @@index([versionId, active, visible, sortOrder])
@@ -171,16 +177,22 @@ model VariantAttribute {
 }
 
 model ProductImage {
-  id        String           @id @default(cuid())
-  productId Int
-  product   Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
-  url       String
-  altText   String
-  position  Int
-  isPrimary Boolean          @default(false)
-  variants  ProductVariant[]
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  id          String           @id @default(cuid())
+  productId   Int
+  product     Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url         String
+  objectKey   String?
+  altText     String
+  contentType String?
+  width       Int?
+  height      Int?
+  size        Int?
+  checksum    String?
+  position    Int
+  isPrimary   Boolean          @default(false)
+  variants    ProductVariant[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   @@unique([id, productId])
   @@unique([productId, position])
@@ -198,16 +210,19 @@ model ProductTag {
 }
 
 model ProductAdminSession {
-  id                    String    @id @default(cuid())
-  tokenHash             String    @unique
+  id                    String                    @id @default(cuid())
+  tokenHash             String                    @unique
   csrfHash              String
   credentialFingerprint String
-  createdAt             DateTime  @default(now())
-  lastActivityAt        DateTime  @default(now())
+  createdAt             DateTime                  @default(now())
+  lastActivityAt        DateTime                  @default(now())
   idleExpiresAt         DateTime
   absoluteExpiresAt     DateTime
   revokedAt             DateTime?
-  updatedAt             DateTime  @updatedAt
+  updatedAt             DateTime                  @updatedAt
+  mediaUploads          CatalogMediaUpload[]
+  mediaIdempotency      CatalogMediaIdempotency[]
+  mediaRateLimit        CatalogMediaRateLimit?
 
   @@index([idleExpiresAt, absoluteExpiresAt, revokedAt], map: "ProductAdminSession_expiry_idx")
   @@index([createdAt], map: "ProductAdminSession_cleanup_idx")
@@ -227,18 +242,92 @@ model ProductAdminThrottle {
 }
 
 model ProductAdminAuditEvent {
-  id                BigInt   @id @default(autoincrement())
-  occurredAt        DateTime @default(now())
+  id                BigInt    @id @default(autoincrement())
+  occurredAt        DateTime  @default(now())
   requestId         String
   event             String
   outcome           String
   reason            String?
   sessionIdHash     String?
   productId         Int?
+  categoryId        String?
+  mediaId           String?
+  mediaUploadHash   String?
+  detectedType      String?
+  encodedSize       Int?
+  checksumPrefix    String?
   expectedUpdatedAt DateTime?
   currentUpdatedAt  DateTime?
   changedFields     Json?
 
   @@index([occurredAt], map: "ProductAdminAuditEvent_retention_idx")
   @@index([productId, occurredAt], map: "ProductAdminAuditEvent_product_idx")
+  @@index([categoryId, occurredAt], map: "ProductAdminAuditEvent_category_idx")
+}
+
+model CatalogMediaUpload {
+  id                 String              @id @default(cuid())
+  sessionId          String
+  session            ProductAdminSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  kind               String
+  idempotencyKeyHash String
+  requestHash        String
+  objectKey          String              @unique
+  deliveryUrl        String
+  contentType        String
+  size               Int
+  width              Int
+  height             Int
+  checksumSha256     String
+  originalNameHash   String
+  status             String              @default("READY")
+  expiresAt          DateTime
+  consumedAt         DateTime?
+  cancelledAt        DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@unique([sessionId, idempotencyKeyHash], map: "CatalogMediaUpload_session_idempotency_key")
+  @@index([status, expiresAt], map: "CatalogMediaUpload_expiry_idx")
+}
+
+model CatalogMediaIdempotency {
+  id          String              @id @default(cuid())
+  sessionId   String
+  session     ProductAdminSession @relation(fields: [sessionId], references: [id], onDelete: Restrict)
+  keyHash     String
+  requestHash String
+  operation   String
+  response    Json
+  expiresAt   DateTime
+  createdAt   DateTime            @default(now())
+
+  @@unique([sessionId, keyHash], map: "CatalogMediaIdempotency_session_key")
+  @@index([expiresAt], map: "CatalogMediaIdempotency_expiry_idx")
+}
+
+model CatalogMediaObjectCleanup {
+  id              String    @id @default(cuid())
+  objectKey       String    @unique
+  deliveryUrl     String
+  reason          String
+  status          String    @default("PENDING")
+  restoreMetadata Json?
+  deleteAfter     DateTime
+  attempts        Int       @default(0)
+  lastErrorCode   String?
+  deletedAt       DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([status, deleteAfter], map: "CatalogMediaObjectCleanup_due_idx")
+}
+
+model CatalogMediaRateLimit {
+  sessionId       String              @id
+  session         ProductAdminSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  windowStartedAt DateTime
+  uploadCount     Int                 @default(0)
+  mutationCount   Int                 @default(0)
+  updatedAt       DateTime            @updatedAt
 }

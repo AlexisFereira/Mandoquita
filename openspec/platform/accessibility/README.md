@@ -36,3 +36,12 @@ Use this area for reusable accessibility rules that apply across all features.
   `../../changes/product-admin-v1/accessibility-design-review.md`; implementation
   and joint QA validation are approved in
   `../../changes/product-admin-v1/qa-review.md`.
+- Catalog Media Admin V1: native file input, meaningful preview and alternative-
+  text association, ordered-list keyboard movement, Primary radio semantics,
+  upload progress/status, destructive confirmation, focus recovery, 44px targets,
+  320px/200% reflow, reduced motion and light-only design contracts are approved
+  at design level in
+  `../../changes/catalog-media-admin-v1/accessibility-design-review.md`; code and
+  automated implementation review passes in
+  `../../changes/catalog-media-admin-v1/accessibility-implementation-review.md`,
+  while independent browser/screen-reader validation remains governed by CMA-038.

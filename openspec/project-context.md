@@ -116,9 +116,12 @@ an expansion into accounts, cart, checkout, Online Payments or orders.
 Production administration requires a temporary server-side session and a
 managed perimeter such as an approved access proxy, VPN/private network or
 operator-network allowlist. The six-digit credential is not sufficient for
-unrestricted Internet exposure. Images, Variants, taxonomy structure, Product
-creation/deletion and transactional or operational data remain outside Product
-Admin V1.
+unrestricted Internet exposure. Product Admin scalar editing remains separate
+from Catalog Media Admin V1, which reuses the isolated session and managed
+perimeter so a maintainer can manage media for existing Products and Categories
+through temporary validated uploads without receiving storage credentials.
+Variants, taxonomy structure, Product/Category creation or deletion, and
+transactional or operational data remain outside both capabilities.
 
 ---
 

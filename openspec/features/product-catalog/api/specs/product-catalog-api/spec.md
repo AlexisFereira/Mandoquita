@@ -203,3 +203,49 @@ implicitly create or change a Product Image association.
 
 - **WHEN** required S3 configuration is absent or AWS rejects the operation
 - **THEN** the API returns a safe 503 or 502 response without exposing credentials
+
+### Requirement: Governed Catalog media administration
+
+The system SHALL expose Product Admin session-authorized temporary upload,
+Product Image and Category Image routes defined in
+`../../../../../changes/catalog-media-admin-v1/backend-contract.md`. State changes
+SHALL require managed-edge proof in production, exact Origin, session CSRF,
+optimistic aggregate baselines and request-shape-bound idempotency.
+
+#### Scenario: Temporary upload is not catalog media
+
+- **WHEN** one authorized valid raster is uploaded
+- **THEN** it is decoded, metadata-stripped and stored under a unique immutable
+  Product or Category namespace key for at most 24 hours
+- **AND** no public Product or Category representation changes until association
+
+#### Scenario: Stable Product Image replacement
+
+- **WHEN** a valid replacement upload and current Product/Image baselines are
+  confirmed for an existing Product Image
+- **THEN** its stored media changes while Product Image ID, Product ownership,
+  position, Primary state and valid Variant references remain unchanged
+
+#### Scenario: Atomic order and Primary
+
+- **WHEN** the complete current Image identity list and explicit Primary outcome
+  are submitted with the current Product baseline
+- **THEN** positions and at-most-one Primary are committed atomically
+- **AND** stale, incomplete or duplicate lists return 409 without partial order
+
+#### Scenario: Referenced Product Image removal
+
+- **WHEN** any Variant currently references the requested Product Image
+- **THEN** removal returns 409 and preserves Image and Variant state
+
+#### Scenario: Category media isolation
+
+- **WHEN** Category media is added, described, replaced or removed
+- **THEN** Category identity, taxonomy version, order, Active, Visible and
+  discovery eligibility remain unchanged
+
+#### Scenario: Governed object disposition
+
+- **WHEN** an upload expires/is cancelled or confirmed media is replaced/removed
+- **THEN** persisted cleanup state schedules immediate orphan deletion or
+  seven-day superseded-object retention and retries storage failures idempotently

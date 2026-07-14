@@ -17,6 +17,7 @@ import type {
   AdminSession,
 } from "./types";
 import { changedEditorValues, productToEditorValues, validateAdminProduct } from "./validation";
+import { CategoryMediaAdmin, ProductMediaAdmin } from "./MediaAdmin";
 
 const emptyFilters: AdminFilters = {
   q: "", published: "", commerciallyAvailable: "", featured: "", active: "", category: "", productType: "",
@@ -112,7 +113,7 @@ function SelectField({ id, label, value, onChange, children, helper, error }: {
   );
 }
 
-function ProductList({ onEdit, onExpired }: { onEdit: (id: number) => void; onExpired: () => void }) {
+function ProductList({ onEdit, onMedia, onExpired }: { onEdit: (id: number) => void; onMedia: (id: number) => void; onExpired: () => void }) {
   const [draft, setDraft] = useState(emptyFilters);
   const [filters, setFilters] = useState(emptyFilters);
   const [page, setPage] = useState(1);
@@ -206,7 +207,7 @@ function ProductList({ onEdit, onExpired }: { onEdit: (id: number) => void; onEx
               <div className="flex flex-wrap gap-2"><Badge variant={product.active ? "success" : "neutral"}>{product.active ? "Activo" : "Inactivo"}</Badge><Badge variant={product.published ? "success" : "warning"}>{product.published ? "Publicado" : "No publicado"}</Badge><Badge variant={product.commerciallyAvailable ? "success" : "neutral"}>{product.commerciallyAvailable ? "Disponible comercialmente" : "No disponible comercialmente"}</Badge><Badge variant={product.featured ? "primary" : "neutral"}>{product.featured ? "Destacado" : "No destacado"}</Badge></div>
               <p className="text-xs text-[rgb(var(--muted)/1)]">Actualizado {new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" }).format(new Date(product.updatedAt))} · {product.currency} {product.price}</p>
             </div>
-            <Button variant="secondary" onClick={() => onEdit(product.id)} aria-label={`Editar ${product.name}`}>Editar</Button>
+            <div className="flex flex-wrap gap-2"><Button variant="secondary" onClick={() => onEdit(product.id)} aria-label={`Editar ${product.name}`}>Editar</Button><Button variant="secondary" onClick={() => onMedia(product.id)} aria-label={`Administrar imágenes de ${product.name}`}>Administrar imágenes</Button></div>
           </Card>
         ))}</ul> : null}
         {response && response.metadata.totalPages > 1 && !loading && !error ? <nav aria-label="Paginación de productos" className="flex flex-wrap items-center gap-3"><Button variant="secondary" disabled={page <= 1} onClick={() => setPage((current) => current - 1)}>Anterior</Button><span aria-current="page" className="text-sm font-semibold">Página {response.metadata.page} de {response.metadata.totalPages}</span><Button variant="secondary" disabled={page >= response.metadata.totalPages} onClick={() => setPage((current) => current + 1)}>Siguiente</Button></nav> : null}
@@ -223,7 +224,7 @@ function CheckField({ id, label, helper, checked, onChange, error }: { id: strin
   return <div className="grid min-h-11 grid-cols-[auto_1fr] items-start gap-x-3 rounded-md p-2"><input id={id} type="checkbox" className="mt-1 h-5 w-5 shrink-0" checked={checked} aria-invalid={Boolean(error) || undefined} aria-describedby={`${id}-helper${error ? ` ${id}-error` : ""}`} onChange={(event) => onChange(event.target.checked)} /><div><label htmlFor={id} className="block cursor-pointer font-medium">{label}</label><p id={`${id}-helper`} className="text-sm text-[rgb(var(--muted)/1)]">{helper}</p>{error ? <p id={`${id}-error`} className="mt-1 text-sm text-[rgb(var(--danger)/1)]">{error}</p> : null}</div></div>;
 }
 
-function Editor({ id, session, onBack, onExpired }: { id: number; session: AdminSession; onBack: () => void; onExpired: () => void }) {
+function Editor({ id, session, onBack, onMedia, onExpired }: { id: number; session: AdminSession; onBack: () => void; onMedia: () => void; onExpired: () => void }) {
   const [product, setProduct] = useState<AdminProduct | null>(null);
   const [types, setTypes] = useState<AdminProductType[]>([]);
   const [baseline, setBaseline] = useState<AdminEditorValues | null>(null);
@@ -281,7 +282,7 @@ function Editor({ id, session, onBack, onExpired }: { id: number; session: Admin
 
   return <div className="mx-auto max-w-[960px] space-y-8">
     <Button variant="ghost" onClick={guardedBack}>← Volver a productos</Button>
-    <div className="space-y-3"><span className="ds-eyebrow">Editar producto</span><h1 className="ds-heading ds-heading-lg [overflow-wrap:anywhere]">{product.name}</h1><p className="text-sm text-[rgb(var(--muted)/1)]">ID {product.id} · /{product.slug} · Actualizado {new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" }).format(new Date(product.updatedAt))} · {product.hasVariant ? "Con variante" : "Sin variantes"}</p></div>
+    <div className="space-y-3"><span className="ds-eyebrow">Editar producto</span><h1 className="ds-heading ds-heading-lg [overflow-wrap:anywhere]">{product.name}</h1><p className="text-sm text-[rgb(var(--muted)/1)]">ID {product.id} · /{product.slug} · Actualizado {new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" }).format(new Date(product.updatedAt))} · {product.hasVariant ? "Con variante" : "Sin variantes"}</p><Button variant="secondary" onClick={() => { if (!dirty || window.confirm("Tienes cambios sin guardar. ¿Quieres descartarlos?")) onMedia(); }}>Administrar imágenes</Button></div>
     {status ? <div ref={summaryRef} tabIndex={-1} role={Object.keys(errors).length || conflict ? "alert" : "status"} className={`space-y-3 rounded-md border p-4 ${Object.keys(errors).length || conflict ? "border-[rgb(var(--danger)/0.35)]" : "border-[rgb(var(--success)/0.35)]"}`}><p>{status}</p>{Object.keys(errors).length ? <ul className="list-disc pl-5">{Object.entries(errors).map(([key, message]) => <li key={key}><a className="underline" href={`#admin-${key}`}>{message}</a></li>)}</ul> : null}{conflict ? <Button variant="secondary" onClick={() => void load()}>Recargar información actual</Button> : null}</div> : null}
     <form onSubmit={save} noValidate className="space-y-6">
       <Card as="section" className="space-y-5"><h2 className="ds-heading ds-heading-md">Identidad</h2><div className="grid gap-5 md:grid-cols-2">{field("name", "Nombre", 200)}{field("slug", "Slug", 160, "Letras minúsculas, números y guiones simples.")}</div></Card>
@@ -301,13 +302,15 @@ export function AdminApp() {
   const [session, setSession] = useState<AdminSession | null>(null);
   const [gateMessage, setGateMessage] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [mediaProductId, setMediaProductId] = useState<number | null>(null);
+  const [workspace, setWorkspace] = useState<"products" | "categories">("products");
   const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => { void adminApi.session().then(setSession).catch((error) => { if (error instanceof AdminApiError && error.status === 503) setGateMessage(errorMessage(error, "access")); }).finally(() => setChecking(false)); }, []);
-  function expired() { setSession(null); setEditingId(null); setGateMessage("Tu sesión terminó. Ingresa el código para continuar."); }
-  async function logout() { if (!session || loggingOut) return; setLoggingOut(true); try { await adminApi.logout(session.csrfToken); } finally { setSession(null); setEditingId(null); setGateMessage("La sesión se cerró correctamente."); setLoggingOut(false); } }
+  function expired() { setSession(null); setEditingId(null); setMediaProductId(null); setGateMessage("Tu sesión terminó. Ingresa el código para continuar."); }
+  async function logout() { if (!session || loggingOut) return; setLoggingOut(true); try { await adminApi.logout(session.csrfToken); } finally { setSession(null); setEditingId(null); setMediaProductId(null); setGateMessage("La sesión se cerró correctamente."); setLoggingOut(false); } }
 
   if (checking) return <main id="admin-main" className="flex min-h-screen items-center justify-center"><PoliteStatus visuallyHidden={false}>Verificando acceso…</PoliteStatus></main>;
   if (!session) return <AccessGate message={gateMessage} onAccess={(next) => { setSession(next); setGateMessage(""); }} />;
-  return <><a href="#admin-main" className="skip-link">Ir al contenido principal</a><header className="border-b border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)]"><Container size="xl" padding="lg" className="flex min-h-20 items-center justify-between gap-4"><p className="font-semibold">Mandoquita · Administración</p><Button variant="ghost" onClick={() => void logout()} disabled={loggingOut}>{loggingOut ? "Saliendo…" : "Salir"}</Button></Container></header><main id="admin-main" className="py-8 sm:py-12"><Container size="xl" padding="lg"><div hidden={editingId !== null}><ProductList onEdit={setEditingId} onExpired={expired} /></div>{editingId !== null ? <Editor id={editingId} session={session} onBack={() => setEditingId(null)} onExpired={expired} /> : null}</Container></main></>;
+  return <><a href="#admin-main" className="skip-link">Ir al contenido principal</a><header className="border-b border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)]"><Container size="xl" padding="lg" className="flex min-h-20 flex-wrap items-center justify-between gap-4"><p className="font-semibold">Mandoquita · Administración</p><nav aria-label="Administración" className="flex flex-wrap items-center gap-2"><Button variant={workspace === "products" ? "primary" : "ghost"} aria-current={workspace === "products" ? "page" : undefined} onClick={() => { setWorkspace("products"); setEditingId(null); setMediaProductId(null); }}>Productos</Button><Button variant={workspace === "categories" ? "primary" : "ghost"} aria-current={workspace === "categories" ? "page" : undefined} onClick={() => { setWorkspace("categories"); setEditingId(null); setMediaProductId(null); }}>Imágenes de categorías</Button><Button variant="ghost" onClick={() => void logout()} disabled={loggingOut}>{loggingOut ? "Saliendo…" : "Salir"}</Button></nav></Container></header><main id="admin-main" className="py-8 sm:py-12"><Container size="xl" padding="lg">{workspace === "categories" ? <CategoryMediaAdmin session={session} onExpired={expired} /> : <><div hidden={editingId !== null || mediaProductId !== null}><ProductList onEdit={setEditingId} onMedia={setMediaProductId} onExpired={expired} /></div>{editingId !== null ? <Editor id={editingId} session={session} onBack={() => setEditingId(null)} onMedia={() => { setEditingId(null); setMediaProductId(editingId); }} onExpired={expired} /> : null}{mediaProductId !== null ? <ProductMediaAdmin productId={mediaProductId} session={session} onBack={() => setMediaProductId(null)} onExpired={expired} /> : null}</>}</Container></main></>;
 }

@@ -1,7 +1,10 @@
 import type {
   AdminEditorValues,
   AdminFilters,
+  AdminCategoryMedia,
+  AdminMediaUpload,
   AdminProduct,
+  AdminProductMedia,
   AdminProductList,
   AdminProductType,
   AdminSession,
@@ -11,6 +14,16 @@ export class AdminApiError extends Error {
   constructor(public status: number, message: string, public retryAfter?: number) {
     super(message);
   }
+}
+
+function idempotencyKey() {
+  return typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `media-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function mutationHeaders(csrfToken: string) {
+  return { "x-csrf-token": csrfToken, "Idempotency-Key": idempotencyKey() };
 }
 
 async function request<T>(url: string, init?: RequestInit): Promise<T> {
@@ -71,4 +84,41 @@ export const adminApi = {
       body: JSON.stringify(payload),
     });
   },
+  uploadMedia: (kind: "product" | "category", file: File, csrfToken: string) =>
+    request<{ upload: AdminMediaUpload }>(`/api/admin/media-uploads?kind=${kind}`, {
+      method: "POST",
+      headers: {
+        ...mutationHeaders(csrfToken),
+        "Content-Type": file.type,
+        "x-file-name": encodeURIComponent(file.name),
+      },
+      body: file,
+    }),
+  cancelUpload: (id: string, csrfToken: string) => request<{ cancelled: true }>(`/api/admin/media-uploads/${id}`, {
+    method: "DELETE", headers: mutationHeaders(csrfToken),
+  }),
+  productMedia: (id: number) => request<AdminProductMedia>(`/api/admin/products/${id}/images`),
+  addProductImage: (id: number, csrfToken: string, body: object) => request<AdminProductMedia>(`/api/admin/products/${id}/images`, {
+    method: "POST", headers: mutationHeaders(csrfToken), body: JSON.stringify(body),
+  }),
+  saveProductImageOrder: (id: number, csrfToken: string, body: object) => request<AdminProductMedia>(`/api/admin/products/${id}/images`, {
+    method: "PATCH", headers: mutationHeaders(csrfToken), body: JSON.stringify(body),
+  }),
+  updateProductImage: (productId: number, imageId: string, csrfToken: string, body: object) => request<AdminProductMedia>(`/api/admin/products/${productId}/images/${imageId}`, {
+    method: "PATCH", headers: mutationHeaders(csrfToken), body: JSON.stringify(body),
+  }),
+  removeProductImage: (productId: number, imageId: string, csrfToken: string, body: object) => request<AdminProductMedia>(`/api/admin/products/${productId}/images/${imageId}`, {
+    method: "DELETE", headers: mutationHeaders(csrfToken), body: JSON.stringify(body),
+  }),
+  categories: (q = "") => request<{ items: AdminCategoryMedia[] }>(`/api/admin/categories${q.trim() ? `?q=${encodeURIComponent(q.trim())}` : ""}`),
+  categoryMedia: (id: string) => request<{ category: AdminCategoryMedia }>(`/api/admin/categories/${encodeURIComponent(id)}/image`),
+  addCategoryImage: (id: string, csrfToken: string, body: object) => request<{ category: AdminCategoryMedia }>(`/api/admin/categories/${encodeURIComponent(id)}/image`, {
+    method: "POST", headers: mutationHeaders(csrfToken), body: JSON.stringify(body),
+  }),
+  updateCategoryImage: (id: string, csrfToken: string, body: object) => request<{ category: AdminCategoryMedia }>(`/api/admin/categories/${encodeURIComponent(id)}/image`, {
+    method: "PATCH", headers: mutationHeaders(csrfToken), body: JSON.stringify(body),
+  }),
+  removeCategoryImage: (id: string, csrfToken: string, body: object) => request<{ category: AdminCategoryMedia }>(`/api/admin/categories/${encodeURIComponent(id)}/image`, {
+    method: "DELETE", headers: mutationHeaders(csrfToken), body: JSON.stringify(body),
+  }),
 };

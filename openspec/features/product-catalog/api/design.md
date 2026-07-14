@@ -161,6 +161,28 @@ The endpoint stores the object only. Associating its URL with `ProductImage`
 requires a separate governed operation containing Product ownership, position,
 Primary status, and approved alternative text.
 
+### Catalog Media Admin routes
+
+The session-authorized media extension is defined canonically in
+`../../../changes/catalog-media-admin-v1/backend-contract.md`. It exposes:
+
+- `POST /api/admin/media-uploads?kind=product|category` plus
+  `GET/DELETE /api/admin/media-uploads/[id]` for a session-bound 24-hour upload;
+- `GET/POST/PATCH /api/admin/products/[id]/images` for complete gallery review,
+  association, collision-safe complete reorder and explicit Primary selection;
+- `PATCH/DELETE /api/admin/products/[id]/images/[imageId]` for strict metadata,
+  stable-identity replacement and reference-protected removal; and
+- `GET /api/admin/categories`, then `GET/POST/PATCH/DELETE
+  /api/admin/categories/[id]/image` for the optional Category Image.
+
+All writes require Product Admin Origin/CSRF/managed-edge authorization,
+optimistic timestamps and a session/request-bound `Idempotency-Key`. Uploads are
+decoded, bounded to 40 MP/12,000 px, orientation-normalized and re-encoded
+without EXIF/GPS before an immutable Product or Category namespace key is stored.
+Temporary objects expire after 24 hours; superseded/removed objects are retained
+seven days and deleted by the governed cleanup job. Object keys, bucket details
+and credentials never enter these browser contracts.
+
 ## Migration and Continuity
 
 Migration `202607120006_activate_category_taxonomy_v1` atomically retires the
@@ -183,6 +205,11 @@ Migration `202607130010_optimize_public_product_search` enables `pg_trgm` and
 adds GIN indexes only to the six approved Search fields. It changes no Product
 data or response shape and may be rolled back by dropping those indexes after
 the prior compatible application artifact is restored.
+
+Migration `202607130012_add_catalog_media_admin` additively records decoded media
+metadata, session-bound temporary uploads/idempotency/rate limits, cleanup
+disposition and safe media audit context. Existing Product Images and legacy
+Category paths remain compatible and require no fabricated metadata.
 
 ## Non-Goals
 

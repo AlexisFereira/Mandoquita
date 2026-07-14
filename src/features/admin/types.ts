@@ -88,3 +88,53 @@ export type AdminEditorValues = {
 };
 
 export type AdminFieldErrors = Partial<Record<keyof AdminEditorValues, string>>;
+
+export type AdminMediaUpload = {
+  id: string;
+  previewUrl: string;
+  contentType: string;
+  size: number;
+  width: number;
+  height: number;
+  checksumSha256: string;
+  expiresAt: string;
+};
+
+export type AdminProductImage = {
+  id: string;
+  previewUrl: string;
+  altText: string;
+  position: number;
+  isPrimary: boolean;
+  referencedByVariants: boolean;
+  variantReferenceCount: number;
+  contentType: string | null;
+  width: number | null;
+  height: number | null;
+  size: number | null;
+  checksumSha256: string | null;
+  updatedAt: string;
+};
+
+export type AdminProductMedia = {
+  product: { id: number; slug: string; name: string; updatedAt: string };
+  images: AdminProductImage[];
+};
+
+export type AdminCategoryMedia = {
+  id: string;
+  slug: string;
+  name: string;
+  active: boolean;
+  visible: boolean;
+  image: null | {
+    previewUrl: string;
+    altText: string | null;
+    contentType: string | null;
+    width: number | null;
+    height: number | null;
+    size: number | null;
+    checksumSha256: string | null;
+  };
+  updatedAt: string;
+};
