@@ -9,6 +9,19 @@ frontend:
         - npx prisma generate
         - npm run build
         - echo "DATABASE_URL=$DATABASE_URL" >> .env.production
+        - echo "PRODUCT_ADMIN_CODE=$PRODUCT_ADMIN_CODE" >> .env.production
+        - echo "PRODUCT_ADMIN_CODE_HASH=$PRODUCT_ADMIN_CODE_HASH" >> .env.production
+        - echo "PRODUCT_ADMIN_SESSION_SECRET=$PRODUCT_ADMIN_SESSION_SECRET" >> .env.production
+        - echo "PRODUCT_ADMIN_EDGE_SECRET=$PRODUCT_ADMIN_EDGE_SECRET" >> .env.production
+        - echo "AWS_REGION=$AWS_REGION" >> .env.production
+        - echo "AWS_S3_BUCKET=$_AWS_S3_BUCKET" >> .env.production
+        - echo "AWS_S3_PUBLIC_BASE_URL=$_AWS_S3_PUBLIC_BASE_URL" >> .env.production
+        - echo "AWS_S3_IMAGE_PREFIX=$_AWS_S3_IMAGE_PREFIX" >> .env.production
+        - echo "AWS_S3_IMAGE_MAX_BYTES=$_AWS_S3_IMAGE_MAX_BYTES" >> .env.production
+        - echo "AWS_S3_KMS_KEY_ID=$_AWS_S3_KMS_KEY_ID" >> .env.production
+        - echo "AWS_ACCESS_KEY_ID=$_AWS_ACCESS_KEY_ID" >> .env.production
+        - echo "AWS_SECRET_ACCESS_KEY=$_AWS_SECRET_ACCESS_KEY" >> .env.production
+        - echo "AWS_SESSION_TOKEN=$_AWS_SESSION_TOKEN" >> .env.production
   artifacts:
     baseDirectory: .next
     files:
