@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@prisma/client";
+import type { Prisma, PrismaClient } from "@prisma/client";
 
 import type { TaxonomyCategory, TaxonomySubcategory } from "@/types/catalog";
 
@@ -24,7 +24,7 @@ function publishedBranchWhere(categoryId: string, subcategoryId?: string) {
   };
 }
 
-export async function listDiscoverableTaxonomy(prisma: PrismaClient): Promise<TaxonomyCategory[]> {
+export async function listDiscoverableTaxonomy(prisma: PrismaClient | Prisma.TransactionClient): Promise<TaxonomyCategory[]> {
   const categories = await prisma.category.findMany({
     where: {
       active: true,
@@ -84,4 +84,13 @@ export async function listDiscoverableTaxonomy(prisma: PrismaClient): Promise<Ta
 export async function getDiscoverableCategory(prisma: PrismaClient, slug: string) {
   const categories = await listDiscoverableTaxonomy(prisma);
   return categories.find((category) => category.slug === slug) ?? null;
+}
+
+export async function resolveCategorySlug(prisma: PrismaClient, slug: string) {
+  const canonical = await prisma.category.findUnique({ where: { slug }, select: { slug: true } });
+  if (canonical) return { slug: canonical.slug, redirected: false };
+  const alias = await prisma.categorySlugAlias.findUnique({
+    where: { slug }, select: { category: { select: { slug: true } } },
+  });
+  return alias ? { slug: alias.category.slug, redirected: true } : null;
 }

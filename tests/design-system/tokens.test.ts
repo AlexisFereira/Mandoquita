@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import { DESIGN_TOKENS, designTokens } from "../../src/design-system/tokens";
@@ -29,5 +32,18 @@ describe("design tokens", () => {
     expect(DESIGN_TOKENS.typography.caption.fontWeight).toBe(500);
     expect(DESIGN_TOKENS.shadows.md).toContain("rgba");
     expect(DESIGN_TOKENS.radii.lg).toBe("24px");
+  });
+
+  it("publishes the approved wide Container token in typed and CSS representations", () => {
+    expect(DESIGN_TOKENS.layout.containers).toEqual({
+      sm: 640,
+      md: 768,
+      lg: 1120,
+      xl: 1280,
+      wide: 1400,
+    });
+    expect(readFileSync(resolve("src/styles/theme.css"), "utf8")).toContain(
+      "--container-wide: 1400px",
+    );
   });
 });

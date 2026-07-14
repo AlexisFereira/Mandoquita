@@ -5,6 +5,7 @@ const containerSizeClasses = {
   md: "max-w-[768px]",
   lg: "max-w-[1120px]",
   xl: "max-w-[1280px]",
+  wide: "max-w-[1400px]",
 } as const;
 
 const containerPaddingClasses = {

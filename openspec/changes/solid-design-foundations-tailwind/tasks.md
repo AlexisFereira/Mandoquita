@@ -1,6 +1,6 @@
 # Tasks: Solid Design Foundations with Tailwind
 
-Status: Superseded by focused Platform contracts and remediation packages.
+Status: Superseded — Closed by focused Platform contracts and remediation packages.
 
 The unchecked items below are retained as historical planning and are not active backlog. Active light-only, component API, frontend cleanup, validation, and documentation work is tracked in `openspec/platform/design-system/`.
 

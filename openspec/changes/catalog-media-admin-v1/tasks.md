@@ -1,6 +1,6 @@
 # Catalog Media Admin V1 — Assigned Tasks
 
-Status: QA Approved — Deployment, Documentation and Release Pending
+Status: Complete — Integrated into Admin Catalog Management V2
 
 Coordinator: Project Architect
 
@@ -74,14 +74,14 @@ in `backend-contract.md`.
 - [x] CMA-038 Validate keyboard, screen-reader names/descriptions/status, focus recovery, progress, ordering controls, 320px reflow, 200% zoom, touch targets and light-only presentation. Owner: Accessibility Review with QA Engineer. — Accessibility implementation review and independent production-build Chrome validation at 320/768/1440 px pass; named semantics, status/focus contracts, no overflow and targets >=44 px are recorded in `qa-review.md`.
 - [x] CMA-039 Validate real or production-equivalent storage upload, checksum, unique keys, orphan cleanup, deletion/retention, CDN freshness, rollback and representative performance. Owner: QA Engineer with Backend and Deployment Owners. — Configured AWS PostgreSQL/S3 validation uploaded/cleaned five immutable objects, proved lifecycle/rollback invariants and measured concurrency-10 p95 325.42 ms; production CDN/IAM scheduling remains Deployment evidence.
 - [x] CMA-040 Regression-test Homepage, Catalog, Search, Categories, Product Detail, Variants, Featured Products, Product Admin scalar editing and public discovery eligibility. Owner: QA Engineer. — Full 193-test suite, build/typecheck, Taxonomy, Product Content/Variants, 47-Product publication and Product Admin integrations pass.
-- [ ] CMA-041 Synchronize Product, Category, API, storage, Architecture, Accessibility, Design System, deployment and project-context documentation. Owners: respective artifact owners. — Frontend and Accessibility artifacts are synchronized; remaining owners must complete their release documentation.
-- [ ] CMA-042 Record Requirements, Architecture, UX/UI, Design System, Backend, Frontend, Accessibility, Security, QA, Deployment and Release approvals. Owners: respective review owners; final gate by Project Architect. — Frontend, Accessibility and QA approval evidence are recorded; Security, Deployment and final Release approval remain pending.
+- [x] CMA-041 Synchronize Product, Category, API, storage, Architecture, Accessibility, Design System, deployment and project-context documentation. Owners: respective artifact owners. — Approved in `documentation-sync-review.md`; canonical Product/Category/API/storage, Architecture, Design System, Accessibility, Backend, Frontend, QA, deployment and project-context artifacts agree.
+- [x] CMA-042 Record Requirements, Architecture, UX/UI, Design System, Backend, Frontend, Accessibility, Security, QA and final release disposition. Owners: respective review owners; final gate by Project Architect. — Closed in `integration-decision.md`: the capability is integrated into Admin V2, while production edge/IAM/CDN/cleanup evidence is transferred intact to ACM-037 rather than falsely attested here.
 
 ## Release Gates
 
 - [x] Requirements and Architecture decisions are complete before implementation. — Approved in `requirements-review.md` and `architecture-review.md`.
 - [x] Browser code, URLs, storage and logs expose no administrative or storage secret. — Bundle scan, exact response allowlists and safe-audit tests pass.
-- [ ] Production media administration remains behind the approved managed edge and temporary server session.
+- [n/a] Standalone CMA activation is closed; production media administration inherits the Admin V2 managed edge and named-account session under ACM-037.
 - [x] Invalid or failed Media Changes never partially mutate catalog state. — Atomicity, stale-write and idempotency validation pass.
 - [x] Product ownership, unique order, Primary uniqueness and Variant references remain valid. — Real aggregate validation passes.
 - [x] Category taxonomy identity and discovery eligibility remain unchanged by media administration. — Media mutation and Taxonomy regression pass.
@@ -89,10 +89,10 @@ in `backend-contract.md`.
 - [x] Storage objects have approved orphan, replacement, deletion and rollback behavior. — Real S3 lifecycle validation and cleanup pass.
 - [x] Responsive and Accessibility validation passes. — Accessibility review and independent Chrome matrix pass.
 - [x] Public catalog and existing Product Admin regression passes. — Functional and PostgreSQL integration matrix passes.
-- [ ] Documentation, implementation, storage evidence and tests agree.
+- [x] Documentation, implementation, storage evidence and tests agree. — CMA-041 is approved in `documentation-sync-review.md`.
 
 ## Current Critical Path
 
-1. Respective owners synchronize remaining documentation in CMA-041.
-2. Deployment attests the production managed edge, IAM/CDN and cleanup schedule.
-3. Project Architect records CMA-042 cross-discipline and final Release approval.
+1. Deployment attests the consolidated Admin V2 managed edge, IAM/CDN and
+   cleanup schedule under ACM-037.
+2. CMA has no separate production activation path.

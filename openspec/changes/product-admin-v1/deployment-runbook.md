@@ -1,6 +1,6 @@
 # Product Admin V1 — Production Deployment Runbook
 
-Status: Ready — Deployment Attestation Pending
+Status: Cancelled — Superseded by Admin Catalog Management V2
 
 Owner: Deployment Owner with Backend Architect and Project Architect
 
@@ -57,9 +57,9 @@ credentials, tokens, full sensitive headers or private network details.
 
 ## Release Decision
 
-Until every attestation item is complete, ADM-040 and the production Release gate
-remain blocked. This does not reopen Product, Design, Backend, Frontend,
-Accessibility or QA approval.
+Do not execute this runbook. Product Admin V1 production release is prohibited by
+`supersession-decision.md`; Admin Catalog Management V2 owns the named-account
+managed-edge activation and rollback procedure.
 
 ## Rollback
 

@@ -9,19 +9,22 @@ frontend:
         - npx prisma generate
         - npm run build
         - echo "DATABASE_URL=$DATABASE_URL" >> .env.production
-        - echo "PRODUCT_ADMIN_CODE=$PRODUCT_ADMIN_CODE" >> .env.production
-        - echo "PRODUCT_ADMIN_CODE_HASH=$PRODUCT_ADMIN_CODE_HASH" >> .env.production
+        - echo "PUBLIC_SITE_ORIGIN=$PUBLIC_SITE_ORIGIN" >> .env.production
+        - echo "WHATSAPP_BUSINESS_NUMBER=$WHATSAPP_BUSINESS_NUMBER" >> .env.production
         - echo "PRODUCT_ADMIN_SESSION_SECRET=$PRODUCT_ADMIN_SESSION_SECRET" >> .env.production
+        - echo "PRODUCT_ADMIN_PASSWORD_PEPPER=$PRODUCT_ADMIN_PASSWORD_PEPPER" >> .env.production
+        - echo "PRODUCT_ADMIN_PASSWORD_BLOCKLIST=$PRODUCT_ADMIN_PASSWORD_BLOCKLIST" >> .env.production
+        - echo "PRODUCT_ADMIN_ORIGIN=$PRODUCT_ADMIN_ORIGIN" >> .env.production
+        - echo "PRODUCT_ADMIN_TRUST_PROXY=$PRODUCT_ADMIN_TRUST_PROXY" >> .env.production
+        - echo "PRODUCT_ADMIN_TRUSTED_PROXY_HOPS=$PRODUCT_ADMIN_TRUSTED_PROXY_HOPS" >> .env.production
         - echo "PRODUCT_ADMIN_EDGE_SECRET=$PRODUCT_ADMIN_EDGE_SECRET" >> .env.production
+        # AWS credentials come from the attached Amplify SSR Compute role.
         - echo "AWS_REGION=$AWS_REGION" >> .env.production
         - echo "AWS_S3_BUCKET=$_AWS_S3_BUCKET" >> .env.production
         - echo "AWS_S3_PUBLIC_BASE_URL=$_AWS_S3_PUBLIC_BASE_URL" >> .env.production
         - echo "AWS_S3_IMAGE_PREFIX=$_AWS_S3_IMAGE_PREFIX" >> .env.production
         - echo "AWS_S3_IMAGE_MAX_BYTES=$_AWS_S3_IMAGE_MAX_BYTES" >> .env.production
         - echo "AWS_S3_KMS_KEY_ID=$_AWS_S3_KMS_KEY_ID" >> .env.production
-        - echo "AWS_ACCESS_KEY_ID=$_AWS_ACCESS_KEY_ID" >> .env.production
-        - echo "AWS_SECRET_ACCESS_KEY=$_AWS_SECRET_ACCESS_KEY" >> .env.production
-        - echo "AWS_SESSION_TOKEN=$_AWS_SESSION_TOKEN" >> .env.production
   artifacts:
     baseDirectory: .next
     files:

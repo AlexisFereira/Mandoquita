@@ -37,13 +37,19 @@ describe("ProductCard", () => {
 
     expect(screen.getByText("Furniture")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Minimal Chair" })).toBeTruthy();
-    expect(
-      screen.getByText("A clean chair for modern interiors."),
-    ).toBeTruthy();
+    expect(screen.queryByText("A clean chair for modern interiors.")).toBeNull();
     expect(screen.getByText("USD 129.00")).toBeTruthy();
     expect(
       screen.getByRole("link", { name: "Ver detalles de Minimal Chair" }),
     ).toBeTruthy();
+    const card = screen.getByRole("article");
+    const image = screen.getByRole("img", { name: "Minimal Chair" });
+    expect(card.className).toContain("!rounded-[8px]");
+    expect(card.className).toContain("overflow-hidden");
+    expect(card.className).toContain("p-0");
+    expect(image.className).toContain("w-full");
+    expect(image.className).toContain("object-cover");
+    expect(image.className).not.toContain("object-contain");
   });
 
   it("keeps an unavailable product navigable without exposing commercial values", () => {
@@ -79,7 +85,7 @@ describe("ProductCard", () => {
     ).toBe("/products/archivo-editorial");
   });
 
-  it("uses approved listing content and preserves a stable missing-media state", () => {
+  it("omits listing descriptions and preserves a stable missing-media state", () => {
     const base = {
       id: 3,
       slug: "producto-sin-imagen",
@@ -108,7 +114,7 @@ describe("ProductCard", () => {
 
     render(<ProductCard product={base} />);
 
-    expect(screen.getByText("Resumen aprobado para listados.")).toBeTruthy();
+    expect(screen.queryByText("Resumen aprobado para listados.")).toBeNull();
     expect(screen.queryByText(base.description)).toBeNull();
     expect(screen.getByText("Sin imagen")).toBeTruthy();
     expect(screen.queryByRole("img")).toBeNull();

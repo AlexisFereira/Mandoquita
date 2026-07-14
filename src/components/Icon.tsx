@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  ImageUp,
   ArrowLeft,
   ArrowRight,
   ChevronLeft,
@@ -9,17 +10,21 @@ import {
   ExternalLink,
   ImageOff,
   Info,
+  LayoutGrid,
   MapPin,
   Menu,
   MessageCircle,
   Search,
   Tag,
   TriangleAlert,
+  SquarePen,
   X,
   type LucideIcon,
 } from "lucide-react";
 
 const iconRegistry = {
+  edit: SquarePen,
+  imageUp: ImageUp,
   search: Search,
   menu: Menu,
   close: X,
@@ -37,6 +42,7 @@ const iconRegistry = {
   "payment-information": Info,
   tag: Tag,
   location: MapPin,
+  categories: LayoutGrid,
 } as const satisfies Record<string, LucideIcon>;
 
 const iconSizes = {

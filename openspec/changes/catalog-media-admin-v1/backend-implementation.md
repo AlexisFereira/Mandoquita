@@ -46,7 +46,12 @@ on 2026-07-13. Prisma applied all 13 migrations successfully.
 
 ## Configuration and operations
 
-- Existing required S3 variables remain authoritative.
+- `S3Client` receives only `AWS_REGION`; authentication is delegated to AWS SDK
+  v3's default credential chain and the attached Amplify SSR Compute role.
+- Static AWS access-key/session variables are not application configuration and
+  are absent from `.env.example` and `amplify.yml`.
+- Bucket, delivery origin, prefixes, size and optional KMS values remain runtime
+  configuration because they identify storage behavior rather than credentials.
 - `AWS_S3_IMAGE_PREFIX` defaults to `images/products`.
 - `AWS_S3_CATEGORY_IMAGE_PREFIX` defaults to `images/categories`.
 - `npm run catalog-media:cleanup` must run on an approved schedule; normal Admin

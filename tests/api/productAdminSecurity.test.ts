@@ -1,24 +1,18 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
   applyProductAdminHeaders,
   authorizeProductAdminSession,
   createProductAdminSession,
   getProductAdminSecurityConfig,
-  hashProductAdminCode,
   ProductAdminConfigurationError,
   ProductAdminHttpError,
   validateProductAdminEdge,
-  verifyProductAdminCode,
   recordProductAdminFailure,
 } from "../../src/server/productAdminSecurity";
 
-let codeHash: string;
-beforeAll(async () => { codeHash = await hashProductAdminCode("482951", "fixed-test-salt"); });
-
 function config(overrides: Record<string, unknown> = {}) {
   return {
-    codeHash,
     sessionSecret: "session-secret-with-at-least-thirty-two-bytes",
     origin: "http://localhost:3000",
     trustProxy: false,
@@ -28,6 +22,13 @@ function config(overrides: Record<string, unknown> = {}) {
   } as any;
 }
 
+const account = {
+  id: "account-1", username: "admin.one", normalizedUsername: "admin.one",
+  passwordHash: "not-used-here", role: "ADMIN", enabled: true, mustChangePassword: false,
+  credentialVersion: 3, passwordChangedAt: null, lastLoginAt: null,
+  createdAt: new Date("2026-07-13T11:00:00.000Z"), updatedAt: new Date("2026-07-13T11:00:00.000Z"),
+} as const;
+
 function response() {
   return {
     headers: {} as Record<string, string>,
@@ -36,18 +37,11 @@ function response() {
 }
 
 describe("Product Admin security", () => {
-  it("verifies only the exact six-digit code against its slow salted hash", async () => {
-    expect(await verifyProductAdminCode("482951", codeHash)).toBe(true);
-    expect(await verifyProductAdminCode("482952", codeHash)).toBe(false);
-    expect(await verifyProductAdminCode("48295", codeHash)).toBe(false);
-  });
-
   it("fails closed on missing production configuration", () => {
     expect(() => getProductAdminSecurityConfig({ NODE_ENV: "production" }))
       .toThrow(ProductAdminConfigurationError);
     expect(() => getProductAdminSecurityConfig({
       NODE_ENV: "production",
-      PRODUCT_ADMIN_CODE_HASH: codeHash,
       PRODUCT_ADMIN_SESSION_SECRET: "session-secret-with-at-least-thirty-two-bytes",
       PRODUCT_ADMIN_ORIGIN: "https://admin.example.com",
     })).toThrow(ProductAdminConfigurationError);
@@ -67,12 +61,12 @@ describe("Product Admin security", () => {
     const prisma = {
       productAdminSession: {
         create: vi.fn(async ({ data }) => stored = { id: "session-1", ...data, revokedAt: null, updatedAt: now }),
-        findUnique: vi.fn(async () => stored),
+        findUnique: vi.fn(async () => ({ ...stored, adminAccount: account })),
         update: vi.fn(async ({ data }) => stored = { ...stored, ...data }),
       },
     } as any;
     const res = response();
-    const created = await createProductAdminSession(prisma, res, config(), now);
+    const created = await createProductAdminSession(prisma, res, config(), account, now);
     expect(res.headers["Set-Cookie"]).toContain("HttpOnly");
     expect(res.headers["Set-Cookie"]).toContain("SameSite=Strict");
     expect(res.headers["Set-Cookie"]).not.toContain("482951");
@@ -98,11 +92,37 @@ describe("Product Admin security", () => {
       production: true,
       origin: "https://admin.example.com",
       edgeSecret: "edge-secret-with-at-least-thirty-two-characters",
-    }), now);
+    }), account, now);
 
     expect(res.headers["Set-Cookie"]).toContain("Secure");
     expect(res.headers["Set-Cookie"]).toContain("HttpOnly");
     expect(res.headers["Set-Cookie"]).toContain("SameSite=Strict");
+  });
+
+  it("enforces fixed-role, temporary-password, and credential-version session restrictions", async () => {
+    const now = new Date("2026-07-13T12:00:00.000Z");
+    async function authorize(accountOverride: Record<string, unknown>, options: Record<string, unknown> = {}, persistedOverride: Record<string, unknown> = {}) {
+      const currentAccount = { ...account, ...accountOverride };
+      let stored: any;
+      const prisma = {
+        productAdminSession: {
+          create: vi.fn(async ({ data }) => stored = { id: "session-restricted", ...data, revokedAt: null, updatedAt: now }),
+          findUnique: vi.fn(async () => ({ ...stored, adminAccount: { ...currentAccount, ...persistedOverride } })),
+          update: vi.fn(async ({ data }) => stored = { ...stored, ...data }),
+        },
+      } as any;
+      const res = response();
+      await createProductAdminSession(prisma, res, config(), currentAccount as any, now);
+      const cookie = res.headers["Set-Cookie"].split(";", 1)[0];
+      return authorizeProductAdminSession(prisma, {
+        headers: { cookie }, query: {}, socket: { remoteAddress: "127.0.0.1" },
+      } as any, response(), config(), { now, ...options });
+    }
+
+    await expect(authorize({}, { requireSuperAdmin: true })).rejects.toMatchObject({ status: 403, reason: "ROLE_REJECTED" });
+    await expect(authorize({ mustChangePassword: true })).rejects.toMatchObject({ status: 403, reason: "PASSWORD_CHANGE_REQUIRED" });
+    await expect(authorize({}, {}, { credentialVersion: account.credentialVersion + 1 })).rejects.toMatchObject({ status: 401 });
+    await expect(authorize({ role: "SUPER_ADMIN" }, { requireSuperAdmin: true })).resolves.toMatchObject({ account: { role: "SUPER_ADMIN" } });
   });
 
   it("rejects expired sessions and revokes their server record", async () => {
@@ -111,12 +131,12 @@ describe("Product Admin security", () => {
     const prisma = {
       productAdminSession: {
         create: vi.fn(async ({ data }) => stored = { id: "session-1", ...data, revokedAt: null, updatedAt: now }),
-        findUnique: vi.fn(async () => ({ ...stored, idleExpiresAt: new Date(now.getTime() - 1) })),
+        findUnique: vi.fn(async () => ({ ...stored, adminAccount: account, idleExpiresAt: new Date(now.getTime() - 1) })),
         update: vi.fn(async ({ data }) => ({ ...stored, ...data })),
       },
     } as any;
     const res = response();
-    await createProductAdminSession(prisma, res, config(), now);
+    await createProductAdminSession(prisma, res, config(), account, now);
     const cookie = res.headers["Set-Cookie"].split(";", 1)[0];
     await expect(authorizeProductAdminSession(prisma, {
       headers: { cookie }, query: {}, socket: { remoteAddress: "127.0.0.1" },
@@ -167,10 +187,11 @@ describe("Product Admin security", () => {
     const now = new Date("2026-07-13T12:00:00.000Z");
     let retryAfter: number | null = null;
     for (let attempt = 0; attempt < 5; attempt += 1) {
-      retryAfter = await recordProductAdminFailure(prisma, "client-hash", now);
+      retryAfter = await recordProductAdminFailure(prisma, "client-hash", "account-hash", now);
     }
     expect(retryAfter).toBe(15 * 60);
     expect(rows.get("CLIENT:client-hash").failureCount).toBe(5);
+    expect(rows.get("ACCOUNT:account-hash").failureCount).toBe(5);
     expect(rows.get("DEPLOYMENT:global").failureCount).toBe(5);
   });
 });

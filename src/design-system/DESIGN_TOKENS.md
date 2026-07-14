@@ -118,9 +118,11 @@ Full radius is reserved for circular controls and intentional pills.
 
 ## Layout
 
-| Role | sm | md | lg | xl |
-| --- | ---: | ---: | ---: | ---: |
-| Containers | 640 | 768 | 1120 | 1280 |
-| Breakpoints | 640 | 768 | 1024 | 1280 |
+| Role | sm | md | lg | xl | wide |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Containers | 640 | 768 | 1120 | 1280 | 1400 |
+| Breakpoints | 640 | 768 | 1024 | 1280 | — |
 
-Values are CSS pixels.
+Values are CSS pixels. `wide` is an opt-in content boundary exposed as
+`DESIGN_TOKENS.layout.containers.wide` and `--container-wide`; it is not a
+viewport breakpoint.

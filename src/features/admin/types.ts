@@ -3,6 +3,17 @@ export type AdminSession = {
   idleExpiresAt: string;
   absoluteExpiresAt: string;
   csrfToken: string;
+  account: {
+    id: string;
+    username: string;
+    role: "SUPER_ADMIN" | "ADMIN";
+    mustChangePassword: boolean;
+  };
+};
+
+export type AdminAccount = {
+  id: string; username: string; role: "SUPER_ADMIN" | "ADMIN"; enabled: boolean;
+  mustChangePassword: boolean; lastLoginAt: string | null; createdAt: string; updatedAt: string;
 };
 
 export type TaxonomyContext = {
@@ -31,6 +42,8 @@ export type AdminProductSummary = {
   subcategory: TaxonomyNode | null;
   category: TaxonomyNode | null;
   updatedAt: string;
+  retiredAt?: string | null;
+  baseVariant?: { id: string; sku: string; active: boolean } | null;
 };
 
 export type AdminProduct = AdminProductSummary & {
@@ -42,6 +55,7 @@ export type AdminProduct = AdminProductSummary & {
   seoTitle: string | null;
   seoDescription: string | null;
   hasVariant: boolean;
+  baseVariant?: { id: string; sku: string; active: boolean } | null;
 };
 
 export type AdminProductType = {
@@ -58,6 +72,7 @@ export type AdminFilters = {
   active: "" | "true" | "false";
   category: string;
   productType: string;
+  retired: "false" | "true";
 };
 
 export type AdminProductList = {
@@ -137,4 +152,16 @@ export type AdminCategoryMedia = {
     checksumSha256: string | null;
   };
   updatedAt: string;
+};
+
+export type AdminCategory = AdminCategoryMedia & {
+  description: string | null; sortOrder: number; retiredAt: string | null;
+  dependencies: { subcategories: number; productTypes: number; products: number };
+  createdAt: string;
+};
+
+export type AdminCategoryList = {
+  items: AdminCategory[];
+  metadata: { page: number; limit: number; totalItems: number; totalPages: number };
+  filters: { q: string | null; retired: boolean };
 };

@@ -25,6 +25,7 @@ export class CatalogMediaRequestError extends Error {}
 export type CatalogMediaMutationContext = {
   sessionId: string;
   sessionIdHash: string;
+  actorAccountId: string;
   requestId: string;
   idempotencyKey: string;
 };
@@ -270,6 +271,7 @@ function auditData(context: CatalogMediaMutationContext, data: {
     event: data.event,
     outcome: "SUCCESS",
     sessionIdHash: context.sessionIdHash,
+    actorAccountId: context.actorAccountId,
     productId: data.productId,
     categoryId: data.categoryId,
     mediaId: data.mediaId,

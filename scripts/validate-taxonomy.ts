@@ -53,6 +53,12 @@ async function main() {
           slug: true,
           imagePath: true,
           imageAltText: true,
+          imageObjectKey: true,
+          imageContentType: true,
+          imageWidth: true,
+          imageHeight: true,
+          imageSize: true,
+          imageChecksum: true,
           sortOrder: true,
           active: true,
           subcategories: {
@@ -85,14 +91,23 @@ async function main() {
     "Category business order is not 1 through 7"
   );
   assert(categories.every((category) => category.active), "An approved Category is inactive");
-  assert(
-    categories.every((category) =>
-      category.imagePath === `/images/categories/${category.slug}.png` &&
-      Boolean(category.imageAltText?.trim()) &&
-      existsSync(join(process.cwd(), "public", category.imagePath)),
-    ),
-    "A Category media path, alternative text, or local asset is missing",
-  );
+  assert(categories.every((category) => {
+    if (!category.imagePath || !category.imageAltText?.trim()) return false;
+    if (category.imagePath.startsWith("/")) {
+      return category.imagePath === `/images/categories/${category.slug}.png` &&
+        existsSync(join(process.cwd(), "public", category.imagePath));
+    }
+    try {
+      const url = new URL(category.imagePath);
+      return url.protocol === "https:" && Boolean(category.imageObjectKey) &&
+        url.pathname.endsWith(`/${category.imageObjectKey}`) &&
+        Boolean(category.imageContentType?.startsWith("image/")) &&
+        Number(category.imageWidth) > 0 && Number(category.imageHeight) > 0 &&
+        Number(category.imageSize) > 0 && Boolean(category.imageChecksum);
+    } catch {
+      return false;
+    }
+  }), "A Category local or managed media reference is incomplete");
   assert(
     new Set(categories.map(({ id }) => id)).size === categories.length &&
       new Set(categories.map(({ slug }) => slug)).size === categories.length,

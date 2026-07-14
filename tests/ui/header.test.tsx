@@ -12,12 +12,17 @@ describe("Header", () => {
 
     expect(screen.getByRole("banner").className).toContain("sticky");
     expect(screen.getByRole("banner").className).toContain("site-header");
+    expect(screen.getByRole("banner").className).toContain("var(--surface)");
+    expect(screen.getByRole("banner").className).toContain("var(--foreground)");
+    expect(screen.getByRole("banner").className).not.toContain("inverse-surface");
+    expect(screen.getByRole("banner").firstElementChild?.className).toContain("max-w-[1400px]");
     const logo = screen.getByRole("img", { name: "Mandoquita" });
     expect(logo.getAttribute("src")).toBe("/images/logo.png");
-    expect(logo.getAttribute("width")).toBe("1024");
-    expect(logo.getAttribute("height")).toBe("672");
+    expect(logo.getAttribute("width")).toBe("685");
+    expect(logo.getAttribute("height")).toBe("264");
     expect(logo.className).toContain("h-[50px]");
     expect(logo.className).toContain("w-auto");
+    expect(logo.className).toContain("invert");
 
     const navigation = screen.getByRole("navigation", {
       name: "Navegación principal",
@@ -56,5 +61,8 @@ describe("Header", () => {
       screen.getByRole("button", { name: "Cerrar navegación" }).getAttribute("aria-expanded"),
     ).toBe("true");
     expect(screen.getByRole("navigation", { name: "Navegación móvil" })).toBeTruthy();
+    expect(screen.getByRole("navigation", { name: "Navegación móvil" }).className).toContain(
+      "var(--surface)",
+    );
   });
 });

@@ -100,12 +100,16 @@ Resolve the Design System blockers preventing approval of homepage validation 8.
 
 # QA Handoff
 
-- [ ] QA-DS-01 Validate light, dark, and system preferences from initial load through hydration.
-- [ ] QA-DS-02 Validate persistence after reload and a simulated system-theme change.
-- [ ] QA-DS-03 Validate keyboard focus through Header, hero actions, carousel, products, categories, contact, and Footer.
-- [ ] QA-DS-04 Capture repeatable mobile, tablet, and desktop screenshots for light and dark themes.
-- [ ] QA-DS-05 Confirm Product Detail and shared component states have no visual regression.
-- [ ] QA-DS-06 Attach contrast evidence for all pairs required by FE-DS-11.
+The light-only Platform contract supersedes the historical multi-theme behavior
+in QA-DS-01/02/04 and the separate Hero referenced by QA-DS-03. The applicable
+light/inverse-surface evidence is approved by HML-021–HML-024 and MLC-011.
+
+- [x] QA-DS-01 Validate initial load through hydration. — Superseded scope: forced dark/system preferences were verified to retain the deterministic light palette without a hydration theme change.
+- [x] QA-DS-02 Validate reload and a simulated system-theme change. — Superseded scope: stored and system theme preferences have no supported persistence behavior and cannot activate another palette.
+- [x] QA-DS-03 Validate focus/semantic order through Header, Carousel, products, categories, Contact and Footer. — The removed Hero is not part of the active contract; one rendered accessibility/focus order and 44px targets pass.
+- [x] QA-DS-04 Validate repeatable mobile, tablet and desktop presentation. — Superseded scope: 320/640/1024/1400px light-only rendered checks and 200% reflow pass; dark screenshots would contradict the active contract.
+- [x] QA-DS-05 Confirm Product Detail and shared component states have no visual regression. — Product Detail, shared components and public-page automated regressions pass in the 214-test suite.
+- [x] QA-DS-06 Attach contrast evidence for all pairs required by FE-DS-11. — The 14-case contrast suite passes for light standard/inverse roles, actions, text, focus, status and controls.
 
 ---
 
@@ -120,7 +124,7 @@ The remediation is ready for Design System re-review only when:
 - [x] AC-05 Primary actions with normal white text achieve at least 4.5:1.
 - [x] AC-06 Focus cues achieve at least 3:1 on standard and inverse surfaces.
 - [x] AC-07 Required text, status, border, and control combinations have recorded contrast evidence.
-- [ ] AC-08 Homepage and Product Detail pass light/dark visual regression checks.
+- [x] AC-08 Homepage and Product Detail pass applicable light-only standard/inverse-surface visual regression checks; historical dark-theme validation is superseded.
 - [x] AC-09 TypeScript validation and the complete test suite pass.
 - [x] AC-10 No business behavior, content eligibility, navigation, backend, or database behavior changes.
 
@@ -147,7 +151,7 @@ The remediation is ready for Design System re-review only when:
 - Primary action: light and dark CSS roles match the typed `SEMANTIC_THEME_TOKENS` decision (`#A8583D` with `#FFFFFF`).
 - Focus and carousel: component-local rings were removed in favor of the shared focus contract; carousel colors now use semantic inverse roles.
 - Automated evidence: 19 test files and 107 tests pass, including 28 semantic contrast cases; `npx tsc --noEmit` and `npm run build` pass.
-- Remaining handoff: QA-DS-01 through QA-DS-06 and AC-08 require QA visual validation and screenshots.
+- QA handoff: QA-DS-01 through QA-DS-06 and AC-08 are complete under the superseding light-only contract; HML and MLC QA reviews contain the rendered evidence.
 
 After frontend and QA complete the applicable tasks:
 

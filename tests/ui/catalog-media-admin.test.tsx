@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import AdminPage from "../../pages/admin";
 
-const session = { authorized: true, idleExpiresAt: "2026-07-13T20:00:00.000Z", absoluteExpiresAt: "2026-07-14T02:00:00.000Z", csrfToken: "csrf-media" };
+const session = { authorized: true, idleExpiresAt: "2026-07-13T20:00:00.000Z", absoluteExpiresAt: "2026-07-14T02:00:00.000Z", csrfToken: "csrf-media", account: { id: "admin-1", username: "catalogo", role: "ADMIN", mustChangePassword: false } };
 const product = { id: 1, slug: "reloj-clasico", name: "Reloj clásico", price: "100.00", currency: "USD", active: true, editorialApproved: true, published: true, commerciallyAvailable: true, featured: false, featuredOrder: null, productType: null, subcategory: null, category: null, updatedAt: "2026-07-13T18:00:00.000Z" };
 const imageOne = { id: "cmg123456789012345678901", previewUrl: "/images/one.webp", altText: "Vista frontal del reloj", position: 0, isPrimary: true, referencedByVariants: true, variantReferenceCount: 1, contentType: "image/webp", width: 800, height: 800, size: 1000, checksumSha256: "abc", updatedAt: "2026-07-13T18:00:00.000Z" };
 const imageTwo = { ...imageOne, id: "cmg223456789012345678901", previewUrl: "/images/two.webp", altText: "Vista lateral del reloj", position: 1, isPrimary: false, referencedByVariants: false, variantReferenceCount: 0 };
@@ -84,13 +84,14 @@ describe("Catalog Media Admin", () => {
   it("keeps Category media separate and confirms optional removal", async () => {
     const fetch = vi.fn((input: string | URL | Request, init?: RequestInit) => {
       const url = String(input);
-      if (url === "/api/admin/categories") return json({ items: [category] });
+      if (url.startsWith("/api/admin/categories?")) return json({ items: [{ ...category, description: null, sortOrder: 1, retiredAt: null, dependencies: { subcategories: 0, productTypes: 0, products: 0 }, createdAt: product.updatedAt }], metadata: { page: 1, limit: 20, totalItems: 1, totalPages: 1 }, filters: {} });
       if (url === "/api/admin/categories/cat-audio/image" && init?.method === "DELETE") return json({ category: { ...category, image: null, updatedAt: "2026-07-13T18:05:00.000Z" } });
       return baseFetch(input, init);
     });
     vi.stubGlobal("fetch", fetch);
     render(<AdminPage />);
-    fireEvent.click(await screen.findByRole("button", { name: "Imágenes de categorías" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Categorías" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Administrar imágenes" }));
     fireEvent.click(await screen.findByRole("button", { name: "Administrar imagen de Audio" }));
     expect(screen.getByRole("heading", { name: "Imagen de la categoría" })).toBeTruthy();
     expect(screen.queryByRole("button", { name: "Reordenar galería" })).toBeNull();
@@ -110,7 +111,7 @@ describe("Catalog Media Admin", () => {
     vi.stubGlobal("fetch", fetch);
     render(<AdminPage />);
     fireEvent.click(await screen.findByRole("button", { name: "Administrar imágenes de Reloj clásico" }));
-    expect(await screen.findByText("Tu sesión terminó. Ingresa el código para continuar.")).toBeTruthy();
+    expect(await screen.findByText("Tu sesión administrativa terminó. Ingresa nuevamente.")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Acceso administrativo" })).toBeTruthy();
     await waitFor(() => expect(screen.queryByRole("heading", { name: "Galería del producto" })).toBeNull());
   });

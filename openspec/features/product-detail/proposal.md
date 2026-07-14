@@ -4,6 +4,12 @@ Status: Approved
 
 Finalized: 2026-07-12
 
+> **Active additive capability (2026-07-14):** Product Detail Contact and Sharing
+> V1 adds complete released-gallery consumption, WhatsApp inquiry and canonical
+> Share behavior without changing this Product Detail lifecycle contract. See
+> `contact-sharing-v1.md`. Frontend and Accessibility evidence is complete;
+> independent QA/Release evidence remains pending.
+
 ## Business Problem
 
 Las personas interesadas en un producto no cuentan con una experiencia de detalle estandarizada y confiable para validar informacion clave antes de decidir. Esto provoca abandono, comparaciones incompletas y menor conversion en la fase de descubrimiento.

@@ -58,15 +58,21 @@ async function main() {
         product.variants[0].active && product.variants[0].attributes.length === 0,
       `Base Variant integrity mismatch for ${source.slug}`,
     );
-    const hasSourceMedia = existsSync(join(process.cwd(), "public", source.imageUrl));
-    assert(product.images.length === (hasSourceMedia ? 1 : 0), `Product Image disposition mismatch for ${source.slug}`);
-    if (hasSourceMedia) {
-      assert(
-        product.images[0].url === source.imageUrl && product.images[0].altText === source.name &&
-          product.images[0].position === 0 && product.images[0].isPrimary,
-        `Primary Image mismatch for ${source.slug}`,
-      );
-    }
+    assert(product.images.filter(({ isPrimary }) => isPrimary).length <= 1, `Primary Image uniqueness mismatch for ${source.slug}`);
+    assert(product.images.every((image, index) => {
+      if (image.position !== index || !image.altText.trim()) return false;
+      if (image.url.startsWith("/")) return existsSync(join(process.cwd(), "public", image.url));
+      try {
+        const url = new URL(image.url);
+        return url.protocol === "https:" && Boolean(image.objectKey) &&
+          url.pathname.endsWith(`/${image.objectKey}`) &&
+          Boolean(image.contentType?.startsWith("image/")) &&
+          Number(image.width) > 0 && Number(image.height) > 0 && Number(image.size) > 0 &&
+          Boolean(image.checksum);
+      } catch {
+        return false;
+      }
+    }), `Product Image disposition mismatch for ${source.slug}`);
   }
 
   const [{ last_value: sequenceValue }] = await prisma.$queryRaw<Array<{ last_value: bigint }>>`

@@ -44,4 +44,11 @@ Use this area for reusable accessibility rules that apply across all features.
   `../../changes/catalog-media-admin-v1/accessibility-design-review.md`; code and
   automated implementation review passes in
   `../../changes/catalog-media-admin-v1/accessibility-implementation-review.md`,
-  while independent browser/screen-reader validation remains governed by CMA-038.
+  and independent production-build browser validation passes under CMA-038 in
+  `../../changes/catalog-media-admin-v1/qa-review.md`.
+- Admin Catalog Management V2: semantic Product/Category/account tables,
+  contained keyboard overflow, account authorization visibility, temporary-
+  password restriction, credential-safe errors, lifecycle confirmations, focus,
+  44px targets, 320px/200% zoom and light-only design contracts are approved in
+  `../../changes/admin-catalog-management-v2/accessibility-design-review.md`.
+  Rendered implementation validation remains gated by ACM-034.

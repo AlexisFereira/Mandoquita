@@ -1,9 +1,13 @@
 import { createHash, randomUUID } from "node:crypto";
 
-import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import sharp from "sharp";
 
-import { getS3ImageStorageConfig, type S3ImageStorageConfig } from "./s3ImageStorageService";
+import {
+  createS3Client,
+  getS3ImageStorageConfig,
+  type S3ImageStorageConfig,
+} from "./s3ImageStorageService";
 
 const MAX_PIXELS = 40_000_000;
 const MAX_EDGE = 12_000;
@@ -100,7 +104,7 @@ export async function storeCatalogMedia(
     throw new CatalogMediaValidationError("Invalid storage namespace");
   }
   const key = `${prefix}/${now.getUTCFullYear()}/${String(now.getUTCMonth() + 1).padStart(2, "0")}/${dependencies.uuid ?? randomUUID()}.${image.extension}`;
-  const client = dependencies.client ?? new S3Client({ region: config.region });
+  const client = dependencies.client ?? createS3Client(config);
   await client.send(new PutObjectCommand({
     Bucket: config.bucket,
     Key: key,
@@ -124,6 +128,6 @@ export async function deleteCatalogMediaObject(
   if (!allowed.some((prefix) => objectKey.startsWith(`${prefix}/`))) {
     throw new CatalogMediaValidationError("Object is outside approved namespaces");
   }
-  const client = dependencies.client ?? new S3Client({ region: config.region });
+  const client = dependencies.client ?? createS3Client(config);
   await client.send(new DeleteObjectCommand({ Bucket: config.bucket, Key: objectKey }));
 }

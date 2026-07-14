@@ -1,4 +1,4 @@
-Status: Superseded by layered Product Catalog and Product Detail feature tasks.
+Status: Superseded — Closed by layered Product Catalog and Product Detail feature tasks.
 
 ## 1. Backend foundation (database + seed)
 

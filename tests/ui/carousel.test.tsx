@@ -158,13 +158,15 @@ describe("Carousel", () => {
     expect(screen.queryByLabelText("Diapositiva anterior")).toBeNull();
 
     const track = getTrackElement();
-    expect(track.style.transform).toContain("0%");
+    const activeSlide = track.querySelector("article") as HTMLElement;
+    expect(activeSlide.style.opacity).toBe("1");
+    expect(activeSlide.style.transform).toBe("");
 
     act(() => {
       vi.advanceTimersByTime(7000);
     });
 
-    expect(track.style.transform).toContain("0%");
+    expect(activeSlide.style.opacity).toBe("1");
   });
 
   it("disables autoplay and transitions when reduced motion is requested", () => {
@@ -182,6 +184,7 @@ describe("Carousel", () => {
 
     render(<Carousel slides={slides} />);
     const track = getTrackElement();
+    const firstSlide = track.querySelector("article") as HTMLElement;
 
     act(() => {
       vi.advanceTimersByTime(7000);
@@ -191,7 +194,7 @@ describe("Carousel", () => {
       "aria-current",
       "true",
     );
-    expect(track.style.transition).toBe("none");
+    expect(firstSlide.style.transition).toBe("none");
   });
 
   it("preserves slider structure for mobile, tablet, and desktop widths", () => {
@@ -215,8 +218,13 @@ describe("Carousel", () => {
 
       expect(section).toBeInTheDocument();
       expect(section.className).toContain("w-full");
-      expect(track.style.width).toBe("300%");
+      expect(track.className).toContain("h-[200px]");
+      expect(track.className).toContain("sm:h-[250px]");
+      expect(track.className).toContain("md:h-[300px]");
+      expect(track.className).toContain("lg:h-[350px]");
+      expect(track.className).toContain("xl:h-[400px]");
       expect(mediaFrame.className).toContain("w-full");
+      expect(mediaFrame.className).toContain("h-full");
       expect(mediaFrame.className).toContain("overflow-hidden");
 
       unmount();

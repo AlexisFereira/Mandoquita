@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   async redirects() {
     return ["audio", "computing", "home-living"].map((slug) => ({
       source: `/categorias/${slug}`,

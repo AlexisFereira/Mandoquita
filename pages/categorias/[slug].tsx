@@ -10,7 +10,7 @@ import { Footer } from "../../src/components/Footer";
 import { Header } from "../../src/components/Header";
 import { ProductCard } from "../../src/components/ProductCard";
 import { listProducts } from "../../src/server/catalogService";
-import { getDiscoverableCategory } from "../../src/server/taxonomyService";
+import { getDiscoverableCategory, resolveCategorySlug } from "../../src/server/taxonomyService";
 import type { ProductItem, TaxonomyCategory } from "../../src/types/catalog";
 import { APPLICATION_THEME_COLOR } from "../../src/design-system/metadata";
 
@@ -29,10 +29,16 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
     return { notFound: true };
   }
 
+  const resolved = await resolveCategorySlug(prisma, slug);
+  const canonicalSlug = resolved?.slug ?? slug;
   const [category, catalog] = await Promise.all([
-    getDiscoverableCategory(prisma, slug),
-    listProducts(prisma, { category: slug, page: "1", limit: "50" }),
+    getDiscoverableCategory(prisma, canonicalSlug),
+    listProducts(prisma, { category: canonicalSlug, page: "1", limit: "50" }),
   ]);
+
+  if (resolved?.redirected && category) {
+    return { redirect: { destination: `/categorias/${resolved.slug}`, permanent: true } };
+  }
 
   return {
     props: {
@@ -50,7 +56,7 @@ export default function CategoryPage({ category, products }: CategoryPageProps) 
         <a href="#main-content" className="skip-link">Ir al contenido principal</a>
         <Header />
         <main id="main-content" className="py-10 sm:py-14">
-          <Container size="xl" padding="lg">
+          <Container size="wide" padding="lg">
             <section aria-labelledby="category-unavailable" className="space-y-5">
               <h1 id="category-unavailable" className="ds-heading ds-heading-lg">Categoría no disponible</h1>
               <p className="max-w-2xl text-[rgb(var(--muted)/1)]">Esta categoría no está disponible para explorar en este momento.</p>
@@ -81,7 +87,7 @@ export default function CategoryPage({ category, products }: CategoryPageProps) 
       <Header />
 
       <main id="main-content" className="py-10 sm:py-14">
-        <Container size="xl" padding="lg" className="space-y-9">
+        <Container size="wide" padding="lg" className="space-y-9">
           <div className="space-y-5">
             <nav aria-label="Breadcrumb">
               <ol className="m-0 flex list-none flex-wrap items-center gap-2 p-0 text-sm">

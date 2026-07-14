@@ -4,6 +4,12 @@ Status: Approved
 
 Finalized: 2026-07-12
 
+> **Active structural amendment (2026-07-14):** Homepage Merchandising Layout V2
+> supersedes the V1 section order, separate Hero and 1280px Homepage composition.
+> The active contract is `merchandising-layout-v2.md`. V1 business scope,
+> eligibility, Featured limits, uncapped Categories, Contact and non-transactional
+> boundaries remain authoritative where the amendment does not supersede them.
+
 ## Summary
 
 The Homepage feature defines the primary entry point for the Product Catalog Platform.

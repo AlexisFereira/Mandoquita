@@ -4,6 +4,12 @@ Status: Approved
 
 Finalized: 2026-07-12
 
+> **Active design amendment (2026-07-14):** The section hierarchy, separate Hero,
+> Container width and grid descriptions below are retained as V1 history and are
+> superseded by `merchandising-layout-v2.md` plus the active change UX/UI and
+> Accessibility reviews. Shared light-only, Card, Contact, eligibility and
+> non-transactional rules remain in force.
+
 ## Overview
 
 The Homepage is the primary discovery entry point for the Product Catalog Platform. It must communicate what the business sells, expose featured products, expose product categories, and provide a business contact path without introducing transactional behavior.
@@ -928,7 +934,9 @@ Success should be represented by clear navigation and continuation, not interrup
 ## Design Validation Checklist
 
 - [x] The page communicates what the business sells before asking the visitor to browse.
-- [x] The page hierarchy is clear: hero, featured products, categories, contact, footer.
+- [x] The active page hierarchy is clear under Merchandising Layout V2: Banner
+  Slider, Categories, Featured Products, Payment Methods Banner, selected-
+  Category Products, Contact and Footer.
 - [x] Featured products are visually more prominent than categories.
 - [x] Product discovery remains the primary experience.
 - [x] The design avoids marketplace density.
@@ -937,12 +945,14 @@ Success should be represented by clear navigation and continuation, not interrup
 - [x] Every section has defined purpose, layout, content, components, responsive behavior, interactions, and accessibility requirements.
 - [x] Desktop layout supports scanning and product comparison.
 - [x] Tablet layout remains readable and touch-friendly.
-- [x] Mobile layout follows a single-column discovery journey.
+- [x] Mobile layout follows the active two-column collection-grid contract at
+  320px while section content retains a single top-to-bottom reading flow.
 - [x] Keyboard navigation and focus order are defined.
 - [x] Semantic regions and heading hierarchy are defined.
 - [x] Product and category image expectations are defined.
 - [x] Empty states are defined for missing featured products, missing categories, and missing media.
-- [x] Loading states are defined for hero, products, categories, and contact.
+- [x] Loading/omission states are defined for Banner Slider, Products,
+  Categories, selected-Category content and Contact.
 - [x] Error states are recoverable and do not expose internal details.
 - [x] Animation guidance is subtle and usability-driven.
 - [x] Visual consistency rules preserve spacing, card rhythm, CTA placement, and product focus.

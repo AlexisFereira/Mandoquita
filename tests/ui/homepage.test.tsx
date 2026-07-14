@@ -50,9 +50,9 @@ function createProducts(count: number): ProductItem[] {
   }));
 }
 
-function setWideViewport(isWide: boolean) {
+function setViewportWidth(width: number) {
   vi.stubGlobal("matchMedia", (query: string) => ({
-    matches: query === "(min-width: 1280px)" ? isWide : false,
+    matches: width >= Number(query.match(/min-width:\s*(\d+)px/)?.[1] ?? Infinity),
     media: query,
     onchange: null,
     addEventListener: vi.fn(),
@@ -72,24 +72,27 @@ describe("Homepage", () => {
   it("limits featured density without creating hidden duplicate cards", () => {
     const products = Array.from({ length: 8 }, (_, index) => index + 1);
 
-    expect(selectVisibleFeaturedProducts(products, false)).toEqual([1, 2, 3, 4]);
-    expect(selectVisibleFeaturedProducts(products, true)).toEqual(products);
+    expect(selectVisibleFeaturedProducts(products, 2)).toEqual([1, 2]);
+    expect(selectVisibleFeaturedProducts(products, 6)).toEqual([1, 2, 3, 4, 5, 6]);
   });
 
-  it("renders only four featured products on mobile and tablet viewports", () => {
-    setWideViewport(false);
+  it("renders a single row of two featured products on mobile", () => {
+    setViewportWidth(390);
     render(<HomePage featuredProducts={createProducts(8)} categories={[]} />);
 
-    expect(screen.getAllByRole("link", { name: /ver detalles de producto/i })).toHaveLength(4);
-    expect(screen.queryByRole("heading", { name: "Producto 5" })).toBeNull();
+    expect(screen.getAllByRole("link", { name: /ver detalles de producto/i })).toHaveLength(2);
+    expect(screen.queryByRole("heading", { name: "Producto 3" })).toBeNull();
   });
 
-  it("renders at most eight featured products on desktop without hidden duplicates", () => {
-    setWideViewport(true);
+  it("renders a single row of six featured products and a real continuation on wide desktop", () => {
+    setViewportWidth(1440);
     render(<HomePage featuredProducts={createProducts(10)} categories={[]} />);
 
-    expect(screen.getAllByRole("link", { name: /ver detalles de producto/i })).toHaveLength(8);
-    expect(screen.queryByRole("heading", { name: "Producto 9" })).toBeNull();
+    expect(screen.getAllByRole("link", { name: /ver detalles de producto/i })).toHaveLength(6);
+    expect(screen.queryByRole("heading", { name: "Producto 7" })).toBeNull();
+    expect(screen.getByRole("link", { name: "Ver más destacados" }).getAttribute("href")).toBe(
+      "/destacados",
+    );
   });
 
   it("renders every eligible category supplied by the backend without a presentation cap", () => {
@@ -107,6 +110,18 @@ describe("Homepage", () => {
         screen.getByRole("link", { name: new RegExp(category.name, "i") }).getAttribute("href"),
       ).toBe(`/categorias/${category.slug}`);
     }
+    expect(screen.getByRole("link", { name: "Ver todas" }).getAttribute("href")).toBe(
+      "/categorias",
+    );
+    expect(screen.getByRole("link", { name: "Categoría 2" }).closest("li")?.className).toContain(
+      "hidden min-[400px]:block",
+    );
+    expect(screen.getByRole("link", { name: "Categoría 3" }).closest("li")?.className).toContain(
+      "hidden sm:block",
+    );
+    expect(screen.getByRole("link", { name: "Categoría 8" }).closest("li")?.className).toContain(
+      "hidden",
+    );
   });
 
   it("keeps a featured product without a current offer discoverable", () => {
@@ -139,9 +154,20 @@ describe("Homepage", () => {
   it("renders categories as category destinations instead of repeated product groups", () => {
     render(<HomePage {...populatedPayload} />);
 
-    expect(screen.getByRole("link", { name: /audio/i }).getAttribute("href")).toBe(
-      "/categorias/audio",
+    const categoryLink = screen.getByRole("link", { name: "Audio" });
+    expect(categoryLink.getAttribute("href")).toBe("/categorias/audio");
+    expect(categoryLink.textContent).toBe("Audio");
+    expect(categoryLink.querySelector("span")?.className).toContain("h-[100px]");
+    expect(categoryLink.querySelector("span")?.className).toContain("rounded-full");
+    expect(categoryLink.querySelector("h3")?.className).toContain("text-center");
+    expect(categoryLink.closest("ul")?.className).toContain("gap-[30px]");
+    expect(categoryLink.closest("ul")?.className).toContain("xl:justify-start");
+    expect(categoryLink.closest("ul")?.parentElement?.className).toContain("xl:justify-between");
+    expect(categoryLink.closest("ul")?.parentElement?.className).toContain("xl:items-center");
+    expect(screen.getByText("Explora el catálogo según tus intereses.").className).toContain(
+      "xl:whitespace-nowrap",
     );
+    expect(categoryLink.className).not.toMatch(/border|shadow|bg-/);
     expect(screen.getAllByRole("heading", { name: "Audífonos Studio" })).toHaveLength(1);
   });
 
@@ -157,6 +183,14 @@ describe("Homepage", () => {
     }
     expect(contact.getAttribute("href")).toContain("https://wa.me/573506928681");
     expect(contact.getAttribute("target")).toBe("_blank");
+    const contactSection = document.getElementById("contacto");
+    const contactImage = contactSection?.querySelector("img");
+    expect(contactImage?.getAttribute("src")).toBe("/images/whatsapp-contact.png");
+    expect(contactImage?.getAttribute("alt")).toBe("");
+    expect(contactImage?.className).toContain("object-cover");
+    expect(contactImage?.closest("div")?.parentElement?.className).toContain(
+      "lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)]",
+    );
 
     const pageText = document.body.textContent ?? "";
     expect(pageText).not.toMatch(
@@ -167,47 +201,73 @@ describe("Homepage", () => {
   it("renders approved payment information as static content before contact", () => {
     render(<HomePage {...populatedPayload} />);
 
-    const heading = screen.getByRole("heading", { name: "Medios de pago" });
-    const paymentSection = heading.closest("section");
+    const paymentSection = screen.getByRole("region", { name: "Medios de pago" });
     const contactHeading = screen.getByRole("heading", {
       name: /quieres conocer mejor un producto/i,
     });
     const contactSection = contactHeading.closest("section");
-    const methods = paymentSection?.querySelectorAll("li");
 
     expect(paymentSection?.id).toBe("medios-de-pago");
-    expect(methods ? Array.from(methods, (method) => method.textContent) : []).toEqual([
-      "Binance",
-      "Pago móvil",
-      "Dólares en efectivo",
-    ]);
     expect(
-      screen.getByText(
-        "Aceptamos Binance, pago móvil y dólares en efectivo. Confirma los detalles del pago directamente con Mandoquita.",
-      ),
+      screen.getByText(/Elige la opción que te resulte más cómoda: aceptamos Binance/i),
     ).toBeTruthy();
+    const paymentBanner = paymentSection.querySelector("img");
+    expect(paymentBanner?.getAttribute("alt")).toBe("");
+    expect(paymentBanner?.className).toContain("xl:h-[350px]");
+    expect(screen.getByRole("heading", { name: "Medios de pago" }).parentElement?.className).toContain(
+      "absolute",
+    );
     expect(
       paymentSection && contactSection
         ? paymentSection.compareDocumentPosition(contactSection) & Node.DOCUMENT_POSITION_FOLLOWING
         : 0,
     ).toBeTruthy();
 
-    const continuation = screen.getByRole("link", { name: "Consultar por WhatsApp" });
-    expect(continuation.getAttribute("href")).toContain("https://wa.me/573506928681");
-    expect(continuation.getAttribute("target")).toBe("_blank");
-    expect(paymentSection?.querySelectorAll("a, button")).toHaveLength(1);
-    expect(paymentSection?.querySelectorAll("[data-icon]"))?.toHaveLength(2);
-    for (const icon of paymentSection?.querySelectorAll("[data-icon] svg") ?? []) {
-      expect(icon.getAttribute("aria-hidden")).toBe("true");
-      expect(icon.getAttribute("focusable")).toBe("false");
+    expect(paymentSection?.querySelectorAll("a, button, input, select")).toHaveLength(0);
+    expect(paymentSection?.querySelectorAll("[data-icon]"))?.toHaveLength(0);
+  });
+
+  it("uses the canonical Banner, Categories, Featured, Payment, selected Category and Contact order", () => {
+    setViewportWidth(1440);
+    render(<HomePage {...populatedPayload} selectedCategoryProducts={{ category: populatedPayload.categories[0], products: [product], businessDate: "2026-07-14" }} />);
+
+    const main = screen.getByRole("main");
+    const slider = screen.getByLabelText("Contenido destacado");
+    expect(slider.className).toContain("w-full");
+    const sliderContentContainers = Array.from(slider.querySelectorAll("div")).filter((node) =>
+      node.className.includes("max-w-[1400px]"),
+    );
+    expect(sliderContentContainers.length).toBeGreaterThanOrEqual(2);
+    expect(sliderContentContainers.every((node) => node.className.includes("px-6"))).toBe(true);
+    const ordered = [
+      screen.getByLabelText("Contenido destacado"),
+      document.getElementById("categorias"),
+      document.getElementById("destacados"),
+      document.getElementById("medios-de-pago"),
+      document.getElementById("seleccion-categoria"),
+      document.getElementById("contacto"),
+    ].filter((node): node is HTMLElement => Boolean(node));
+    expect(ordered).toHaveLength(6);
+    expect(ordered.every((node) => main.contains(node))).toBe(true);
+    for (let index = 0; index < ordered.length - 1; index += 1) {
+      expect(ordered[index].compareDocumentPosition(ordered[index + 1]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     }
+    expect(screen.getByRole("link", { name: "Ver categoría Audio" }).getAttribute("href")).toBe("/categorias/audio");
+  });
+
+  it("omits the complete selected-Category region when the server projection is absent or empty", () => {
+    const { rerender } = render(<HomePage {...populatedPayload} selectedCategoryProducts={null} />);
+    expect(document.getElementById("seleccion-categoria")).toBeNull();
+    rerender(<HomePage {...populatedPayload} selectedCategoryProducts={{ category: populatedPayload.categories[0], products: [], businessDate: "2026-07-14" }} />);
+    expect(document.getElementById("seleccion-categoria")).toBeNull();
   });
 
   it("keeps payment information readable and non-transactional without a contact URL", () => {
     render(<PaymentInformation />);
 
-    const section = screen.getByRole("heading", { name: "Medios de pago" }).closest("section");
-    expect(section?.querySelectorAll("li")).toHaveLength(3);
+    const section = screen.getByRole("region", { name: "Medios de pago" });
+    expect(section.querySelectorAll("li")).toHaveLength(0);
+    expect(section.querySelector("img")?.getAttribute("alt")).toBe("");
     expect(section?.querySelectorAll("a, button, input, select")).toHaveLength(0);
     expect(screen.queryByRole("link", { name: "Consultar por WhatsApp" })).toBeNull();
     expect(document.body.textContent).not.toMatch(/checkout|pagar ahora|orden|transacción/i);

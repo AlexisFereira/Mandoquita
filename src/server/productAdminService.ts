@@ -48,6 +48,19 @@ export const productUpdateSchema = z.object({
   }
 });
 
+export const productCreateSchema = z.object({
+  slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(160),
+  name: z.string().trim().min(1).max(200),
+  price: z.union([stringPrice, numericPrice]),
+  currency: z.string().trim().regex(/^[A-Z]{3}$/),
+  baseSku: z.string().trim().min(1).max(120).regex(/^[A-Za-z0-9._-]+$/),
+  productTypeId: nullableText(200).optional(),
+}).strict();
+
+export const productLifecycleSchema = z.object({
+  expectedUpdatedAt: z.string().datetime({ offset: true }),
+}).strict();
+
 export type ProductUpdateInput = z.input<typeof productUpdateSchema>;
 
 export type AdminProductItem = {
@@ -70,6 +83,7 @@ export type AdminProductItem = {
   featured: boolean;
   featuredOrder: number | null;
   productTypeId: string | null;
+  retiredAt: string | null;
   updatedAt: string;
 };
 
@@ -96,6 +110,7 @@ const adminProductSelect = {
   featured: true,
   featuredOrder: true,
   productTypeId: true,
+  retiredAt: true,
   updatedAt: true,
 } as const;
 
@@ -108,6 +123,7 @@ function mapAdminProduct(product: SelectedAdminProduct): AdminProductItem {
     genderApplicability: product.genderApplicability
       ? product.genderApplicability.toLowerCase() as AdminProductItem["genderApplicability"]
       : null,
+    retiredAt: product.retiredAt?.toISOString() ?? null,
     updatedAt: product.updatedAt.toISOString(),
   };
 }
@@ -138,6 +154,8 @@ export async function updateProductById(
     where: { id },
     select: {
       editorialApproved: true,
+      slug: true,
+      retiredAt: true,
       published: true,
       productTypeId: true,
       featured: true,
@@ -153,6 +171,12 @@ export async function updateProductById(
     },
   });
   if (!current) throw new ProductNotFoundError("Product not found");
+  if (current.retiredAt) throw new ProductUpdateConflictError("Retired Product must be restored before editing");
+
+  if (input.slug && input.slug !== current.slug) {
+    const reserved = await prisma.productSlugAlias.findUnique({ where: { slug: input.slug }, select: { slug: true } });
+    if (reserved) throw new ProductUpdateConflictError("Product slug is historically reserved");
+  }
 
   const published = input.published ?? current.published;
   const editorialApproved = input.editorialApproved ?? current.editorialApproved;
@@ -213,7 +237,95 @@ export async function updateProductById(
     throw new ProductUpdateConflictError("Product changed since it was read");
   }
 
+  if (input.slug && input.slug !== current.slug) {
+    await prisma.productSlugAlias.create({ data: { slug: current.slug, productId: id } });
+  }
+
   const updated = await prisma.product.findUnique({ where: { id }, select: adminProductSelect });
   if (!updated) throw new ProductNotFoundError("Product not found");
   return mapAdminProduct(updated);
+}
+
+async function assertProductSlugAvailable(prisma: PrismaClient | Prisma.TransactionClient, slug: string) {
+  const [product, alias] = await Promise.all([
+    prisma.product.findUnique({ where: { slug }, select: { id: true } }),
+    prisma.productSlugAlias.findUnique({ where: { slug }, select: { slug: true } }),
+  ]);
+  if (product || alias) throw new ProductUpdateConflictError("Product slug is reserved");
+}
+
+export async function createProductWithBaseVariant(
+  prisma: PrismaClient | Prisma.TransactionClient,
+  rawInput: unknown,
+) {
+  const input = productCreateSchema.parse(rawInput);
+  await assertProductSlugAvailable(prisma, input.slug);
+  if (input.productTypeId) {
+    const leaf = await prisma.productType.findFirst({
+      where: { name: input.productTypeId, active: true,
+        subcategory: { active: true, category: { active: true, version: { status: "ACTIVE" } } } },
+      select: { name: true },
+    });
+    if (!leaf) throw new ProductUpdateConflictError("Product Type must belong to the active taxonomy");
+  }
+  const product = await prisma.product.create({
+    data: {
+      slug: input.slug, name: input.name, price: input.price, currency: input.currency,
+      productTypeId: input.productTypeId ?? null,
+      active: false, editorialApproved: false, published: false,
+      commerciallyAvailable: false, featured: false, featuredOrder: null,
+      variants: { create: { sku: input.baseSku, isBase: true, active: true } },
+    },
+    select: adminProductSelect,
+  });
+  return mapAdminProduct(product);
+}
+
+export async function retireProduct(
+  prisma: PrismaClient | Prisma.TransactionClient,
+  id: number,
+  rawInput: unknown,
+  actorAccountId: string,
+) {
+  const input = productLifecycleSchema.parse(rawInput);
+  const result = await prisma.product.updateMany({
+    where: { id, retiredAt: null, updatedAt: new Date(input.expectedUpdatedAt) },
+    data: {
+      retiredAt: new Date(), retiredByAccountId: actorAccountId,
+      active: false, published: false, commerciallyAvailable: false,
+      featured: false, featuredOrder: null,
+    },
+  });
+  if (!result.count) {
+    const exists = await prisma.product.findUnique({ where: { id }, select: { id: true } });
+    if (!exists) throw new ProductNotFoundError("Product not found");
+    throw new ProductUpdateConflictError("Product changed or is already retired");
+  }
+  const product = await prisma.product.findUnique({ where: { id }, select: adminProductSelect });
+  if (!product) throw new ProductNotFoundError("Product not found");
+  return mapAdminProduct(product);
+}
+
+export async function restoreProduct(
+  prisma: PrismaClient | Prisma.TransactionClient,
+  id: number,
+  rawInput: unknown,
+) {
+  const input = productLifecycleSchema.parse(rawInput);
+  const result = await prisma.product.updateMany({
+    where: { id, retiredAt: { not: null }, updatedAt: new Date(input.expectedUpdatedAt) },
+    data: {
+      retiredAt: null, retiredByAccountId: null,
+      active: false, editorialApproved: false, published: false,
+      commerciallyAvailable: false, featured: false, featuredOrder: null,
+    },
+  });
+  if (!result.count) {
+    const exists = await prisma.product.findUnique({ where: { id }, select: { id: true } });
+    if (!exists) throw new ProductNotFoundError("Product not found");
+    throw new ProductUpdateConflictError("Product changed or is not retired");
+  }
+  const product = await prisma.product.findUnique({ where: { id }, select: adminProductSelect });
+  if (!product) throw new ProductNotFoundError("Product not found");
+  return mapAdminProduct(product);
 }

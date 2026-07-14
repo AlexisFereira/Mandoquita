@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import { Button } from "./Button";
+import { Container } from "./Container";
 import { Icon } from "./Icon";
 import { PoliteStatus } from "./PoliteStatus";
 
@@ -101,20 +102,24 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
       }}
     >
       <div
-        className="flex"
-        style={{
-          width: `${computedSlides.length * 100}%`,
-          transform: `translateX(-${activeIndex * (100 / computedSlides.length)}%)`,
-          transition: prefersReducedMotion ? "none" : "transform 320ms ease",
-        }}
+        className="relative h-[200px] w-full sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px]"
       >
         {computedSlides.map((slide, index) => (
-          <article key={slide.title} className="relative" style={{ width: `${100 / computedSlides.length}%`, flex: `0 0 ${100 / computedSlides.length}%` }}>
-            <div className="relative h-[clamp(220px,44vw,520px)] w-full overflow-hidden">
+          <article
+            key={slide.title}
+            aria-hidden={activeIndex !== index}
+            className={`absolute inset-0 ${activeIndex === index ? "pointer-events-auto" : "pointer-events-none"}`}
+            style={{
+              opacity: activeIndex === index ? 1 : 0,
+              zIndex: activeIndex === index ? 1 : 0,
+              transition: prefersReducedMotion ? "none" : "opacity 320ms ease",
+            }}
+          >
+            <div className="relative h-full w-full overflow-hidden">
               <img src="/images/banners/default-banner.svg" alt="" aria-hidden="true" width="1280" height="720" className="absolute inset-0 h-full w-full object-cover" />
               <img
                 src={slide.imageUrl}
-                alt={slide.title}
+                alt=""
                 width="1280"
                 height="720"
                 sizes="(min-width: 1024px) 45vw, 100vw"
@@ -123,10 +128,12 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
                 className="absolute inset-0 h-full w-full object-cover transition-opacity duration-200 motion-reduce:transition-none"
                 style={{ opacity: loadedSlides[index] ? 1 : 0 }}
               />
-              <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-inverse-surface/85 via-inverse-surface/60 to-transparent px-5 pb-20 pt-24 text-inverse-foreground sm:px-7">
-                <h2 className="max-w-xl text-2xl font-semibold tracking-[-0.03em] sm:text-3xl">{slide.title}</h2>
-                {slide.description ? <p className="mt-2 max-w-xl text-sm leading-6 text-inverse-muted sm:text-base">{slide.description}</p> : null}
-                {slide.action ? <Button href={slide.action.href} size="sm" className="mt-4">{slide.action.label}</Button> : null}
+              <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-inverse-surface/85 via-inverse-surface/60 to-transparent pb-16 pt-6 text-inverse-foreground sm:pb-20 sm:pt-12 lg:pt-16">
+                <Container size="wide" padding="lg">
+                  <h2 className="max-w-xl text-xl font-semibold tracking-[-0.03em] sm:text-2xl lg:text-3xl">{slide.title}</h2>
+                  {slide.description ? <p className="mt-1 max-w-xl text-xs leading-5 text-inverse-muted sm:mt-2 sm:text-sm sm:leading-6 lg:text-base">{slide.description}</p> : null}
+                  {slide.action ? <Button href={slide.action.href} size="sm" tabIndex={activeIndex === index ? undefined : -1} className="mt-2 sm:mt-3">{slide.action.label}</Button> : null}
+                </Container>
               </div>
             </div>
           </article>
@@ -134,24 +141,26 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
       </div>
 
       {computedSlides.length > 1 ? (
-        <div className="absolute inset-x-0 bottom-0 z-20 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-b from-transparent to-inverse-surface/45 px-4 py-3">
-          <div className="flex gap-1">
-            {computedSlides.map((slide, index) => (
-              <button
-                key={slide.title}
-                type="button"
-                onClick={() => goToSlide(index)}
-                aria-label={`Ir a la diapositiva ${index + 1}`}
-                aria-current={activeIndex === index ? "true" : "false"}
-                className="h-11 w-11 cursor-pointer rounded-full border-0"
-                style={{ background: activeIndex === index ? "radial-gradient(circle, rgb(var(--inverse-foreground) / 1) 0 5px, transparent 6px)" : "radial-gradient(circle, rgb(var(--inverse-muted) / 1) 0 4px, transparent 5px)" }}
-              />
-            ))}
-          </div>
-          <div className="flex gap-2">
-            <button type="button" onClick={() => goToSlide(activeIndex - 1)} aria-label="Diapositiva anterior" className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-inverse-surface/75 px-3 text-inverse-foreground"><Icon name="previous" /><span className="sr-only sm:not-sr-only sm:ml-1">Anterior</span></button>
-            <button type="button" onClick={() => goToSlide(activeIndex + 1)} aria-label="Diapositiva siguiente" className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-inverse-surface/75 px-3 text-inverse-foreground"><span className="sr-only sm:not-sr-only sm:mr-1">Siguiente</span><Icon name="next" /></button>
-          </div>
+        <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-b from-transparent to-inverse-surface/45 py-3">
+          <Container size="wide" padding="lg" className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex gap-1">
+              {computedSlides.map((slide, index) => (
+                <button
+                  key={slide.title}
+                  type="button"
+                  onClick={() => goToSlide(index)}
+                  aria-label={`Ir a la diapositiva ${index + 1}`}
+                  aria-current={activeIndex === index ? "true" : "false"}
+                  className="h-11 w-11 cursor-pointer rounded-full border-0"
+                  style={{ background: activeIndex === index ? "radial-gradient(circle, rgb(var(--inverse-foreground) / 1) 0 5px, transparent 6px)" : "radial-gradient(circle, rgb(var(--inverse-muted) / 1) 0 4px, transparent 5px)" }}
+                />
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <button type="button" onClick={() => goToSlide(activeIndex - 1)} aria-label="Diapositiva anterior" className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-inverse-surface/75 px-3 text-inverse-foreground"><Icon name="previous" /><span className="sr-only sm:not-sr-only sm:ml-1">Anterior</span></button>
+              <button type="button" onClick={() => goToSlide(activeIndex + 1)} aria-label="Diapositiva siguiente" className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-inverse-surface/75 px-3 text-inverse-foreground"><span className="sr-only sm:not-sr-only sm:mr-1">Siguiente</span><Icon name="next" /></button>
+            </div>
+          </Container>
         </div>
       ) : null}
     </section>

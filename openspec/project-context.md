@@ -58,8 +58,8 @@ Current scope includes:
 
 The following features are intentionally excluded:
 
-- User Registration
-- Authentication
+- Public/customer registration
+- Public/customer authentication
 - Shopping Cart
 - Checkout
 - Online Payments
@@ -79,6 +79,20 @@ Static accepted-payment information is presentation content, not an Online
 Payment capability. It may identify only business-approved methods and direct the
 visitor to external contact; it cannot select, validate, calculate, capture or
 complete a payment.
+
+Homepage Merchandising Layout V2 uses this active discovery order: full-width
+Banner Slider, all eligible Categories, Featured Products, informational Payment
+Methods Banner, up to six Products from one anonymous deterministic daily
+Category, then Contact and Footer. Non-Banner content opts into a 1400px maximum
+and Category/Product collections use 2/3/4/6 columns at 320/640/1024/1400px.
+Selection uses the Bogotá business date on the server and is neither visitor
+personalization nor client-side randomness.
+
+Product Detail may continue discovery through one WhatsApp information request
+and one canonical Share action. Both use only public Product name and the
+governed canonical Product URL; price, Variant, visitor, referrer, session and
+administrative data are excluded. These actions create no transaction, lead,
+analytics event or delivery guarantee.
 
 ---
 
@@ -108,20 +122,27 @@ The platform is optimized for customers rather than administrators.
 
 # Administrative Operations
 
-Product Admin V1 provides one isolated `/admin` capability for an authorized
-maintainer to review and update the approved scalar fields of existing Products.
-It is an operational capability, not part of the public visitor journey and not
-an expansion into accounts, cart, checkout, Online Payments or orders.
+Admin Catalog Management V2 provides one isolated `/admin` operational
+capability backed by named accounts: exactly one Deployment-bootstrapped,
+protected Superadministrator and multiple fixed-role Administrators. The former
+shared six-digit credential is not accepted. Passwords use Argon2id, temporary
+credentials require replacement, and credential lifecycle changes revoke every
+named server-side session for the account.
 
-Production administration requires a temporary server-side session and a
-managed perimeter such as an approved access proxy, VPN/private network or
-operator-network allowlist. The six-digit credential is not sufficient for
-unrestricted Internet exposure. Product Admin scalar editing remains separate
-from Catalog Media Admin V1, which reuses the isolated session and managed
-perimeter so a maintainer can manage media for existing Products and Categories
-through temporary validated uploads without receiving storage credentials.
-Variants, taxonomy structure, Product/Category creation or deletion, and
-transactional or operational data remain outside both capabilities.
+Production administration still requires managed-edge attestation in addition
+to the named opaque `HttpOnly` session, origin and CSRF protections. The
+Superadministrator alone manages Administrator creation, password reset,
+deactivation and reactivation; there is no self-service recovery or configurable
+permission model.
+
+Authorized Administrators can list/create/edit/retire/restore Products and
+Categories through strict transactional contracts. Product creation includes
+one explicit Base SKU/Variant. Retirement is reversible and non-cascading;
+historical Product/Category slugs remain reserved and permanently redirect only
+while the canonical resource is publicly eligible. Catalog Media Admin remains
+the sole Product/Category Image ownership and upload capability. Taxonomy-version
+management, Variant matrices, bulk mutation, cart, checkout, Online Payments,
+orders and physical purge remain outside this capability.
 
 ---
 

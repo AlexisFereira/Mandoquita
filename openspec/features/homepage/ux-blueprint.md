@@ -4,6 +4,12 @@ Status: Approved
 
 Finalized: 2026-07-12
 
+> **Active UX amendment (2026-07-14):** `merchandising-layout-v2.md` and
+> `../../changes/homepage-merchandising-layout-v2/ux-blueprint.md` supersede the
+> V1 section order and Hero journey below. The active journey begins with the
+> full-width Banner Slider, then Categories, Featured Products, Payment Methods,
+> daily selected-Category Products and Contact.
+
 ## Feature Goal
 
 From the visitor's perspective, the homepage must quickly answer four questions:

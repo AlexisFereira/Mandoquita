@@ -38,6 +38,7 @@
   --container-md: 768px;
   --container-lg: 1120px;
   --container-xl: 1280px;
+  --container-wide: 1400px;
   --font-sans: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-display: Manrope, Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --line-height-body: 1.55;

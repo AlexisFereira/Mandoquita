@@ -1,6 +1,11 @@
 import { createHash, randomUUID } from "node:crypto";
 
-import { PutObjectCommand, S3Client, type PutObjectCommandInput } from "@aws-sdk/client-s3";
+import {
+  PutObjectCommand,
+  S3Client,
+  type PutObjectCommandInput,
+  type S3ClientConfig,
+} from "@aws-sdk/client-s3";
 import { z } from "zod";
 
 const storageConfigSchema = z.object({
@@ -45,6 +50,19 @@ export function getS3ImageStorageConfig(
   });
   if (!result.success) throw new S3ImageConfigurationError("S3 image storage is not configured");
   return result.data;
+}
+
+/**
+ * Keep authentication outside application configuration. In Amplify Hosting,
+ * AWS SDK v3 resolves the temporary credentials exposed by the attached SSR
+ * Compute role through its default credential provider chain.
+ */
+export function getS3ClientConfig(config: Pick<S3ImageStorageConfig, "region">): S3ClientConfig {
+  return { region: config.region };
+}
+
+export function createS3Client(config: Pick<S3ImageStorageConfig, "region">) {
+  return new S3Client(getS3ClientConfig(config));
 }
 
 function detectedImage(body: Buffer): { contentType: StoredImage["contentType"]; extension: string } | null {
@@ -110,7 +128,7 @@ export async function uploadImageToS3(
     ServerSideEncryption: config.kmsKeyId ? "aws:kms" : "AES256",
     ...(config.kmsKeyId ? { SSEKMSKeyId: config.kmsKeyId } : {}),
   };
-  const client = dependencies?.client ?? new S3Client({ region: config.region });
+  const client = dependencies?.client ?? createS3Client(config);
   await client.send(new PutObjectCommand(putInput));
 
   return {

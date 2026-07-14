@@ -28,6 +28,7 @@ function selectedProduct(overrides: Record<string, unknown> = {}) {
     featured: true,
     featuredOrder: 1,
     productTypeId: "Camiseta oversize",
+    retiredAt: null,
     updatedAt: now,
     ...overrides,
   };
@@ -36,6 +37,8 @@ function selectedProduct(overrides: Record<string, unknown> = {}) {
 function currentProduct(overrides: Record<string, unknown> = {}) {
   return {
     editorialApproved: true,
+    slug: "camiseta-acid-wash-oversize-cw",
+    retiredAt: null,
     published: true,
     productTypeId: "Camiseta oversize",
     featured: true,
@@ -66,6 +69,10 @@ describe("updateProductById", () => {
         updateMany: vi.fn().mockResolvedValue({ count: 1 }),
       },
       productType: { findFirst: vi.fn().mockResolvedValue({ name: "Camiseta" }) },
+      productSlugAlias: {
+        findUnique: vi.fn().mockResolvedValue(null),
+        create: vi.fn().mockResolvedValue({ slug: "camiseta-acid-wash-oversize-cw" }),
+      },
     } as any;
 
     await updateProductById(prisma, 200000, {

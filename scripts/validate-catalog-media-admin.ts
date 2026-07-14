@@ -37,6 +37,7 @@ function context(operation: string) {
   return {
     sessionId,
     sessionIdHash: randomBytes(32).toString("hex"),
+    actorAccountId: `${runId}-actor`,
     requestId: `${runId}-${operation}`,
     idempotencyKey: `${runId}-${operation}`,
   };

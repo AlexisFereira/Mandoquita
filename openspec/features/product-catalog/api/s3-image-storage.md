@@ -25,12 +25,16 @@ Optional configuration:
 | `AWS_S3_CATEGORY_IMAGE_PREFIX` | `images/categories` | Category media object-key namespace. |
 | `AWS_S3_IMAGE_MAX_BYTES` | `5242880` | Maximum bytes per file; hard ceiling is 20 MiB. |
 | `AWS_S3_KMS_KEY_ID` | unset | KMS key ID/ARN/alias; when absent S3 AES-256 is used. |
-| `AWS_ACCESS_KEY_ID` | credential chain | Static credential only when the runtime has no IAM Role. |
-| `AWS_SECRET_ACCESS_KEY` | credential chain | Secret paired with the static access key. |
-| `AWS_SESSION_TOKEN` | unset | Required only for temporary static credentials. |
 
-Production should use an IAM Role rather than persisted access keys. The media
-administration and cleanup runtime needs scoped `s3:PutObject` and
+`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN` are not
+application configuration and must not be persisted in Amplify variables or
+generated `.env` files. `S3Client` is constructed with only `region`; AWS SDK v3
+uses its default credential provider chain to obtain and refresh temporary
+credentials from the Amplify SSR Compute role. Local operators should use an
+approved AWS profile or IAM Identity Center session rather than add keys to this
+repository.
+
+The media administration and cleanup runtime needs scoped `s3:PutObject` and
 `s3:DeleteObject` for the Product and Category prefixes; it does not require
 bucket listing. The separately deployed upload-only operator may retain only
 `s3:PutObject`. When KMS is enabled the applicable runtime also needs the key

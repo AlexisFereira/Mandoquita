@@ -6,6 +6,12 @@ Owner: React Frontend Architect
 
 Last Reviewed: 2026-07-12
 
+> **V2 synchronization (2026-07-14):** This file remains V1 release history.
+> Homepage Merchandising Layout V2 is implemented and its active Backend/
+> Frontend evidence lives under
+> `../../changes/homepage-merchandising-layout-v2/`. HML QA and Release gates are
+> still open; this V1 completion status does not close them.
+
 ## Resolved Decisions
 
 The following earlier blockers are implemented and no longer prevent frontend

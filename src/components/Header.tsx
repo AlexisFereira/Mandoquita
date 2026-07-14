@@ -17,9 +17,9 @@ export function Header() {
   const [logoFailed, setLogoFailed] = useState(false);
 
   return (
-    <header className="site-header sticky z-[1000] w-full border-b border-[rgb(var(--inverse-border)/1)] bg-[rgb(var(--inverse-surface)/1)] text-[rgb(var(--inverse-foreground)/1)] shadow-sm">
+    <header className="site-header sticky z-[1000] w-full border-b border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] text-[rgb(var(--foreground)/1)] shadow-sm">
       <Container
-        size="xl"
+        size="wide"
         padding="lg"
         className="flex min-h-[72px] items-center justify-between gap-6"
       >
@@ -34,10 +34,10 @@ export function Header() {
             <img
               src="/images/logo.png"
               alt="Mandoquita"
-              width="1024"
-              height="672"
+              width="685"
+              height="264"
               onError={() => setLogoFailed(true)}
-              className="h-[50px] w-auto object-contain"
+              className="h-[50px] w-auto object-contain invert"
             />
           )}
         </Link>
@@ -50,7 +50,7 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="inline-flex min-h-11 items-center border-b-2 border-transparent px-1 text-sm font-semibold text-[rgb(var(--inverse-muted)/1)] transition-colors hover:border-[rgb(var(--inverse-foreground)/1)] hover:text-[rgb(var(--inverse-foreground)/1)]"
+              className="inline-flex min-h-11 items-center border-b-2 border-transparent px-1 text-sm font-semibold text-[rgb(var(--muted)/1)] transition-colors hover:border-[rgb(var(--primary)/1)] hover:text-[rgb(var(--foreground)/1)]"
             >
               {item.icon ? <Icon name={item.icon} className="mr-2" /> : null}
               {item.label}
@@ -64,7 +64,7 @@ export function Header() {
           aria-expanded={open}
           aria-controls="mobile-navigation"
           onClick={() => setOpen((value) => !value)}
-          className="mobile-toggle min-h-11 min-w-11 rounded-md border border-[rgb(var(--inverse-border)/1)] bg-transparent px-3 text-sm font-semibold text-[rgb(var(--inverse-foreground)/1)]"
+          className="mobile-toggle min-h-11 min-w-11 rounded-md border border-[rgb(var(--border)/1)] bg-transparent px-3 text-sm font-semibold text-[rgb(var(--foreground)/1)]"
         >
           <Icon name={open ? "close" : "menu"} className="mr-2" />
           {open ? "Cerrar" : "Menú"}
@@ -75,15 +75,15 @@ export function Header() {
         <nav
           id="mobile-navigation"
           aria-label="Navegación móvil"
-          className="border-t border-[rgb(var(--inverse-border)/1)] bg-[rgb(var(--inverse-surface)/1)]"
+          className="border-t border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)]"
         >
-          <Container size="xl" padding="lg" className="grid gap-1 py-3">
+          <Container size="wide" padding="lg" className="grid gap-1 py-3">
             {navigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="flex min-h-11 items-center rounded-md px-3 font-semibold text-[rgb(var(--inverse-muted)/1)] hover:bg-[rgb(var(--inverse-foreground)/0.1)] hover:text-[rgb(var(--inverse-foreground)/1)]"
+                className="flex min-h-11 items-center rounded-md px-3 font-semibold text-[rgb(var(--muted)/1)] hover:bg-[rgb(var(--surface-muted)/1)] hover:text-[rgb(var(--foreground)/1)]"
               >
                 {item.icon ? <Icon name={item.icon} className="mr-2" /> : null}
                 {item.label}

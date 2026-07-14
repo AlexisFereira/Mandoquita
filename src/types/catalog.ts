@@ -80,6 +80,8 @@ export type ProductDetailResponse = {
   item: ProductItem;
   variantSelection: ProductVariantSelection;
   related: ProductItem[];
+  canonicalUrl: string | null;
+  whatsappUrl: string | null;
 };
 
 export type HomepageCategory = {
@@ -106,4 +108,9 @@ export type TaxonomyCategory = HomepageCategory & {
 export type HomepagePayload = {
   featuredProducts: ProductItem[];
   categories: HomepageCategory[];
+  selectedCategoryProducts?: {
+    category: Pick<HomepageCategory, "id" | "slug" | "name">;
+    products: ProductItem[];
+    businessDate: string;
+  } | null;
 };

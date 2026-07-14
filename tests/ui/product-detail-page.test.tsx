@@ -1,8 +1,8 @@
 import "@testing-library/jest-dom/vitest";
 
 import React from "react";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import ProductDetailPage, {
   createProductStructuredData,
@@ -30,7 +30,16 @@ const unavailableProduct: ProductItem = {
   productType: { name: "Audífonos" },
 };
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  Reflect.deleteProperty(navigator, "share");
+  Reflect.deleteProperty(navigator, "clipboard");
+  vi.restoreAllMocks();
+});
+
+function setBrowserCapability(name: "share" | "clipboard", value: unknown) {
+  Object.defineProperty(navigator, name, { configurable: true, value });
+}
 
 describe("Product detail commercial availability", () => {
   it("shows a deterministic unavailable offer while preserving published detail", () => {
@@ -39,10 +48,13 @@ describe("Product detail commercial availability", () => {
         item={unavailableProduct}
         variantSelection={{ mode: "none", variants: [] }}
         related={[]}
+        canonicalUrl={null}
+        whatsappUrl={null}
       />,
     );
 
     expect(screen.getByRole("heading", { name: unavailableProduct.name })).toBeTruthy();
+    expect(screen.getByRole("main").firstElementChild?.className).toContain("max-w-[1400px]");
     expect(screen.getByText("Oferta no disponible actualmente")).toBeTruthy();
     expect(container.textContent).not.toMatch(/null|0\.00/);
 
@@ -104,10 +116,12 @@ describe("Product detail commercial availability", () => {
           ],
         }}
         related={[]}
+        canonicalUrl={null}
+        whatsappUrl={null}
       />,
     );
 
-    expect(screen.getByRole("region", { name: `Galería de ${item.name}` })).toBeTruthy();
+    expect(screen.getByRole("region", { name: `Imágenes de ${item.name}` })).toBeTruthy();
     expect(screen.getByRole("img", { name: "Camiseta roja" })).toBeTruthy();
     expect(screen.getByText(item.shortDescription!)).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Descripción" })).toBeTruthy();
@@ -146,6 +160,8 @@ describe("Product detail commercial availability", () => {
           }],
         }}
         related={[]}
+        canonicalUrl={null}
+        whatsappUrl={null}
       />,
     );
 
@@ -153,5 +169,118 @@ describe("Product detail commercial availability", () => {
     expect(screen.getByText("Algodón")).toBeTruthy();
     expect(screen.queryByRole("radio")).toBeNull();
     expect(screen.getByText("No hay imágenes disponibles para este producto.")).toBeTruthy();
+  });
+
+  it("uses the server-approved WhatsApp destination and exact native Share payload", async () => {
+    const share = vi.fn().mockResolvedValue(undefined);
+    setBrowserCapability("share", share);
+    const canonicalUrl = "https://mandoquita.example/products/producto-sin-oferta";
+    const whatsappUrl = "https://wa.me/573506928681?text=mensaje%20aprobado";
+
+    render(
+      <ProductDetailPage
+        item={unavailableProduct}
+        variantSelection={{ mode: "none", variants: [] }}
+        related={[]}
+        canonicalUrl={canonicalUrl}
+        whatsappUrl={whatsappUrl}
+      />,
+    );
+
+    const contact = screen.getByRole("link", { name: /Preguntar por este producto/ });
+    expect(contact).toHaveAttribute("href", whatsappUrl);
+    expect(contact).toHaveAttribute("target", "_blank");
+    expect(contact).toHaveAttribute("rel", "noopener noreferrer");
+    expect(contact).toHaveAttribute("referrerpolicy", "no-referrer");
+    expect(
+      screen.getByText(
+        "Abriremos WhatsApp con el nombre y el enlace del producto listos para enviar.",
+      ),
+    ).toBeTruthy();
+
+    const shareButton = screen.getByRole("button", { name: "Compartir producto" });
+    fireEvent.click(shareButton);
+    await waitFor(() => expect(share).toHaveBeenCalledWith({
+      title: `${unavailableProduct.name} | Mandoquita`,
+      text: `Mira “${unavailableProduct.name}” en Mandoquita.`,
+      url: canonicalUrl,
+    }));
+    await waitFor(() => expect(shareButton).toHaveFocus());
+    expect(screen.queryByRole("heading", { name: "Compartir enlace" })).toBeNull();
+  });
+
+  it("omits WhatsApp when absent and copies only the canonical fallback URL", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    setBrowserCapability("clipboard", { writeText });
+    const canonicalUrl = "https://mandoquita.example/products/producto-sin-oferta";
+
+    render(
+      <ProductDetailPage
+        item={unavailableProduct}
+        variantSelection={{ mode: "none", variants: [] }}
+        related={[]}
+        canonicalUrl={canonicalUrl}
+        whatsappUrl={null}
+      />,
+    );
+
+    expect(screen.queryByRole("link", { name: /WhatsApp/ })).toBeNull();
+    expect(screen.queryByText(/WhatsApp se abrirá/)).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Compartir producto" }));
+    expect(screen.getByRole("heading", { name: "Compartir enlace" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: `Enlace canónico de ${unavailableProduct.name}` })).toHaveAttribute("href", canonicalUrl);
+
+    const copy = screen.getByRole("button", { name: "Copiar enlace" });
+    fireEvent.click(copy);
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(canonicalUrl));
+    expect(screen.getByRole("status")).toHaveTextContent("Enlace copiado");
+    await waitFor(() => expect(copy).toHaveFocus());
+  });
+
+  it("keeps Share cancellation neutral and recovers from Share and Clipboard failure", async () => {
+    const cancellation = Object.assign(new Error("cancelled"), { name: "AbortError" });
+    const share = vi.fn().mockRejectedValueOnce(cancellation).mockRejectedValueOnce(new Error("share failed"));
+    setBrowserCapability("share", share);
+    setBrowserCapability("clipboard", { writeText: vi.fn().mockRejectedValue(new Error("denied")) });
+    const canonicalUrl = "https://mandoquita.example/products/producto-sin-oferta";
+
+    render(
+      <ProductDetailPage
+        item={unavailableProduct}
+        variantSelection={{ mode: "none", variants: [] }}
+        related={[]}
+        canonicalUrl={canonicalUrl}
+        whatsappUrl={null}
+      />,
+    );
+
+    const shareButton = screen.getByRole("button", { name: "Compartir producto" });
+    fireEvent.click(shareButton);
+    await waitFor(() => expect(share).toHaveBeenCalledTimes(1));
+    expect(screen.queryByRole("heading", { name: "Compartir enlace" })).toBeNull();
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
+    await waitFor(() => expect(shareButton).toHaveFocus());
+
+    fireEvent.click(shareButton);
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("No pudimos abrir las opciones para compartir."));
+    fireEvent.click(screen.getByRole("button", { name: "Copiar enlace" }));
+    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("No pudimos copiar el enlace. Selecciónalo para copiarlo manualmente."));
+    expect(screen.getByRole("link", { name: `Enlace canónico de ${unavailableProduct.name}` })).toHaveAttribute("href", canonicalUrl);
+  });
+
+  it("fails closed when canonical configuration is absent", () => {
+    render(
+      <ProductDetailPage
+        item={unavailableProduct}
+        variantSelection={{ mode: "none", variants: [] }}
+        related={[]}
+        canonicalUrl={null}
+        whatsappUrl={null}
+      />,
+    );
+
+    expect(screen.queryByRole("button", { name: "Compartir producto" })).toBeNull();
+    expect(screen.queryByRole("link", { name: /WhatsApp/ })).toBeNull();
+    expect(screen.getByText("Las opciones para contactar y compartir no están disponibles en este momento.")).toBeTruthy();
   });
 });

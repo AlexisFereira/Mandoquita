@@ -10,7 +10,7 @@ import { Footer } from "../../../src/components/Footer";
 import { Header } from "../../../src/components/Header";
 import { ProductCard } from "../../../src/components/ProductCard";
 import { listProducts } from "../../../src/server/catalogService";
-import { getDiscoverableCategory } from "../../../src/server/taxonomyService";
+import { getDiscoverableCategory, resolveCategorySlug } from "../../../src/server/taxonomyService";
 import type { ProductItem, TaxonomySubcategory } from "../../../src/types/catalog";
 import { APPLICATION_THEME_COLOR } from "../../../src/design-system/metadata";
 
@@ -28,14 +28,19 @@ export const getServerSideProps: GetServerSideProps<SubcategoryPageProps> = asyn
 
   if (!categorySlug || !subcategorySlug) return { notFound: true };
 
-  const category = await getDiscoverableCategory(prisma, categorySlug);
+  const resolved = await resolveCategorySlug(prisma, categorySlug);
+  const canonicalCategorySlug = resolved?.slug ?? categorySlug;
+  const category = await getDiscoverableCategory(prisma, canonicalCategorySlug);
   const subcategory = category?.subcategories.find((item) => item.slug === subcategorySlug);
   if (!category || !subcategory) {
     return { props: { category: null, subcategory: null, products: [] } };
   }
+  if (resolved?.redirected) {
+    return { redirect: { destination: `/categorias/${resolved.slug}/${subcategorySlug}`, permanent: true } };
+  }
 
   const catalog = await listProducts(prisma, {
-    category: categorySlug,
+    category: canonicalCategorySlug,
     subcategory: subcategorySlug,
     page: "1",
     limit: "50",
@@ -58,7 +63,7 @@ export default function SubcategoryPage({ category, subcategory, products }: Sub
         <a href="#main-content" className="skip-link">Ir al contenido principal</a>
         <Header />
         <main id="main-content" className="py-10 sm:py-14">
-          <Container size="xl" padding="lg">
+          <Container size="wide" padding="lg">
             <section aria-labelledby="subcategory-unavailable" className="space-y-5">
               <h1 id="subcategory-unavailable" className="ds-heading ds-heading-lg">Subcategoría no disponible</h1>
               <p className="max-w-2xl text-[rgb(var(--muted)/1)]">Esta subcategoría no está disponible para explorar en este momento.</p>
@@ -83,7 +88,7 @@ export default function SubcategoryPage({ category, subcategory, products }: Sub
       <Header />
 
       <main id="main-content" className="py-10 sm:py-14">
-        <Container size="xl" padding="lg" className="space-y-9">
+        <Container size="wide" padding="lg" className="space-y-9">
           <div className="space-y-5">
             <nav aria-label="Breadcrumb">
               <ol className="m-0 flex list-none flex-wrap items-center gap-2 p-0 text-sm">

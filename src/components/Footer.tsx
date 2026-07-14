@@ -14,7 +14,7 @@ export function Footer() {
   return (
     <footer className="border-t border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] py-10">
       <Container
-        size="xl"
+        size="wide"
         padding="lg"
         className="flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between"
       >

@@ -4,6 +4,10 @@ Status: Approved
 
 Finalized: 2026-07-12
 
+> **Active additive capability (2026-07-14):** `contact-sharing-v1.md` governs
+> Product Detail gallery integration, WhatsApp inquiry, native Share and
+> copy/manual-link recovery. It adds no Product state, transaction or media model.
+
 ## Business Problem
 
 La capacidad de detalle de producto requiere reglas de negocio mas estrictas para evitar interpretaciones divergentes sobre publicacion, disponibilidad comercial, manejo de media faltante y resultados de relacionados.

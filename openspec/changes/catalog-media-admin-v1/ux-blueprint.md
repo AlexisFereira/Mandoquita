@@ -1,5 +1,9 @@
 # Catalog Media Admin V1 — UX Solution
 
+> **Admin V2 integration (2026-07-14):** media journeys remain valid, but their
+> access/session shell is the released Admin V2 named-account experience. The
+> Product Admin V1 shared-code shell described historically is not active.
+
 Status: UX Ready — Requirements and Architecture Approved
 
 Owner: UX Solution Architect

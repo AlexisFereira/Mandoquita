@@ -35,6 +35,11 @@ enum VariantAttributeValueType {
   BOOLEAN
 }
 
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+}
+
 model TaxonomyVersion {
   id         String         @id
   version    String         @unique
@@ -46,29 +51,41 @@ model TaxonomyVersion {
 }
 
 model Category {
-  id               String          @id
-  slug             String          @unique
-  name             String
-  description      String?
-  imagePath        String?
-  imageAltText     String?
-  imageObjectKey   String?
-  imageContentType String?
-  imageWidth       Int?
-  imageHeight      Int?
-  imageSize        Int?
-  imageChecksum    String?
-  sortOrder        Int
-  active           Boolean         @default(true)
-  visible          Boolean         @default(true)
-  versionId        String
-  version          TaxonomyVersion @relation(fields: [versionId], references: [id])
-  subcategories    Subcategory[]
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  id                 String              @id
+  slug               String              @unique
+  name               String
+  description        String?
+  imagePath          String?
+  imageAltText       String?
+  imageObjectKey     String?
+  imageContentType   String?
+  imageWidth         Int?
+  imageHeight        Int?
+  imageSize          Int?
+  imageChecksum      String?
+  sortOrder          Int
+  active             Boolean             @default(true)
+  visible            Boolean             @default(true)
+  versionId          String
+  version            TaxonomyVersion     @relation(fields: [versionId], references: [id])
+  subcategories      Subcategory[]
+  slugAliases        CategorySlugAlias[]
+  retiredAt          DateTime?
+  retiredByAccountId String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 
   @@unique([versionId, sortOrder])
   @@index([versionId, active, visible, sortOrder])
+}
+
+model CategorySlugAlias {
+  slug       String   @id
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdAt  DateTime @default(now())
+
+  @@index([categoryId])
 }
 
 model Subcategory {
@@ -125,6 +142,9 @@ model Product {
   variants              ProductVariant[]
   images                ProductImage[]
   tags                  ProductTag[]
+  slugAliases           ProductSlugAlias[]
+  retiredAt             DateTime?
+  retiredByAccountId    String?
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
 
@@ -139,6 +159,15 @@ model Product {
   @@index([description(ops: raw("gin_trgm_ops"))], type: Gin, map: "Product_search_description_trgm_idx")
   @@index([brand(ops: raw("gin_trgm_ops"))], type: Gin, map: "Product_search_brand_trgm_idx")
   @@index([collection(ops: raw("gin_trgm_ops"))], type: Gin, map: "Product_search_collection_trgm_idx")
+}
+
+model ProductSlugAlias {
+  slug      String   @id
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  createdAt DateTime @default(now())
+
+  @@index([productId])
 }
 
 model ProductVariant {
@@ -214,6 +243,9 @@ model ProductAdminSession {
   tokenHash             String                    @unique
   csrfHash              String
   credentialFingerprint String
+  adminAccountId        String?
+  adminAccount          AdminAccount?             @relation(fields: [adminAccountId], references: [id], onDelete: Restrict)
+  credentialVersion     Int?
   createdAt             DateTime                  @default(now())
   lastActivityAt        DateTime                  @default(now())
   idleExpiresAt         DateTime
@@ -226,6 +258,25 @@ model ProductAdminSession {
 
   @@index([idleExpiresAt, absoluteExpiresAt, revokedAt], map: "ProductAdminSession_expiry_idx")
   @@index([createdAt], map: "ProductAdminSession_cleanup_idx")
+  @@index([adminAccountId, revokedAt], map: "ProductAdminSession_account_idx")
+}
+
+model AdminAccount {
+  id                 String                @id @default(cuid())
+  username           String
+  normalizedUsername String                @unique
+  passwordHash       String
+  role               AdminRole
+  enabled            Boolean               @default(true)
+  mustChangePassword Boolean               @default(true)
+  credentialVersion  Int                   @default(1)
+  passwordChangedAt  DateTime?
+  lastLoginAt        DateTime?
+  sessions           ProductAdminSession[]
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+
+  @@index([role, enabled])
 }
 
 model ProductAdminThrottle {
@@ -259,10 +310,14 @@ model ProductAdminAuditEvent {
   expectedUpdatedAt DateTime?
   currentUpdatedAt  DateTime?
   changedFields     Json?
+  actorAccountId    String?
+  targetAccountId   String?
 
   @@index([occurredAt], map: "ProductAdminAuditEvent_retention_idx")
   @@index([productId, occurredAt], map: "ProductAdminAuditEvent_product_idx")
   @@index([categoryId, occurredAt], map: "ProductAdminAuditEvent_category_idx")
+  @@index([actorAccountId, occurredAt], map: "ProductAdminAuditEvent_actor_idx")
+  @@index([targetAccountId, occurredAt], map: "ProductAdminAuditEvent_target_account_idx")
 }
 
 model CatalogMediaUpload {

@@ -54,6 +54,7 @@ export async function authorizeCatalogMediaMutation(
   return {
     sessionId: authorized.session.id,
     sessionIdHash: authorized.sessionIdHash,
+    actorAccountId: authorized.account.id,
     requestId: productAdminRequestId(req),
     idempotencyKey,
   };

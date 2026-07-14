@@ -227,6 +227,26 @@ Product collection. Payment Information remains static Homepage content and
 introduces no Backend, Product, checkout, order or transaction state. These
 Feature meanings never flow into the Icon or Motion Platform APIs.
 
+Homepage Merchandising Layout V2 consumes the additive Platform merchandising
+layout contract: an opt-in 1400px Container and domain-neutral CollectionGrid
+with one semantic DOM order. Homepage owns section order, uncapped Category
+meaning, Featured limits and daily selected-Category behavior; Platform layout
+does not own or modify those collections.
+
+Daily Category selection and its maximum-six canonical Products are composed on
+the server from canonical taxonomy/catalog predicates in one consistent snapshot
+using the `America/Bogota` business date. React receives the projection and does
+not reroll or personalize it. The promotional Carousel remains presentation-
+owned static content and adds no Banner persistence/API.
+
+Product Detail contact/share is an additive continuation boundary. The server
+constructs one canonical Product URL from governed public-origin configuration
+after slug resolution and an optional `wa.me` URL from the approved business
+number. Frontend may progressively invoke native Share/Clipboard, but no
+third-party SDK, lead persistence, Product mutation, visitor profiling or
+arbitrary request-host URL construction is permitted. The canonical Feature
+contract is `features/product-detail/contact-sharing-v1.md`.
+
 ### Shared catalog taxonomy capability
 
 Category Taxonomy V1 is the reusable catalog-domain contract for Category,
@@ -242,6 +262,21 @@ released; visual, accessibility, and frontend-wide rules remain in Platform.
 Only one taxonomy version may be Active for public discovery. Changes to stable
 identifiers, slugs, hierarchy ownership, or Product Type meaning require a new
 reviewed change and coordinated compatibility decision.
+
+### Administrative catalog capability
+
+Admin Catalog Management V2 is an isolated operational capability, not public
+customer authentication. It uses exactly one Deployment-bootstrapped protected
+Superadministrator and multiple fixed-role Administrators. Named opaque sessions,
+managed-edge proof, same-origin/CSRF validation, persistent throttling and safe
+audit are cumulative controls; username/password does not replace the edge.
+
+The Superadministrator alone manages Administrator creation, password reset,
+deactivation and reactivation. Product and Category create/edit/retire/restore
+commands are explicit aggregate operations with optimistic concurrency,
+non-cascading retirement and immutable historical slug ownership. Catalog Media
+Admin remains the only Product/Category Image mutation boundary. The active
+canonical contract is `features/product-catalog/admin-catalog-management-v2.md`.
 
 ### Product content and Variant aggregate
 

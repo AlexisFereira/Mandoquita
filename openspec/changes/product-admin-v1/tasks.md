@@ -1,6 +1,6 @@
 # Product Admin V1 Tasks
 
-Status: Implementation, QA and Documentation Complete — Production Release Blocked
+Status: Superseded — Closed Without Production Release
 
 Coordinator: Project Architect
 
@@ -63,13 +63,13 @@ Backend and Design contracts and have passed independent QA.
 - [x] ADM-037 Validate `/admin` exclusion from public navigation/indexing and regression-test Homepage, Catalog, Search, Category, Product Detail, Variants, and Featured Products. Owner: QA Engineer. — `noindex,nofollow,noarchive`, public-shell exclusion and public feature regressions pass; see `qa-review.md`.
 - [x] ADM-038 Run full tests, TypeScript, integration/security checks, production build, and representative responsive validation. Owner: QA Engineer. — 32 files/184 tests, TypeScript, build, PostgreSQL Admin/public functional integrations, security and browser checks pass; see `qa-review.md`.
 - [x] ADM-039 Synchronize Product Admin, Product, API, Architecture, Accessibility, Design System, deployment, and project-context documentation. Owners: respective artifact owners. — Product Requirements, Product/API, Architecture, Design System, Accessibility, Backend, Frontend, QA, deployment and project-context documentation agree; the production evidence procedure is recorded in `deployment-runbook.md`.
-- [ ] ADM-040 Record Requirements, Architecture, UX, Design, Backend, Frontend, Accessibility, QA, Security, and Release approvals. Owners: respective review owners. — All discipline, implementation, Accessibility, QA and Security approvals are recorded. `release-approval.md` remains blocked only on production edge attestation and credential disposition by Deployment/Security.
+- [x] ADM-040 Record Requirements, Architecture, UX, Design, Backend, Frontend, Accessibility, QA, Security, and final disposition. Owners: respective review owners. — Closed in `supersession-decision.md`: discipline evidence is retained, production release is prohibited and Admin Catalog Management V2 owns the only active Admin path.
 
 ## Release Gates
 
 - [x] Six-digit code and internal API key never enter client-visible configuration, URL, logs, or browser storage.
 - [x] Every admin read/write endpoint fails closed without a valid server session.
-- [ ] Production admin routes are restricted by the approved managed edge-access boundary; otherwise stronger authentication is approved.
+- [n/a] V1 production managed-edge activation is intentionally not attested because V1 production release is prohibited by the V2 hard cutover.
 - [x] Throttling and session expiry pass the approved security contract.
 - [x] Only approved Product fields can be changed.
 - [x] Product publication, taxonomy, Variant, Featured, and Commercial Availability invariants remain valid.
@@ -77,4 +77,4 @@ Backend and Design contracts and have passed independent QA.
 - [x] Responsive and accessibility validation passes.
 - [x] Public catalog regression passes.
 - [x] Documentation, implementation, and tests agree. — ADM-039 synchronization is complete.
-- [ ] Any credential-shaped value previously placed in the local `.env.example` is confirmed inactive or revoked/rotated by Deployment/Security.
+- [n/a] V1 credential activation is cancelled; Admin V2 Deployment still owns independent production-secret verification before ACM-037.

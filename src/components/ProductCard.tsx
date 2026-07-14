@@ -14,21 +14,20 @@ export type ProductCardProps = {
 
 export function ProductCard({ product, featured = false }: ProductCardProps) {
   const cardImage = product.images.find((image) => image.isPrimary) ?? product.images[0];
-  const summary = product.shortDescription ?? product.description;
 
   return (
     <Card
       as="article"
       padding="none"
       elevation="none"
-      className="h-full"
+      className="h-full overflow-hidden !rounded-[8px]"
     >
       <Link
         href={`/products/${product.slug}`}
         aria-label={`Ver detalles de ${product.name}`}
         className="group grid h-full"
       >
-        <div className="relative aspect-[4/3] overflow-hidden rounded-t-lg bg-[rgb(var(--background)/1)]">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[rgb(var(--background)/1)]">
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
@@ -40,7 +39,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
               onError={(event) => {
                 event.currentTarget.src = "/images/banners/default-banner.svg";
               }}
-              className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.02] motion-reduce:transition-none"
+              className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02] motion-reduce:transition-none"
             />
           ) : (
             <span className="flex h-full flex-col items-center justify-center gap-2 p-4 text-center text-sm text-[rgb(var(--muted)/1)]">
@@ -61,11 +60,6 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
             <h3 className="text-xl font-semibold tracking-[-0.02em] text-[rgb(var(--foreground)/1)]">
               {product.name}
             </h3>
-            {summary ? (
-              <p className="line-clamp-2 text-sm leading-6 text-[rgb(var(--muted)/1)]">
-                {summary}
-              </p>
-            ) : null}
           </div>
 
           <div className="mt-auto flex items-center justify-between gap-4 pt-2">

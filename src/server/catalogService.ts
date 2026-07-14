@@ -8,6 +8,7 @@ import type {
   ProductVariantAttributeItem,
   ProductVariantSelection,
 } from "@/types/catalog";
+import { buildPublicProductContinuations } from "@/server/publicProductContinuationService";
 
 const listQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
@@ -24,6 +25,8 @@ type ListQueryInput = {
   subcategory?: string | string[];
   q?: string | string[];
 };
+
+type CatalogDb = PrismaClient | Prisma.TransactionClient;
 
 const classificationInclude = {
   productType: {
@@ -224,7 +227,7 @@ export function parseListQuery(input: ListQueryInput) {
   });
 }
 
-export async function listFeaturedProducts(prisma: PrismaClient, limit: number) {
+export async function listFeaturedProducts(prisma: CatalogDb, limit: number) {
   const products = await prisma.product.findMany({
     where: {
       active: true,
@@ -244,7 +247,7 @@ export async function listFeaturedProducts(prisma: PrismaClient, limit: number) 
   return products.map(mapProduct);
 }
 
-export async function listProducts(prisma: PrismaClient, rawQuery: ListQueryInput): Promise<ProductListResponse> {
+export async function listProducts(prisma: CatalogDb, rawQuery: ListQueryInput): Promise<ProductListResponse> {
   const query = parseListQuery(rawQuery);
   const where: Prisma.ProductWhereInput = {
     ...publicProductWhere(query.category, query.subcategory),
@@ -290,7 +293,11 @@ export async function listProducts(prisma: PrismaClient, rawQuery: ListQueryInpu
   };
 }
 
-export async function getProductDetail(prisma: PrismaClient, slug: string): Promise<ProductDetailResponse | null> {
+export async function getProductDetail(
+  prisma: PrismaClient,
+  slug: string,
+  environment: Record<string, string | undefined> = process.env,
+): Promise<ProductDetailResponse | null> {
   const item = await prisma.product.findFirst({
     where: {
       slug,
@@ -329,5 +336,15 @@ export async function getProductDetail(prisma: PrismaClient, slug: string): Prom
     item: mapProduct(item),
     variantSelection: mapVariantSelection(item),
     related: related.map(mapProduct),
+    ...buildPublicProductContinuations({ slug: item.slug, name: item.name }, environment),
   };
+}
+
+export async function resolveProductSlug(prisma: PrismaClient, slug: string) {
+  const canonical = await prisma.product.findUnique({ where: { slug }, select: { slug: true } });
+  if (canonical) return { slug: canonical.slug, redirected: false };
+  const alias = await prisma.productSlugAlias.findUnique({
+    where: { slug }, select: { product: { select: { slug: true } } },
+  });
+  return alias ? { slug: alias.product.slug, redirected: true } : null;
 }

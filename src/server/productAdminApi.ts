@@ -11,12 +11,13 @@ import {
   auditProductAdminEvent,
   productAdminRequestId,
 } from "./productAdminSecurity";
+import { AdminAccountConflictError, AdminAccountPolicyError } from "./adminAccountService";
 
 export async function requireProductAdmin(
   prisma: PrismaClient,
   req: NextApiRequest,
   res: NextApiResponse,
-  options: { csrf?: boolean } = {},
+  options: { csrf?: boolean; allowPasswordChange?: boolean; requireSuperAdmin?: boolean } = {},
 ) {
   applyProductAdminHeaders(res);
   const config = getProductAdminSecurityConfig();
@@ -32,6 +33,7 @@ export async function requireProductAdmin(
         event: "ADMIN_REQUEST",
         outcome: "DENIED",
         reason: error.reason,
+        actorAccountId: error.actorAccountId,
         productId: Number.isSafeInteger(productId) ? productId : undefined,
       });
     }
@@ -41,6 +43,8 @@ export async function requireProductAdmin(
 
 export function respondProductAdminError(res: NextApiResponse, error: unknown) {
   if (error instanceof ZodError) return res.status(400).json({ error: "Invalid request" });
+  if (error instanceof AdminAccountPolicyError) return res.status(400).json({ error: "Password does not meet policy" });
+  if (error instanceof AdminAccountConflictError) return res.status(409).json({ error: "Account conflicts with current state" });
   if (error instanceof ProductAdminHttpError) {
     if (error.retryAfter) res.setHeader("Retry-After", String(error.retryAfter));
     return res.status(error.status).json({

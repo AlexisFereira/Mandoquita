@@ -47,6 +47,8 @@ describe("Category taxonomy pages", () => {
     };
     render(<CategoriesPage categories={[category, second]} />);
 
+    expect(screen.getByRole("main").firstElementChild?.className).toContain("max-w-[1400px]");
+
     const destinations = screen.getAllByRole("link")
       .filter((link) => link.getAttribute("href")?.startsWith("/categorias/"))
       .map((link) => link.getAttribute("href"));
@@ -68,6 +70,8 @@ describe("Category taxonomy pages", () => {
   it("presents eligible subcategories before category products", () => {
     render(<CategoryPage category={category} products={[product]} />);
 
+    expect(screen.getByRole("main").firstElementChild?.className).toContain("max-w-[1400px]");
+
     const subcategoryLink = screen.getByRole("link", { name: /Camisetas 1 productos/i });
     expect(subcategoryLink.getAttribute("href")).toBe("/categorias/ropa-y-moda/camisetas");
     expect(screen.getByRole("heading", { name: "Productos de Ropa y moda" })).toBeTruthy();
@@ -83,6 +87,8 @@ describe("Category taxonomy pages", () => {
         products={[product]}
       />,
     );
+
+    expect(screen.getByRole("main").firstElementChild?.className).toContain("max-w-[1400px]");
 
     const breadcrumb = screen.getByRole("navigation", { name: "Breadcrumb" });
     expect(within(breadcrumb).getByRole("link", { name: "Categorías" }).getAttribute("href")).toBe("/categorias");

@@ -88,6 +88,14 @@ distinguishable Active Variants, or `content_correction` when Active Variants
 cannot form meaningful public choices. Public Variant entries contain only the
 stable Variant ID, approved attributes, and optional Product Image ID.
 
+Detail also adds `canonicalUrl` and `whatsappUrl` as server-constructed public
+continuation fields. `canonicalUrl` uses only the governed public site origin
+and current canonical slug. `whatsappUrl` uses only the approved international
+business number, normalized public Product name and canonical URL; it contains
+no price, Variant, visitor, referrer, session or administrative data. Either
+field is `null` when its required Deployment configuration is absent or invalid.
+Historical slug requests redirect before these values are built.
+
 ### `GET /api/categories`
 
 Returns every non-empty eligible Category in ascending business order. Each
@@ -101,6 +109,14 @@ Frontend resolves relative paths with `NEXT_PUBLIC_ASSET_BASE_URL`, which may be
 empty for Next.js `public/` assets or point to a CDN/application asset prefix.
 
 ### `PATCH /api/admin/products/[id]`
+
+> **Admin Catalog Management V2 supersession (2026-07-14):** The Product Admin
+> V1 contract below is retained as implementation history. Active Admin access,
+> account, Product and Category contracts are defined by
+> `../admin-catalog-management-v2.md` and
+> `../../../changes/admin-catalog-management-v2/backend-api-contracts.md`. V2
+> accepts named username/password accounts only; the shared six-digit path and
+> its sessions are removed. Where this historical section differs, V2 governs.
 
 Updates one Product by positive numeric ID. This is a Product Admin V1 contract,
 not a public catalog endpoint. Every request requires the signed, revocable

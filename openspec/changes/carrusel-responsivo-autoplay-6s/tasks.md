@@ -1,4 +1,4 @@
-Status: Superseded by `../../features/homepage/carousel-autoplay/tasks.md`
+Status: Superseded — Closed by `../../features/homepage/carousel-autoplay/tasks.md`
 
 ## 1. Carousel behavior foundation
 

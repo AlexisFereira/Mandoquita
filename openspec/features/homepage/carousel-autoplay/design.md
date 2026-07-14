@@ -2,6 +2,11 @@ Status: Approved
 
 Finalized: 2026-07-12
 
+> **Placement amendment (2026-07-14):** Autoplay, pause, manual controls,
+> single-slide and reduced-motion behavior below remain active. The Carousel is
+> now full-width and replaces the separate Hero under
+> `../merchandising-layout-v2.md`.
+
 ## Overview
 
 La homepage funciona como punto de entrada al catalogo y el carrusel es el primer elemento de descubrimiento que recibe la atencion del visitante. Esta capacidad define el comportamiento de rotacion automatica y manual del carrusel principal para que la exploracion destaque productos o contenidos relevantes sin interrumpir la lectura ni el control del usuario.

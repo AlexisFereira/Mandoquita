@@ -1,5 +1,10 @@
 # Catalog Media Admin V1
 
+> **Admin V2 integration (2026-07-14):** this capability is complete and is
+> consumed through Admin Catalog Management V2 named accounts. Product Admin V1
+> access references below are historical; production activation is governed by
+> ACM-037 and `integration-decision.md`.
+
 Status: Approved — Requirements and Architecture Complete
 
 Coordinator: Project Architect

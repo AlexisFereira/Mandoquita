@@ -241,4 +241,36 @@ describe("getProductDetail", () => {
     expect(response?.item.price).toBeNull();
     expect(response?.item.currency).toBeNull();
   });
+
+  it("preserves the complete ordered gallery, Primary flag and Variant Image association", async () => {
+    const item = makeProduct({
+      images: [
+        { id: "image-primary", url: "/primary.webp", altText: "Vista principal", position: 0, isPrimary: true },
+        { id: "image-detail", url: "/detail.webp", altText: "Vista de detalle", position: 1, isPrimary: false },
+      ],
+      variants: [{
+        id: "variant-detail", active: true, isBase: false, imageId: "image-detail",
+        attributes: [{ name: "COLOR", valueType: "TEXT", textValue: "Azul", numberValue: null, booleanValue: null }],
+      }],
+    });
+    const prisma = {
+      product: {
+        findFirst: vi.fn().mockResolvedValue(item),
+        findMany: vi.fn().mockResolvedValue([]),
+      },
+    } as any;
+    const response = await getProductDetail(prisma, item.slug, {
+      NODE_ENV: "production", PUBLIC_SITE_ORIGIN: "https://mandoquita.example",
+      WHATSAPP_BUSINESS_NUMBER: "573506928681",
+    });
+    expect(response?.item.images).toEqual([
+      { id: "image-primary", url: "/primary.webp", altText: "Vista principal", position: 0, isPrimary: true },
+      { id: "image-detail", url: "/detail.webp", altText: "Vista de detalle", position: 1, isPrimary: false },
+    ]);
+    expect(response?.variantSelection.variants[0]).toMatchObject({ imageId: "image-detail" });
+    expect(response?.canonicalUrl).toBe("https://mandoquita.example/products/camiseta-basica");
+    expect(prisma.product.findFirst).toHaveBeenCalledWith(expect.objectContaining({
+      include: expect.objectContaining({ images: { orderBy: { position: "asc" } } }),
+    }));
+  });
 });

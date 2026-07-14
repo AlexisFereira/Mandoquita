@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  getS3ClientConfig,
   getS3ImageStorageConfig,
   ImageUploadTooLargeError,
   ImageUploadValidationError,
@@ -20,6 +21,13 @@ const config: S3ImageStorageConfig = {
 const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3]);
 
 describe("S3 image storage", () => {
+  it("delegates authentication to the AWS default credential chain", () => {
+    const clientConfig = getS3ClientConfig(config);
+
+    expect(clientConfig).toEqual({ region: "us-east-1" });
+    expect(clientConfig).not.toHaveProperty("credentials");
+  });
+
   it("loads required configuration and default limits from environment", () => {
     expect(getS3ImageStorageConfig({
       AWS_REGION: "us-east-1",

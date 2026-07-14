@@ -1,4 +1,7 @@
-Status: Superseded by `../../features/navigation/sticky-header/tasks.md`
+Status: Superseded — Closed by `../../features/navigation/sticky-header/tasks.md`
+
+The unchecked items below are retained as historical planning and are not active
+backlog. The canonical feature package owns all continuing work and approvals.
 
 ## 1. Sticky header foundation
 

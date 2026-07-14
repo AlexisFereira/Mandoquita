@@ -54,6 +54,7 @@ export async function handleAdminProduct(req: NextApiRequest, res: NextApiRespon
         expectedUpdatedAt,
         currentUpdatedAt: new Date(updated.updatedAt),
         changedFields,
+        actorAccountId: authorized.account.id,
       });
       return updated;
     });
@@ -64,6 +65,7 @@ export async function handleAdminProduct(req: NextApiRequest, res: NextApiRespon
         await auditProductAdminEvent(prisma, {
           requestId, event: "PRODUCT_UPDATE", outcome: "INVALID", reason: "VALIDATION",
           sessionIdHash, productId,
+          actorAccountId: undefined,
         });
       } catch { return res.status(503).json({ error: "Product Admin is unavailable" }); }
       return res.status(400).json({ error: "Invalid Product update" });

@@ -83,6 +83,7 @@ export interface DesignTokens {
       md: number;
       lg: number;
       xl: number;
+      wide: number;
     };
     breakpoints: {
       sm: number;
@@ -253,6 +254,7 @@ export const DESIGN_TOKENS = {
       md: 768,
       lg: 1120,
       xl: 1280,
+      wide: 1400,
     },
     breakpoints: {
       sm: 640,

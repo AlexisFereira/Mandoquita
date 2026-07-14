@@ -187,7 +187,12 @@ Homepage layout follows these rules:
 - grid gaps based on the shared 16, 24, and 32 CSS-pixel steps;
 - no viewport width may introduce horizontal overflow.
 
-The shared maximum content width for the homepage is 1280 CSS pixels. Readable text blocks remain narrower through composition rather than a second nested page container.
+The V1 default Homepage maximum was 1280 CSS pixels. Homepage Merchandising
+Layout V2 now opts into the additive `Container size="wide"` maximum of 1400 CSS
+pixels; existing Container defaults and unrelated consumers remain unchanged.
+Readable text blocks remain narrower through composition rather than a second
+nested page container. The reusable boundary and 2/3/4/6 grid are canonical in
+`merchandising-layout-contract/`.
 
 ---
 

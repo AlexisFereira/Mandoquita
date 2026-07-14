@@ -1,6 +1,6 @@
-import { createHash, createHmac, randomBytes, randomUUID, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
 
-import type { PrismaClient, ProductAdminSession } from "@prisma/client";
+import type { AdminAccount, PrismaClient, ProductAdminSession } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 
@@ -11,8 +11,9 @@ const CLIENT_LOCK_MS = 15 * 60 * 1000;
 const DEPLOYMENT_LOCK_MS = 30 * 60 * 1000;
 
 const configSchema = z.object({
-  codeHash: z.string().regex(/^scrypt\$16384\$8\$1\$[A-Za-z0-9_-]{8,}\$[A-Za-z0-9_-]{80,}$/),
   sessionSecret: z.string().min(32),
+  passwordPepper: z.string().min(32).optional(),
+  passwordBlocklist: z.string().optional(),
   origin: z.string().url(),
   trustProxy: z.boolean(),
   trustedProxyHops: z.number().int().min(1).max(10),
@@ -25,8 +26,8 @@ const configSchema = z.object({
   if (value.production && !value.edgeSecret) {
     context.addIssue({ code: z.ZodIssueCode.custom, path: ["edgeSecret"], message: "Edge proof required" });
   }
-  if (value.sessionSecret === value.codeHash) {
-    context.addIssue({ code: z.ZodIssueCode.custom, path: ["sessionSecret"], message: "Secrets must be independent" });
+  if (value.passwordPepper && value.sessionSecret === value.passwordPepper) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["passwordPepper"], message: "Secrets must be independent" });
   }
 });
 
@@ -34,7 +35,12 @@ export type ProductAdminSecurityConfig = z.output<typeof configSchema>;
 
 export class ProductAdminConfigurationError extends Error {}
 export class ProductAdminHttpError extends Error {
-  constructor(public status: 400 | 401 | 403 | 404 | 409 | 429 | 500 | 503, public reason: string, public retryAfter?: number) {
+  constructor(
+    public status: 400 | 401 | 403 | 404 | 409 | 429 | 500 | 503,
+    public reason: string,
+    public retryAfter?: number,
+    public actorAccountId?: string,
+  ) {
     super(reason);
   }
 }
@@ -43,8 +49,9 @@ export function getProductAdminSecurityConfig(
   environment: Record<string, string | undefined> = process.env,
 ): ProductAdminSecurityConfig {
   const result = configSchema.safeParse({
-    codeHash: environment.PRODUCT_ADMIN_CODE_HASH,
     sessionSecret: environment.PRODUCT_ADMIN_SESSION_SECRET,
+    passwordPepper: environment.PRODUCT_ADMIN_PASSWORD_PEPPER || undefined,
+    passwordBlocklist: environment.PRODUCT_ADMIN_PASSWORD_BLOCKLIST || undefined,
     origin: environment.PRODUCT_ADMIN_ORIGIN,
     trustProxy: environment.PRODUCT_ADMIN_TRUST_PROXY === "true",
     trustedProxyHops: Number(environment.PRODUCT_ADMIN_TRUSTED_PROXY_HOPS || "1"),
@@ -64,38 +71,12 @@ function equal(left: string, right: string) {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-export async function hashProductAdminCode(code: string, salt = randomBytes(16).toString("base64url")) {
-  const derived = await new Promise<Buffer>((resolve, reject) => {
-    scryptCallback(code, salt, 64, { cost: 16_384, blockSize: 8, parallelization: 1 }, (error, value) => {
-      if (error) reject(error); else resolve(value as Buffer);
-    });
-  });
-  return `scrypt$16384$8$1$${salt}$${derived.toString("base64url")}`;
-}
-
-export async function verifyProductAdminCode(code: unknown, encodedHash: string) {
-  const parts = encodedHash.split("$");
-  if (parts.length !== 6 || parts[0] !== "scrypt") return false;
-  const [, cost, blockSize, parallelization, salt, expected] = parts;
-  const candidate = typeof code === "string" ? code : "000000";
-  const derived = await new Promise<Buffer>((resolve, reject) => {
-    scryptCallback(candidate, salt, 64, {
-      cost: Number(cost), blockSize: Number(blockSize), parallelization: Number(parallelization),
-    }, (error, value) => { if (error) reject(error); else resolve(value as Buffer); });
-  });
-  return /^\d{6}$/.test(candidate) && equal(derived.toString("base64url"), expected);
-}
-
 function sha256(value: string) {
   return createHash("sha256").update(value).digest("hex");
 }
 
 function hmac(value: string, secret: string) {
   return createHmac("sha256", secret).update(value).digest("base64url");
-}
-
-export function credentialFingerprint(config: ProductAdminSecurityConfig) {
-  return sha256(config.codeHash);
 }
 
 function cookieName(config: ProductAdminSecurityConfig) {
@@ -155,10 +136,15 @@ export function productAdminClientKey(req: NextApiRequest, config: ProductAdminS
   return hmac(`client:${address}`, config.sessionSecret);
 }
 
+export function productAdminAccountKey(normalizedUsername: string, config: ProductAdminSecurityConfig) {
+  return hmac(`account:${normalizedUsername}`, config.sessionSecret);
+}
+
 export async function createProductAdminSession(
   prisma: PrismaClient,
   res: NextApiResponse,
   config: ProductAdminSecurityConfig,
+  account: Pick<AdminAccount, "id" | "credentialVersion">,
   now = new Date(),
 ) {
   const token = randomBytes(32).toString("base64url");
@@ -170,7 +156,9 @@ export async function createProductAdminSession(
     data: {
       tokenHash: sha256(token),
       csrfHash: sha256(csrfToken),
-      credentialFingerprint: credentialFingerprint(config),
+      credentialFingerprint: "named-account-v2",
+      adminAccountId: account.id,
+      credentialVersion: account.credentialVersion,
       lastActivityAt: now,
       idleExpiresAt,
       absoluteExpiresAt,
@@ -191,32 +179,44 @@ function sessionToken(req: NextApiRequest, config: ProductAdminSecurityConfig) {
   return equal(signature, hmac(`session:${token}`, config.sessionSecret)) ? token : null;
 }
 
-export type AuthorizedProductAdminSession = { session: ProductAdminSession; sessionIdHash: string; csrfToken: string };
+export type AuthorizedProductAdminSession = {
+  session: ProductAdminSession;
+  account: AdminAccount;
+  sessionIdHash: string;
+  csrfToken: string;
+};
 
 export async function authorizeProductAdminSession(
   prisma: PrismaClient,
   req: NextApiRequest,
   res: NextApiResponse,
   config: ProductAdminSecurityConfig,
-  options: { csrf?: boolean; now?: Date; touch?: boolean } = {},
+  options: { csrf?: boolean; now?: Date; touch?: boolean; allowPasswordChange?: boolean; requireSuperAdmin?: boolean } = {},
 ): Promise<AuthorizedProductAdminSession> {
   validateProductAdminEdge(req, config);
   const token = sessionToken(req, config);
   if (!token) throw new ProductAdminHttpError(401, "SESSION_INVALID");
   const now = options.now ?? new Date();
   const tokenHash = sha256(token);
-  const session = await prisma.productAdminSession.findUnique({ where: { tokenHash } });
-  const invalid = !session || session.revokedAt || session.idleExpiresAt <= now ||
-    session.absoluteExpiresAt <= now || session.credentialFingerprint !== credentialFingerprint(config);
-  if (invalid) {
+  const session = await prisma.productAdminSession.findUnique({ where: { tokenHash }, include: { adminAccount: true } });
+  if (!session || !session.adminAccount || session.revokedAt || session.idleExpiresAt <= now ||
+      session.absoluteExpiresAt <= now || !session.adminAccount.enabled ||
+      session.credentialVersion !== session.adminAccount.credentialVersion) {
     if (session && !session.revokedAt) {
       await prisma.productAdminSession.update({ where: { id: session.id }, data: { revokedAt: now } });
     }
     clearProductAdminCookie(res, config);
     throw new ProductAdminHttpError(401, "SESSION_EXPIRED");
   }
+  const account = session.adminAccount;
   const csrfToken = hmac(`csrf:${token}`, config.sessionSecret);
   if (session.csrfHash !== sha256(csrfToken)) throw new ProductAdminHttpError(401, "SESSION_INVALID");
+  if (account.mustChangePassword && !options.allowPasswordChange) {
+    throw new ProductAdminHttpError(403, "PASSWORD_CHANGE_REQUIRED", undefined, account.id);
+  }
+  if (options.requireSuperAdmin && account.role !== "SUPER_ADMIN") {
+    throw new ProductAdminHttpError(403, "ROLE_REJECTED", undefined, account.id);
+  }
   if (options.csrf) {
     validateProductAdminOrigin(req, config);
     const supplied = req.headers["x-csrf-token"];
@@ -224,7 +224,7 @@ export async function authorizeProductAdminSession(
       throw new ProductAdminHttpError(403, "CSRF_REJECTED");
     }
   }
-  let authorizedSession = session;
+  let authorizedSession: ProductAdminSession = session;
   if (options.touch !== false) {
     const idleExpiresAt = new Date(Math.min(now.getTime() + IDLE_MS, session.absoluteExpiresAt.getTime()));
     authorizedSession = await prisma.productAdminSession.update({
@@ -232,7 +232,7 @@ export async function authorizeProductAdminSession(
       data: { lastActivityAt: now, idleExpiresAt },
     });
   }
-  return { session: authorizedSession, sessionIdHash: sha256(session.id), csrfToken };
+  return { session: authorizedSession, account, sessionIdHash: sha256(session.id), csrfToken };
 }
 
 export async function revokeProductAdminSession(prisma: PrismaClient, sessionId: string, now = new Date()) {
@@ -242,19 +242,33 @@ export async function revokeProductAdminSession(prisma: PrismaClient, sessionId:
 export async function currentThrottle(
   prisma: PrismaClient,
   clientKey: string,
+  accountKey?: string,
   now = new Date(),
 ) {
   const rows = await prisma.productAdminThrottle.findMany({
-    where: { OR: [{ scope: "CLIENT", keyHash: clientKey }, { scope: "DEPLOYMENT", keyHash: "global" }] },
+    where: { OR: [
+      { scope: "CLIENT", keyHash: clientKey },
+      { scope: "DEPLOYMENT", keyHash: "global" },
+      ...(accountKey ? [{ scope: "ACCOUNT", keyHash: accountKey }] : []),
+    ] },
   });
   const locked = rows.filter((row) => row.lockedUntil && row.lockedUntil > now)
     .sort((a, b) => b.lockedUntil!.getTime() - a.lockedUntil!.getTime())[0];
   return locked?.lockedUntil ? Math.max(1, Math.ceil((locked.lockedUntil.getTime() - now.getTime()) / 1000)) : null;
 }
 
+export async function currentDeploymentThrottle(prisma: PrismaClient, now = new Date()) {
+  const row = await prisma.productAdminThrottle.findUnique({
+    where: { scope_keyHash: { scope: "DEPLOYMENT", keyHash: "global" } },
+  });
+  return row?.lockedUntil && row.lockedUntil > now
+    ? Math.max(1, Math.ceil((row.lockedUntil.getTime() - now.getTime()) / 1000))
+    : null;
+}
+
 async function recordScopeFailure(
   prisma: PrismaClient,
-  scope: "CLIENT" | "DEPLOYMENT",
+  scope: "ACCOUNT" | "CLIENT" | "DEPLOYMENT",
   keyHash: string,
   limit: number,
   lockMs: number,
@@ -279,16 +293,21 @@ async function recordScopeFailure(
   return row;
 }
 
-export async function recordProductAdminFailure(prisma: PrismaClient, clientKey: string, now = new Date()) {
+export async function recordProductAdminFailure(prisma: PrismaClient, clientKey: string, accountKey?: string, now = new Date()) {
   await prisma.$transaction(async (tx) => {
     await recordScopeFailure(tx as PrismaClient, "CLIENT", clientKey, 5, CLIENT_LOCK_MS, now);
+    if (accountKey) await recordScopeFailure(tx as PrismaClient, "ACCOUNT", accountKey, 5, CLIENT_LOCK_MS, now);
     await recordScopeFailure(tx as PrismaClient, "DEPLOYMENT", "global", 50, DEPLOYMENT_LOCK_MS, now);
   });
-  return currentThrottle(prisma, clientKey, now);
+  return currentThrottle(prisma, clientKey, accountKey, now);
 }
 
 export async function clearProductAdminClientThrottle(prisma: PrismaClient, clientKey: string) {
   await prisma.productAdminThrottle.deleteMany({ where: { scope: "CLIENT", keyHash: clientKey } });
+}
+
+export async function clearProductAdminAccountThrottle(prisma: PrismaClient, accountKey: string) {
+  await prisma.productAdminThrottle.deleteMany({ where: { scope: "ACCOUNT", keyHash: accountKey } });
 }
 
 export async function auditProductAdminEvent(
@@ -296,7 +315,7 @@ export async function auditProductAdminEvent(
   data: {
     requestId: string; event: string; outcome: string; reason?: string;
     sessionIdHash?: string; productId?: number; expectedUpdatedAt?: Date;
-    currentUpdatedAt?: Date; changedFields?: string[];
+    currentUpdatedAt?: Date; changedFields?: string[]; actorAccountId?: string; targetAccountId?: string;
   },
 ) {
   await prisma.productAdminAuditEvent.create({ data: { ...data, changedFields: data.changedFields ?? undefined } });

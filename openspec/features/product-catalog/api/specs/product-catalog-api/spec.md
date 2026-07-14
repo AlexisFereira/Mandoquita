@@ -87,7 +87,19 @@ Products.
 - **WHEN** a client requests an eligible Product slug
 - **THEN** the API returns core Product fields, Product Type, inherited
   Subcategory and Category, ordered Images, optional content, Variant-selection
-  outcome, and at most four related Products
+  outcome, governed canonical/contact continuation URLs, and at most four related
+  Products
+
+#### Scenario: Safe canonical and contact continuation
+
+- **WHEN** public origin and approved WhatsApp configuration are valid
+- **THEN** `canonicalUrl` contains only the configured origin and current Product slug
+- **AND** `whatsappUrl` contains only the approved recipient, normalized public
+  Product name and canonical URL
+- **AND** neither value contains price, Variant, visitor, referrer, session or
+  administrative data
+- **WHEN** required configuration is absent or invalid
+- **THEN** the affected continuation value is null without affecting Product detail
 
 #### Scenario: Base Variant
 

@@ -137,6 +137,20 @@ Provide low-priority reorientation and approved business information after prima
 
 ---
 
+# Wide Container and CollectionGrid
+
+Homepage Merchandising Layout V2 consumes the additive Platform contract in
+`merchandising-layout-contract/`:
+
+- `Container size="wide"` provides an opt-in centered 1400px maximum without
+  changing existing sizes/defaults;
+- `CollectionGrid` preserves one semantic child collection and source/focus order;
+- collection density is 2/3/4/6 columns at base/640/1024/1400px;
+- the layout primitive never caps, hides, clones, sorts or reorders entities; and
+- feature contracts retain ownership of eligibility, limits and Card meaning.
+
+---
+
 # Shared Acceptance Criteria
 
 All components in this document must:

@@ -12,6 +12,7 @@ const querySchema = z.object({
   active: z.enum(["true", "false"]).transform((value) => value === "true").optional(),
   category: z.string().trim().min(1).max(160).optional(),
   productType: z.string().trim().min(1).max(200).optional(),
+  retired: z.enum(["true", "false"]).transform((value) => value === "true").default("false"),
 }).strict();
 
 type RawAdminListQuery = Record<string, string | string[] | undefined>;
@@ -26,8 +27,9 @@ const taxonomyInclude = {
 
 const adminDetailInclude = {
   ...taxonomyInclude,
+  variants: { orderBy: [{ isBase: "desc" }, { createdAt: "asc" }] },
   _count: { select: { variants: true } },
-} as const;
+} satisfies Prisma.ProductInclude;
 
 type AdminProduct = Prisma.ProductGetPayload<{ include: typeof adminDetailInclude }>;
 
@@ -43,7 +45,13 @@ const adminListSelect = {
   commerciallyAvailable: true,
   featured: true,
   featuredOrder: true,
+  retiredAt: true,
   updatedAt: true,
+  variants: {
+    where: { isBase: true },
+    take: 1,
+    select: { id: true, sku: true, active: true },
+  },
   productType: {
     select: {
       name: true,
@@ -103,6 +111,7 @@ export async function listAdminProducts(prisma: PrismaClient, raw: RawAdminListQ
     ...(query.featured !== undefined ? { featured: query.featured } : {}),
     ...(query.active !== undefined ? { active: query.active } : {}),
     ...(query.productType ? { productTypeId: query.productType } : {}),
+    ...(query.retired ? { retiredAt: { not: null } } : { retiredAt: null }),
     ...(query.category ? { productType: { is: { subcategory: { category: { slug: query.category } } } } } : {}),
   };
   const [requestedItems, totalItems] = await Promise.all([
@@ -137,6 +146,8 @@ export async function listAdminProducts(prisma: PrismaClient, raw: RawAdminListQ
       commerciallyAvailable: product.commerciallyAvailable,
       featured: product.featured,
       featuredOrder: product.featuredOrder,
+      baseVariant: ("variants" in product ? product.variants[0] : undefined) ?? null,
+      retiredAt: product.retiredAt?.toISOString() ?? null,
       ...taxonomy(product),
       updatedAt: product.updatedAt.toISOString(),
     })),
@@ -149,6 +160,7 @@ export async function listAdminProducts(prisma: PrismaClient, raw: RawAdminListQ
       active: query.active ?? null,
       category: query.category ?? null,
       productType: query.productType ?? null,
+      retired: query.retired,
     },
   };
 }
@@ -177,6 +189,12 @@ export async function getAdminProductById(prisma: PrismaClient, id: number) {
     featuredOrder: product.featuredOrder,
     ...taxonomy(product),
     hasVariant: product._count.variants > 0,
+    baseVariant: product.variants.find((variant) => variant.isBase) ? {
+      id: product.variants.find((variant) => variant.isBase)!.id,
+      sku: product.variants.find((variant) => variant.isBase)!.sku,
+      active: product.variants.find((variant) => variant.isBase)!.active,
+    } : null,
+    retiredAt: product.retiredAt?.toISOString() ?? null,
     updatedAt: product.updatedAt.toISOString(),
   };
 }

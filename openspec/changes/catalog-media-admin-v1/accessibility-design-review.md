@@ -1,6 +1,6 @@
 # Catalog Media Admin V1 — Accessibility Design Review
 
-Status: Approved at Design Level — Implementation Validation Pending
+Status: Approved — Design and Implementation Validation Complete
 
 Owner: Accessibility Review
 
@@ -13,10 +13,10 @@ administration design described in `ui-design.md`. Together with the UX/UI
 self-review, this closes the design gate CMA-018 and authorizes Frontend handoff
 once the executable Backend contract is complete.
 
-This approval validates the specified interaction and semantic contract. It does
-not pre-approve rendered implementation conformance; keyboard, assistive-
-technology, zoom/reflow, target-size, contrast and status behavior remain subject
-to CMA-038 validation against the implemented application.
+This approval validates the specified interaction and semantic contract.
+Rendered keyboard, assistive-technology, zoom/reflow, target-size, contrast and
+status conformance is independently approved under CMA-038 in
+`accessibility-implementation-review.md` and `qa-review.md`.
 
 ## Review evidence
 
@@ -89,13 +89,11 @@ replace keyboard ordering with drag-only behavior, hide the file input from its
 accessible contract, announce unconfirmed upload as catalog success, or create
 duplicated responsive action trees.
 
-Any material departure requires renewed Accessibility Review. CMA-038 remains
-open for independent validation of the rendered implementation at keyboard,
-screen-reader, 320px, 200% zoom, target-size, contrast, reduced-motion and
-light-only checkpoints.
+Any material departure requires renewed Accessibility Review. CMA-038 rendered
+validation is complete for keyboard, screen-reader, 320px, 200% zoom,
+target-size, contrast, reduced-motion and light-only checkpoints.
 
 ## Outcome
 
-CMA-018 is approved. No Accessibility design blocker remains. Frontend tasks
-CMA-027 through CMA-034 remain dependent on Backend CMA-019 through CMA-026.
-
+CMA-018 and CMA-038 are approved. No Accessibility design or implementation
+blocker remains.

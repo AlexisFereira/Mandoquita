@@ -1,5 +1,8 @@
 import type {
   AdminEditorValues,
+  AdminAccount,
+  AdminCategory,
+  AdminCategoryList,
   AdminFilters,
   AdminCategoryMedia,
   AdminMediaUpload,
@@ -47,9 +50,12 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
 
 export const adminApi = {
   session: () => request<AdminSession>("/api/admin/session"),
-  login: (code: string) => request<AdminSession>("/api/admin/session", {
+  login: (username: string, password: string) => request<AdminSession>("/api/admin/session", {
     method: "POST",
-    body: JSON.stringify({ code }),
+    body: JSON.stringify({ username, password }),
+  }),
+  changePassword: (csrfToken: string, currentPassword: string, newPassword: string) => request<AdminSession>("/api/admin/session", {
+    method: "PATCH", headers: { "x-csrf-token": csrfToken }, body: JSON.stringify({ currentPassword, newPassword }),
   }),
   logout: (csrfToken: string) => request<void>("/api/admin/session", {
     method: "DELETE",
@@ -64,6 +70,12 @@ export const adminApi = {
     return request<AdminProductList>(`/api/admin/products?${params}`);
   },
   product: (id: number) => request<{ item: AdminProduct }>(`/api/admin/products/${id}`),
+  createProduct: (csrfToken: string, body: object) => request<{ item: AdminProduct }>("/api/admin/products", {
+    method: "POST", headers: { "x-csrf-token": csrfToken }, body: JSON.stringify(body),
+  }),
+  productLifecycle: (id: number, action: "retire" | "restore", csrfToken: string, expectedUpdatedAt: string) => request<{ item: AdminProduct }>(`/api/admin/products/${id}/${action}`, {
+    method: "POST", headers: { "x-csrf-token": csrfToken }, body: JSON.stringify({ expectedUpdatedAt }),
+  }),
   productTypes: () => request<{ items: AdminProductType[] }>("/api/admin/product-types"),
   updateProduct: (id: number, csrfToken: string, expectedUpdatedAt: string, changes: Partial<AdminEditorValues>) => {
     const payload: Record<string, unknown> = { expectedUpdatedAt };
@@ -110,7 +122,24 @@ export const adminApi = {
   removeProductImage: (productId: number, imageId: string, csrfToken: string, body: object) => request<AdminProductMedia>(`/api/admin/products/${productId}/images/${imageId}`, {
     method: "DELETE", headers: mutationHeaders(csrfToken), body: JSON.stringify(body),
   }),
-  categories: (q = "") => request<{ items: AdminCategoryMedia[] }>(`/api/admin/categories${q.trim() ? `?q=${encodeURIComponent(q.trim())}` : ""}`),
+  categories: (q = "", page = 1, retired = false) => request<AdminCategoryList>(`/api/admin/categories?${new URLSearchParams({ page: String(page), limit: "20", retired: String(retired), ...(q.trim() ? { q: q.trim() } : {}) })}`),
+  category: (id: string) => request<{ item: AdminCategory }>(`/api/admin/categories/${encodeURIComponent(id)}`),
+  createCategory: (csrfToken: string, body: object) => request<{ item: AdminCategory }>("/api/admin/categories", {
+    method: "POST", headers: { "x-csrf-token": csrfToken }, body: JSON.stringify(body),
+  }),
+  updateCategory: (id: string, csrfToken: string, body: object) => request<{ item: AdminCategory }>(`/api/admin/categories/${encodeURIComponent(id)}`, {
+    method: "PATCH", headers: { "x-csrf-token": csrfToken }, body: JSON.stringify(body),
+  }),
+  categoryLifecycle: (id: string, action: "retire" | "restore", csrfToken: string, expectedUpdatedAt: string) => request<{ item: AdminCategory }>(`/api/admin/categories/${encodeURIComponent(id)}/${action}`, {
+    method: "POST", headers: { "x-csrf-token": csrfToken }, body: JSON.stringify({ expectedUpdatedAt }),
+  }),
+  accounts: () => request<{ items: AdminAccount[] }>("/api/admin/accounts"),
+  createAccount: (csrfToken: string, body: object) => request<{ item: AdminAccount }>("/api/admin/accounts", {
+    method: "POST", headers: { "x-csrf-token": csrfToken }, body: JSON.stringify(body),
+  }),
+  updateAccount: (id: string, csrfToken: string, body: object) => request<{ item: AdminAccount }>(`/api/admin/accounts/${encodeURIComponent(id)}`, {
+    method: "PATCH", headers: { "x-csrf-token": csrfToken }, body: JSON.stringify(body),
+  }),
   categoryMedia: (id: string) => request<{ category: AdminCategoryMedia }>(`/api/admin/categories/${encodeURIComponent(id)}/image`),
   addCategoryImage: (id: string, csrfToken: string, body: object) => request<{ category: AdminCategoryMedia }>(`/api/admin/categories/${encodeURIComponent(id)}/image`, {
     method: "POST", headers: mutationHeaders(csrfToken), body: JSON.stringify(body),

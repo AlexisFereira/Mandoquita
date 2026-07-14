@@ -12,7 +12,7 @@ import {
   hasCurrentOffer,
 } from "../../src/components/ProductOffer";
 import { prisma } from "../../lib/prisma";
-import { getProductDetail } from "../../src/server/catalogService";
+import { getProductDetail, resolveProductSlug } from "../../src/server/catalogService";
 import type { ProductDetailResponse } from "../../src/types/catalog";
 import { APPLICATION_THEME_COLOR } from "../../src/design-system/metadata";
 import { Container } from "../../src/components/Container";
@@ -22,6 +22,7 @@ import { ProductVariantOptions } from "../../src/components/ProductVariantOption
 import type { PublicProductVariantItem } from "../../src/types/catalog";
 import { ScrollEntryMotion } from "../../src/components/ScrollEntryMotion";
 import { Icon } from "../../src/components/Icon";
+import { ProductContinuationActions } from "../../src/features/product-detail/ProductContinuationActions";
 
 type ProductDetailPageProps = ProductDetailResponse;
 
@@ -35,10 +36,15 @@ export const getServerSideProps: GetServerSideProps<
     return { notFound: true };
   }
 
-  const data = await getProductDetail(prisma, slug);
+  const resolved = await resolveProductSlug(prisma, slug);
+  const data = resolved ? await getProductDetail(prisma, resolved.slug) : null;
 
   if (!data) {
     return { notFound: true };
+  }
+
+  if (resolved?.redirected) {
+    return { redirect: { destination: `/products/${resolved.slug}`, permanent: true } };
   }
 
   return { props: data };
@@ -74,6 +80,8 @@ export default function ProductDetailPage({
   item,
   variantSelection,
   related,
+  canonicalUrl,
+  whatsappUrl,
 }: ProductDetailPageProps) {
   const structuredData = createProductStructuredData(item);
   const initialImageId =
@@ -140,7 +148,7 @@ export default function ProductDetailPage({
           content="width=device-width, initial-scale=1, maximum-scale=5"
         />
         <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
-        <link rel="canonical" href={`/products/${item.slug}`} />
+        {canonicalUrl ? <link rel="canonical" href={canonicalUrl} /> : null}
         <meta property="og:title" content={item.seo.title ?? item.name} />
         <meta
           property="og:description"
@@ -155,6 +163,7 @@ export default function ProductDetailPage({
           <meta property="og:image" content={item.imageUrl} />
         ) : null}
         <meta property="og:type" content="product" />
+        {canonicalUrl ? <meta property="og:url" content={canonicalUrl} /> : null}
       </Head>
 
       <Script
@@ -170,7 +179,7 @@ export default function ProductDetailPage({
       <Header />
 
       <main id="main-content" className="py-8 sm:py-12">
-        <Container size="xl" padding="lg">
+        <Container size="wide" padding="lg">
           <nav aria-label="Breadcrumb" className="mb-6">
             <ol className="m-0 flex list-none flex-wrap gap-2 p-0">
               <li>
@@ -216,13 +225,13 @@ export default function ProductDetailPage({
             </ol>
           </nav>
 
-          <article className="mb-12 grid gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-12">
+          <article className="mb-12 grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:gap-12">
             <Carousel
               mode="gallery"
               items={galleryItems}
               activeItemId={activeImageId}
               onActiveItemChange={setActiveImageId}
-              aria-label={`Galería de ${item.name}`}
+              aria-label={`Imágenes de ${item.name}`}
               missingMediaMessage="No hay imágenes disponibles para este producto."
               failedMediaMessage="No pudimos mostrar esta imagen."
             />
@@ -274,6 +283,12 @@ export default function ProductDetailPage({
                   <dd className="m-0">{item.productType.name}</dd>
                 </div>
               </dl>
+
+              <ProductContinuationActions
+                productName={item.name}
+                canonicalUrl={canonicalUrl}
+                whatsappUrl={whatsappUrl}
+              />
             </div>
           </article>
 

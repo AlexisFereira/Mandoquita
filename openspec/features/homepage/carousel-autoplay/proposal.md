@@ -6,6 +6,11 @@ Finalized: 2026-07-12
 
 Author: Product Requirements Architect
 
+> **Placement amendment (2026-07-14):** Homepage Merchandising Layout V2 retains
+> this Carousel interaction contract but moves the promotional Carousel out of
+> the separate Hero. It is now the full-width first Homepage content region.
+> `../merchandising-layout-v2.md` governs placement and inventory integration.
+
 ---
 
 # Executive Summary

@@ -34,6 +34,12 @@ img {
   max-width: 100%;
 }
 
+@media (min-width: 1400px) {
+  .collection-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
 button,
 input,
 select,
@@ -211,6 +217,10 @@ textarea {
 
 .mobile-toggle {
   display: none;
+}
+
+nav[aria-label="Paginación de productos"] {
+  flex-wrap: wrap;
 }
 
 @media (max-width: 768px) {

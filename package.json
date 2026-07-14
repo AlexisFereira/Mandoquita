@@ -14,16 +14,21 @@
     "test:integration:search": "tsx scripts/validate-public-search.ts",
     "test:integration:product-admin": "tsx scripts/validate-product-admin.ts",
     "test:integration:catalog-media": "tsx scripts/validate-catalog-media-admin.ts",
+    "test:integration:admin-catalog-v2": "tsx scripts/validate-admin-catalog-v2.ts",
+    "test:browser:homepage": "node scripts/validate-homepage-merchandising-browser.cjs",
+    "test:browser:product-detail": "node scripts/validate-product-detail-contact-browser.cjs",
     "catalog-media:cleanup": "tsx scripts/cleanup-catalog-media.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init_catalog",
     "prisma:seed": "prisma db seed",
     "prisma:publish-products-v1": "tsx prisma/publish-products-v1.ts",
-    "admin:generate-secrets": "tsx scripts/generate-product-admin-secrets.ts"
+    "admin:generate-secrets": "tsx scripts/generate-product-admin-secrets.ts",
+    "admin:account": "tsx scripts/admin-account.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1085.0",
     "@prisma/client": "^6.11.1",
+    "argon2": "^0.41.1",
     "autoprefixer": "^10.5.2",
     "dotenv": "^16.6.1",
     "lucide-react": "1.24.0",

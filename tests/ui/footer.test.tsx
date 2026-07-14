@@ -10,6 +10,10 @@ describe("Footer", () => {
   it("contains only supported discovery destinations", () => {
     render(<Footer />);
 
+    expect(screen.getByRole("contentinfo").firstElementChild?.className).toContain(
+      "max-w-[1400px]",
+    );
+
     const destinations = screen
       .getAllByRole("link")
       .map((link) => link.getAttribute("href"));

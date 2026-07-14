@@ -1,54 +1,43 @@
 import React from "react";
 
-import { Button } from "../../components/Button";
 import { Container } from "../../components/Container";
-import { Icon } from "../../components/Icon";
 import { Section } from "../../components/Section";
-
-const paymentMethods = ["Binance", "Pago móvil", "Dólares en efectivo"] as const;
 
 export type PaymentInformationProps = {
   contactHref?: string;
 };
 
-export function PaymentInformation({ contactHref }: PaymentInformationProps) {
+export function PaymentInformation({ contactHref: _contactHref }: PaymentInformationProps) {
   return (
-    <Section id="medios-de-pago" tone="default" spacing="spacious">
-      <Container size="xl" padding="lg">
-        <div className="rounded-2xl border border-[rgb(var(--border)/1)] bg-[rgb(var(--surface-muted)/1)] p-6 sm:p-8 lg:p-10">
-          <div className="max-w-3xl space-y-4">
-            <h2 className="flex items-center gap-2 text-balance text-2xl font-semibold tracking-[-0.02em] text-[rgb(var(--foreground)/1)] sm:text-3xl">
-              <Icon name="payment-information" />
-              <span>Medios de pago</span>
+    <Section
+      id="medios-de-pago"
+      aria-labelledby="medios-de-pago-title"
+      tone="default"
+      spacing="spacious"
+    >
+      <Container size="wide" padding="lg">
+        <div className="relative overflow-hidden rounded-[8px]">
+          <img
+            src="/images/payment-methods-banner.png"
+            alt=""
+            width="2172"
+            height="724"
+            sizes="(min-width: 1400px) 1352px, calc(100vw - 48px)"
+            loading="lazy"
+            className="h-[160px] w-full object-cover sm:h-[220px] lg:h-[300px] xl:h-[350px]"
+          />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-inverse-surface/85 via-inverse-surface/55 to-transparent px-4 pb-4 pt-12 text-inverse-foreground sm:px-6 sm:pb-6 sm:pt-16 lg:px-8 lg:pb-8">
+            <h2
+              id="medios-de-pago-title"
+              className="text-balance text-xl font-semibold tracking-[-0.02em] sm:text-2xl lg:text-3xl"
+            >
+              Medios de pago
             </h2>
-            <p className="text-sm leading-6 text-[rgb(var(--muted)/1)] sm:text-base">
-              Aceptamos Binance, pago móvil y dólares en efectivo. Confirma los detalles del
-              pago directamente con Mandoquita.
+            <p className="mt-1 max-w-3xl text-xs leading-5 text-inverse-muted sm:mt-2 sm:text-sm sm:leading-6 lg:text-base">
+              Elige la opción que te resulte más cómoda: aceptamos Binance, Pago Móvil en
+              Venezuela y dólares en efectivo.
             </p>
           </div>
-
-          <ul className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {paymentMethods.map((method) => (
-              <li
-                key={method}
-                className="rounded-xl border border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] p-4 font-medium text-[rgb(var(--foreground)/1)]"
-              >
-                {method}
-              </li>
-            ))}
-          </ul>
-
-          {contactHref ? (
-            <Button
-              href={contactHref}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 w-full gap-2 sm:w-auto"
-            >
-              <Icon name="contact" />
-              <span>Consultar por WhatsApp</span>
-            </Button>
-          ) : null}
         </div>
       </Container>
     </Section>
