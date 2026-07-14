@@ -25,7 +25,7 @@ export const productUpdateSchema = z.object({
     .optional(),
   seoTitle: nullableText(200).optional(),
   seoDescription: nullableText(500).optional(),
-  price: z.union([stringPrice, numericPrice]).optional(),
+  price: z.string().regex(/^(?:0|[1-9]\d{0,7})(?:\.\d{1,2})?$/).refine(v => Number(v) > 0, "Price must be positive").transform(v => Number(v).toFixed(2)),
   currency: z.string().trim().regex(/^[A-Z]{3}$/).optional(),
   active: z.boolean().optional(),
   editorialApproved: z.boolean().optional(),
@@ -51,7 +51,7 @@ export const productUpdateSchema = z.object({
 export const productCreateSchema = z.object({
   slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).max(160),
   name: z.string().trim().min(1).max(200),
-  price: z.union([stringPrice, numericPrice]),
+  price: z.string().regex(/^(?:0|[1-9]\d{0,7})(?:\.\d{1,2})?$/).refine(v => Number(v) > 0, "Price must be positive").transform(v => Number(v).toFixed(2)),
   currency: z.string().trim().regex(/^[A-Z]{3}$/),
   baseSku: z.string().trim().min(1).max(120).regex(/^[A-Za-z0-9._-]+$/),
   productTypeId: nullableText(200).optional(),
@@ -87,8 +87,8 @@ export type AdminProductItem = {
   updatedAt: string;
 };
 
-export class ProductNotFoundError extends Error {}
-export class ProductUpdateConflictError extends Error {}
+export class ProductNotFoundError extends Error { }
+export class ProductUpdateConflictError extends Error { }
 
 const adminProductSelect = {
   id: true,
@@ -195,21 +195,21 @@ export async function updateProductById(
     : input.productTypeId === null
       ? null
       : await prisma.productType.findFirst({
-          where: {
-            name: input.productTypeId,
-            active: true,
-            subcategory: { active: true, category: { active: true, visible: true, version: { status: "ACTIVE" } } },
-          },
-          select: { name: true },
-        });
+        where: {
+          name: input.productTypeId,
+          active: true,
+          subcategory: { active: true, category: { active: true, visible: true, version: { status: "ACTIVE" } } },
+        },
+        select: { name: true },
+      });
   if (input.productTypeId != null && !approvedProductType) {
     throw new ProductUpdateConflictError("Product Type must be an approved active taxonomy leaf");
   }
   if (published && (!approvedProductType ||
-      ("active" in approvedProductType && (!approvedProductType.active ||
-        !approvedProductType.subcategory.active || !approvedProductType.subcategory.category.active ||
-        !approvedProductType.subcategory.category.visible ||
-        approvedProductType.subcategory.category.version.status !== "ACTIVE")))) {
+    ("active" in approvedProductType && (!approvedProductType.active ||
+      !approvedProductType.subcategory.active || !approvedProductType.subcategory.category.active ||
+      !approvedProductType.subcategory.category.visible ||
+      approvedProductType.subcategory.category.version.status !== "ACTIVE")))) {
     throw new ProductUpdateConflictError("Published Product requires an approved Product Type");
   }
   const featured = input.featured ?? current.featured;
@@ -262,17 +262,24 @@ export async function createProductWithBaseVariant(
   await assertProductSlugAvailable(prisma, input.slug);
   if (input.productTypeId) {
     const leaf = await prisma.productType.findFirst({
-      where: { name: input.productTypeId, active: true,
-        subcategory: { active: true, category: { active: true, version: { status: "ACTIVE" } } } },
+      where: {
+        name: input.productTypeId, active: true,
+        subcategory: { active: true, category: { active: true, version: { status: "ACTIVE" } } }
+      },
       select: { name: true },
     });
     if (!leaf) throw new ProductUpdateConflictError("Product Type must belong to the active taxonomy");
   }
   const product = await prisma.product.create({
     data: {
-      slug: input.slug, name: input.name, price: input.price, currency: input.currency,
+      slug: input.slug,
+      name: input.name,
+      price: input.price,
+      currency: input.currency,
       productTypeId: input.productTypeId ?? null,
-      active: false, editorialApproved: false, published: false,
+      active: false,
+      editorialApproved: false,
+      published: false,
       commerciallyAvailable: false, featured: false, featuredOrder: null,
       variants: { create: { sku: input.baseSku, isBase: true, active: true } },
     },

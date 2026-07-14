@@ -408,6 +408,7 @@ function ProductForm({
           price: values.price,
           currency: values.currency,
           baseSku: values.baseSku.trim(),
+          productTypeId: values.productTypeId.trim() || null,
         });
         setProduct(result.item);
         setStatus("Producto creado.");
@@ -511,6 +512,31 @@ function ProductForm({
               onChange={(e) => set("baseSku", e.target.value)}
             />
           ) : null}
+
+          <div className="md:col-span-2">
+            <label htmlFor="product-type" className="block font-medium">
+              Categoría
+            </label>
+            <select
+              id="product-type"
+              className="min-h-11 w-full rounded-md border border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] p-2"
+              value={values.productTypeId}
+              onChange={(e) => set("productTypeId", e.target.value)}
+              disabled={busy}
+            >
+              <option value="">
+                Sin clasificar (luego no podrás publicarlo)
+              </option>
+              {types.map((type) => (
+                <option key={type.name} value={type.name}>
+                  {type.category?.name} / {type.subcategory?.name} /{type.name}
+                </option>
+              ))}
+            </select>
+            <p className="pt-1 text-xs text-[rgb(var(--muted)/1)]">
+              Solo aparecen tipos activos en categorías visibles y activas.
+            </p>
+          </div>
         </Card>
         {id && !product?.retiredAt ? (
           <Card className="space-y-4">
@@ -720,7 +746,7 @@ function ProductWorkspace({
           >
             <table className={`${table} min-w-[1296px]`}>
               <caption className="sr-only">
-                {retired ? "Productos retirados" : "Productos vigentes"}.{" "}
+                {retired ? "Productos retirados" : "Productos vigentes"}.
                 {data.metadata.totalItems} resultados.
               </caption>
               <thead>
@@ -1013,8 +1039,8 @@ function CategoryWorkspace({
           <Card className="space-y-3">
             <h2 className="ds-heading ds-heading-md">Ciclo de vida</h2>
             <p>
-              Dependencias: {selected.dependencies.subcategories} subcategorías,{" "}
-              {selected.dependencies.productTypes} tipos,{" "}
+              Dependencias: {selected.dependencies.subcategories} subcategorías,
+              {selected.dependencies.productTypes} tipos,
               {selected.dependencies.products} productos.
             </p>
             {!selected.retiredAt &&
@@ -1102,9 +1128,9 @@ function CategoryWorkspace({
                     : `${c.active ? "Activa" : "Inactiva"}, ${c.visible ? "visible" : "no visible"}`}
                 </td>
                 <td>
-                  {c.dependencies.subcategories} subcategorías ·{" "}
-                  {c.dependencies.productTypes} tipos ·{" "}
-                  {c.dependencies.products} productos
+                  {c.dependencies.subcategories} subcategorías ·
+                  {c.dependencies.productTypes} tipos ·{c.dependencies.products}{" "}
+                  productos
                 </td>
                 <td>
                   {c.image ? (

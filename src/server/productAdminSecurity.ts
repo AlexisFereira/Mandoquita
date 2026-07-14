@@ -33,7 +33,7 @@ const configSchema = z.object({
 
 export type ProductAdminSecurityConfig = z.output<typeof configSchema>;
 
-export class ProductAdminConfigurationError extends Error {}
+export class ProductAdminConfigurationError extends Error { }
 export class ProductAdminHttpError extends Error {
   constructor(
     public status: 400 | 401 | 403 | 404 | 409 | 429 | 500 | 503,
@@ -200,8 +200,8 @@ export async function authorizeProductAdminSession(
   const tokenHash = sha256(token);
   const session = await prisma.productAdminSession.findUnique({ where: { tokenHash }, include: { adminAccount: true } });
   if (!session || !session.adminAccount || session.revokedAt || session.idleExpiresAt <= now ||
-      session.absoluteExpiresAt <= now || !session.adminAccount.enabled ||
-      session.credentialVersion !== session.adminAccount.credentialVersion) {
+    session.absoluteExpiresAt <= now || !session.adminAccount.enabled ||
+    session.credentialVersion !== session.adminAccount.credentialVersion) {
     if (session && !session.revokedAt) {
       await prisma.productAdminSession.update({ where: { id: session.id }, data: { revokedAt: now } });
     }
@@ -246,11 +246,13 @@ export async function currentThrottle(
   now = new Date(),
 ) {
   const rows = await prisma.productAdminThrottle.findMany({
-    where: { OR: [
-      { scope: "CLIENT", keyHash: clientKey },
-      { scope: "DEPLOYMENT", keyHash: "global" },
-      ...(accountKey ? [{ scope: "ACCOUNT", keyHash: accountKey }] : []),
-    ] },
+    where: {
+      OR: [
+        { scope: "CLIENT", keyHash: clientKey },
+        { scope: "DEPLOYMENT", keyHash: "global" },
+        ...(accountKey ? [{ scope: "ACCOUNT", keyHash: accountKey }] : []),
+      ]
+    },
   });
   const locked = rows.filter((row) => row.lockedUntil && row.lockedUntil > now)
     .sort((a, b) => b.lockedUntil!.getTime() - a.lockedUntil!.getTime())[0];
@@ -320,3 +322,5 @@ export async function auditProductAdminEvent(
 ) {
   await prisma.productAdminAuditEvent.create({ data: { ...data, changedFields: data.changedFields ?? undefined } });
 }
+
+

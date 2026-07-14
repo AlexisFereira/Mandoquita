@@ -24,9 +24,11 @@ export async function handleAdminProduct(req: NextApiRequest, res: NextApiRespon
     res.setHeader("Allow", "GET, PATCH");
     return res.status(405).json({ error: "Method not allowed" });
   }
+
   const requestId = productAdminRequestId(req);
   let productId: number | undefined;
   let sessionIdHash: string | undefined;
+
   try {
     const authorized = await requireProductAdmin(prisma, req, res, { csrf: req.method === "PATCH" });
     sessionIdHash = authorized.sessionIdHash;
@@ -70,6 +72,7 @@ export async function handleAdminProduct(req: NextApiRequest, res: NextApiRespon
       } catch { return res.status(503).json({ error: "Product Admin is unavailable" }); }
       return res.status(400).json({ error: "Invalid Product update" });
     }
+
     if (error instanceof ProductNotFoundError) {
       try {
         await auditProductAdminEvent(prisma, {
@@ -79,8 +82,9 @@ export async function handleAdminProduct(req: NextApiRequest, res: NextApiRespon
       } catch { return res.status(503).json({ error: "Product Admin is unavailable" }); }
       return res.status(404).json({ error: "Product not found" });
     }
+
     if (error instanceof ProductUpdateConflictError ||
-        (error instanceof Prisma.PrismaClientKnownRequestError && ["P2002", "P2003", "P2025"].includes(error.code))) {
+      (error instanceof Prisma.PrismaClientKnownRequestError && ["P2002", "P2003", "P2025"].includes(error.code))) {
       const expected = typeof req.body?.expectedUpdatedAt === "string" ? new Date(req.body.expectedUpdatedAt) : undefined;
       const current = productId ? await prisma.product.findUnique({ where: { id: productId }, select: { updatedAt: true } }) : null;
       try {
@@ -90,7 +94,8 @@ export async function handleAdminProduct(req: NextApiRequest, res: NextApiRespon
           currentUpdatedAt: current?.updatedAt,
         });
       } catch { return res.status(503).json({ error: "Product Admin is unavailable" }); }
-      return res.status(409).json({ error: "Product update conflicts with current state" });
+      console.warn("[CONFLICT]", { productId, reason: error instanceof Error ? error.message : "Unknown conflict", expectedUpdatedAt: req.body?.expectedUpdatedAt, currentUpdatedAt: current?.updatedAt });
+      return res.status(409).json({ error: "Product update conflicts with current state", reason: error instanceof Error ? error.message : "Unknown conflict", });
     }
     return respondProductAdminError(res, error);
   }
