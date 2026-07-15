@@ -37,7 +37,7 @@ export function Card<T extends ElementType = "div">({
 }: CardProps<T>) {
   const Component = (as ?? "div") as ElementType;
   const classes = [
-    "rounded-lg border border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] transition duration-200",
+    "rounded-xl border border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] transition duration-200",
     cardElevationClasses[elevation],
     cardPaddingClasses[padding],
     interactive

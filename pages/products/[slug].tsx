@@ -12,7 +12,10 @@ import {
   hasCurrentOffer,
 } from "../../src/components/ProductOffer";
 import { prisma } from "../../lib/prisma";
-import { getProductDetail, resolveProductSlug } from "../../src/server/catalogService";
+import {
+  getProductDetail,
+  resolveProductSlug,
+} from "../../src/server/catalogService";
 import type { ProductDetailResponse } from "../../src/types/catalog";
 import { APPLICATION_THEME_COLOR } from "../../src/design-system/metadata";
 import { Container } from "../../src/components/Container";
@@ -44,7 +47,9 @@ export const getServerSideProps: GetServerSideProps<
   }
 
   if (resolved?.redirected) {
-    return { redirect: { destination: `/products/${resolved.slug}`, permanent: true } };
+    return {
+      redirect: { destination: `/products/${resolved.slug}`, permanent: true },
+    };
   }
 
   return { props: data };
@@ -163,7 +168,9 @@ export default function ProductDetailPage({
           <meta property="og:image" content={item.imageUrl} />
         ) : null}
         <meta property="og:type" content="product" />
-        {canonicalUrl ? <meta property="og:url" content={canonicalUrl} /> : null}
+        {canonicalUrl ? (
+          <meta property="og:url" content={canonicalUrl} />
+        ) : null}
       </Head>
 
       <Script
@@ -217,7 +224,10 @@ export default function ProductDetailPage({
               <li aria-hidden="true" className="ds-text-muted shrink-0">
                 /
               </li>
-              <li className="ds-text-muted min-w-0 overflow-hidden text-ellipsis" title={item.productType.name}>
+              <li
+                className="ds-text-muted min-w-0 overflow-hidden text-ellipsis"
+                title={item.productType.name}
+              >
                 {item.productType.name}
               </li>
               <li aria-hidden="true" className="ds-text-muted shrink-0">
@@ -255,7 +265,7 @@ export default function ProductDetailPage({
                 </p>
               ) : null}
 
-              <ProductOffer product={item} emphasis="detail" />
+              {/* <ProductOffer product={item} emphasis="detail" />*/}
 
               <ProductVariantOptions
                 key={item.id}
@@ -388,7 +398,6 @@ export default function ProductDetailPage({
           )}
         </Container>
       </main>
-
       <Footer />
     </>
   );

@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @config "../tailwind.config.ts";
 
+:root {
+  --info: 2 132 199; /* sky-600, debe coincidir con la rampa de tu marca */
+  /* el resto de tus tokens existentes */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --info: 56 189 248; /* sky-400 */
+  }
+}
+
 * {
   box-sizing: border-box;
 }

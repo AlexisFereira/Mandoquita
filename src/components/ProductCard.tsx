@@ -13,7 +13,8 @@ export type ProductCardProps = {
 };
 
 export function ProductCard({ product, featured = false }: ProductCardProps) {
-  const cardImage = product.images.find((image) => image.isPrimary) ?? product.images[0];
+  const cardImage =
+    product.images.find((image) => image.isPrimary) ?? product.images[0];
 
   return (
     <Card
@@ -70,7 +71,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
             data-product-card-offer-row="true"
             className="mt-auto flex flex-col items-start gap-3 pt-2 @min-[280px]:flex-row @min-[280px]:items-center @min-[280px]:justify-between @min-[280px]:gap-4"
           >
-            <ProductOffer product={product} />
+            {/* <ProductOffer product={product} />  */}
             <span className="text-sm font-semibold text-[rgb(var(--foreground)/1)] underline decoration-transparent underline-offset-4 transition group-hover:decoration-current">
               Ver detalles
             </span>

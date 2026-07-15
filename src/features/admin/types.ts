@@ -165,3 +165,27 @@ export type AdminCategoryList = {
   metadata: { page: number; limit: number; totalItems: number; totalPages: number };
   filters: { q: string | null; retired: boolean };
 };
+
+
+export type AdminSubcategory = {
+  id: string;
+  slug: string;
+  name: string;
+  sourceOrder: number;
+  active: boolean;
+  categoryId: string;
+  category?: Pick<AdminCategory, "id" | "name" | "slug">;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AdminSubcategoryList = {
+  items: AdminSubcategory[];
+  metadata: {
+    page: number;
+    totalPages: number;
+    totalItems: number;
+  };
+};
+
+

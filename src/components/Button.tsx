@@ -28,30 +28,30 @@ const buttonSizeClasses = {
   lg: "px-8 py-4 text-base",
 } as const;
 
+const sharedProps = {
+  borderStyle: "solid",
+  borderWidth: "1px",
+  boxShadow: "var(--shadow-md)",
+};
+
 const variantStyles = {
   primary: {
     backgroundColor: "rgb(var(--primary) / 1)",
     color: "rgb(var(--primary-foreground) / 1)",
     borderColor: "rgb(var(--primary) / 1)",
-    borderStyle: "solid",
-    borderWidth: "1px",
-    boxShadow: "var(--shadow-md)",
+    ...sharedProps,
   },
   danger: {
     backgroundColor: "rgb(var(--danger) / 1)",
     color: "rgb(var(--primary-foreground) / 1)",
     borderColor: "rgb(var(--danger) / 1)",
-    borderStyle: "solid",
-    borderWidth: "1px",
-    boxShadow: "var(--shadow-sm)",
+    ...sharedProps,
   },
   secondary: {
     backgroundColor: "rgb(var(--surface) / 1)",
     color: "rgb(var(--foreground) / 1)",
     borderColor: "rgb(var(--border) / 1)",
-    borderStyle: "solid",
-    borderWidth: "1px",
-    boxShadow: "var(--shadow-sm)",
+    ...sharedProps,
   },
   ghost: {
     backgroundColor: "transparent",

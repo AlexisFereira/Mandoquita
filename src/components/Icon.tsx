@@ -19,6 +19,7 @@ import {
   TriangleAlert,
   SquarePen,
   X,
+  LogOut,
   type LucideIcon,
 } from "lucide-react";
 
@@ -43,6 +44,7 @@ const iconRegistry = {
   tag: Tag,
   location: MapPin,
   categories: LayoutGrid,
+  logout: LogOut,
 } as const satisfies Record<string, LucideIcon>;
 
 const iconSizes = {

@@ -11,19 +11,22 @@ import { CategoryMediaAdmin, ProductMediaAdmin } from "./MediaAdmin";
 import type {
   AdminAccount,
   AdminCategory,
-  AdminProduct,
   AdminProductList,
-  AdminProductType,
   AdminSession,
 } from "./types";
 import { Icon } from "../../components/Icon";
+import { Notice } from "./components/Notice";
+import AdminHeader from "./components/adminHeader";
+import Pagination from "./components/pagination";
+import SearchProducts from "./components/searchProducts";
+import { ProductForm } from "./components/ProductForm";
 
 const tableRegion =
   "overflow-x-auto rounded-md border border-[rgb(var(--border)/1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgb(var(--focus)/1)]";
 const table =
   "min-w-[1024px] w-full border-collapse text-left text-sm [&_td]:border-t [&_td]:border-[rgb(var(--border)/1)] [&_td]:p-4 [&_td]:align-top [&_th]:p-4 [&_th]:align-top";
 
-function message(error: unknown, fallback: string) {
+export function message(error: unknown, fallback: string) {
   if (!(error instanceof AdminApiError)) return fallback;
   if (error.status === 429)
     return "La acción no está disponible temporalmente. Intenta más tarde.";
@@ -36,27 +39,6 @@ function message(error: unknown, fallback: string) {
   if ([401, 403].includes(error.status))
     return "No se pudo confirmar la autorización.";
   return fallback;
-}
-
-function Notice({
-  text,
-  error = false,
-  children,
-}: {
-  text: string;
-  error?: boolean;
-  children?: React.ReactNode;
-}) {
-  return (
-    <div
-      role={error ? "alert" : "status"}
-      tabIndex={error ? -1 : undefined}
-      className={`space-y-3 rounded-md border p-4 ${error ? "border-[rgb(var(--danger)/.4)]" : "border-[rgb(var(--border)/1)]"}`}
-    >
-      <p>{text}</p>
-      {children}
-    </div>
-  );
 }
 
 const PasswordInput = React.forwardRef<
@@ -133,7 +115,7 @@ function AccessGate({
             </h1>
             <p>Ingresa con tu cuenta administrativa.</p>
           </div>
-          {error ? <Notice text={error} error /> : null}
+          {error ? <Notice text={error} variant="error" /> : null}
           <form onSubmit={submit} noValidate className="space-y-5">
             <Input
               id="admin-username"
@@ -229,7 +211,7 @@ function PasswordChange({
               Unicode.
             </p>
           </div>
-          {status ? <Notice text={status} error /> : null}
+          {status ? <Notice text={status} variant="error" /> : null}
           <form className="space-y-5" onSubmit={submit}>
             <PasswordInput
               id="current-password"
@@ -269,7 +251,7 @@ function PasswordChange({
   );
 }
 
-type ProductFormValues = {
+export type ProductFormValues = {
   name: string;
   slug: string;
   price: string;
@@ -290,7 +272,7 @@ type ProductFormValues = {
   commerciallyAvailable: boolean;
   featured: boolean;
 };
-const emptyProduct: ProductFormValues = {
+export const emptyProduct: ProductFormValues = {
   name: "",
   slug: "",
   price: "",
@@ -311,325 +293,6 @@ const emptyProduct: ProductFormValues = {
   commerciallyAvailable: false,
   featured: false,
 };
-
-function ProductForm({
-  session,
-  id,
-  onDone,
-  onMedia,
-  onExpired,
-}: {
-  session: AdminSession;
-  id?: number;
-  onDone: () => void;
-  onMedia?: () => void;
-  onExpired: () => void;
-}) {
-  const [product, setProduct] = useState<AdminProduct | null>(null);
-  const [types, setTypes] = useState<AdminProductType[]>([]);
-  const [values, setValues] = useState(emptyProduct);
-  const [status, setStatus] = useState("");
-  const [busy, setBusy] = useState(Boolean(id));
-  const [confirming, setConfirming] = useState(false);
-  useEffect(() => {
-    void adminApi
-      .productTypes()
-      .then(({ items }) => setTypes(items))
-      .catch(() => null);
-    if (!id) return;
-    setBusy(true);
-    adminApi
-      .product(id)
-      .then(({ item }) => {
-        setProduct(item);
-        setValues({
-          name: item.name,
-          slug: item.slug,
-          price: item.price,
-          currency: item.currency,
-          baseSku: item.baseVariant?.sku ?? "",
-          shortDescription: item.shortDescription ?? "",
-          description: item.description ?? "",
-          brand: item.brand ?? "",
-          collection: item.collection ?? "",
-          genderApplicability: item.genderApplicability ?? "",
-          productTypeId: item.productType?.name ?? "",
-          seoTitle: item.seoTitle ?? "",
-          seoDescription: item.seoDescription ?? "",
-          featuredOrder:
-            item.featuredOrder == null ? "" : String(item.featuredOrder),
-          active: item.active,
-          editorialApproved: item.editorialApproved,
-          published: item.published,
-          commerciallyAvailable: item.commerciallyAvailable,
-          featured: item.featured,
-        });
-      })
-      .catch((cause) => {
-        if (cause instanceof AdminApiError && [401, 403].includes(cause.status))
-          onExpired();
-        else setStatus(message(cause, "No pudimos cargar el producto."));
-      })
-      .finally(() => setBusy(false));
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
-  const set = <K extends keyof ProductFormValues>(
-    key: K,
-    value: ProductFormValues[K],
-  ) => setValues((old) => ({ ...old, [key]: value }));
-  async function save(event: React.FormEvent) {
-    event.preventDefault();
-    if (
-      !values.name.trim() ||
-      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(values.slug) ||
-      Number(values.price) <= 0 ||
-      !/^[A-Z]{3}$/.test(values.currency) ||
-      (!id && !values.baseSku.trim())
-    ) {
-      setStatus("Revisa nombre, slug, precio, moneda y SKU base.");
-      return;
-    }
-    setBusy(true);
-    setStatus("");
-    try {
-      if (id && product) {
-        const { baseSku: _baseSku, ...changes } = values;
-        const result = await adminApi.updateProduct(
-          id,
-          session.csrfToken,
-          product.updatedAt,
-          changes,
-        );
-        setProduct(result.item);
-        setStatus("Cambios guardados.");
-      } else {
-        const result = await adminApi.createProduct(session.csrfToken, {
-          name: values.name.trim(),
-          slug: values.slug.trim(),
-          price: values.price,
-          currency: values.currency,
-          baseSku: values.baseSku.trim(),
-          productTypeId: values.productTypeId.trim() || null,
-        });
-        setProduct(result.item);
-        setStatus("Producto creado.");
-      }
-    } catch (cause) {
-      if (cause instanceof AdminApiError && [401, 403].includes(cause.status))
-        onExpired();
-      else setStatus(message(cause, "No se guardó el producto."));
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function lifecycle() {
-    if (!product) return;
-    setBusy(true);
-    try {
-      const action = product.retiredAt ? "restore" : "retire";
-      const result = await adminApi.productLifecycle(
-        product.id,
-        action,
-        session.csrfToken,
-        product.updatedAt,
-      );
-      setProduct(result.item);
-      setConfirming(false);
-      setStatus(
-        action === "retire" ? "Producto retirado." : "Producto restaurado.",
-      );
-    } catch (cause) {
-      setStatus(message(cause, "No se cambió el ciclo de vida."));
-    } finally {
-      setBusy(false);
-    }
-  }
-  if (busy && id && !product)
-    return (
-      <PoliteStatus visuallyHidden={false}>Cargando producto…</PoliteStatus>
-    );
-  return (
-    <div className="mx-auto max-w-[960px] space-y-6">
-      <Button variant="ghost" onClick={onDone}>
-        ← Volver a productos
-      </Button>
-      <div className="space-y-2">
-        <span className="ds-eyebrow">
-          {id ? "Editar producto" : "Nuevo producto"}
-        </span>
-        <h1 className="ds-heading ds-heading-lg">
-          {id ? product?.name : "Crear producto"}
-        </h1>
-        {product ? (
-          <Badge variant={product.retiredAt ? "warning" : "success"}>
-            {product.retiredAt ? "Retirado" : "Vigente"}
-          </Badge>
-        ) : (
-          <p>
-            Se creará una variante base y el producto quedará inactivo y no
-            publicado.
-          </p>
-        )}
-      </div>
-      {status ? (
-        <Notice
-          text={status}
-          error={status.startsWith("No") || status.startsWith("Revisa")}
-        />
-      ) : null}
-      <form onSubmit={save} className="space-y-6">
-        <Card className="grid gap-5 md:grid-cols-2">
-          <Input
-            id="product-name"
-            label="Nombre"
-            value={values.name}
-            onChange={(e) => set("name", e.target.value)}
-          />
-          <Input
-            id="product-slug"
-            label="Slug"
-            value={values.slug}
-            onChange={(e) => set("slug", e.target.value)}
-          />
-          <Input
-            id="product-price"
-            label="Precio del producto"
-            inputMode="decimal"
-            value={values.price}
-            onChange={(e) => set("price", e.target.value)}
-          />
-          <Input
-            id="product-currency"
-            label="Moneda"
-            maxLength={3}
-            value={values.currency}
-            onChange={(e) => set("currency", e.target.value.toUpperCase())}
-          />
-          {!id ? (
-            <Input
-              id="product-sku"
-              label="SKU base"
-              value={values.baseSku}
-              onChange={(e) => set("baseSku", e.target.value)}
-            />
-          ) : null}
-
-          <div className="md:col-span-2">
-            <label htmlFor="product-type" className="block font-medium">
-              Categoría
-            </label>
-            <select
-              id="product-type"
-              className="min-h-11 w-full rounded-md border border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] p-2"
-              value={values.productTypeId}
-              onChange={(e) => set("productTypeId", e.target.value)}
-              disabled={busy}
-            >
-              <option value="">
-                Sin clasificar (luego no podrás publicarlo)
-              </option>
-              {types.map((type) => (
-                <option key={type.name} value={type.name}>
-                  {type.category?.name} / {type.subcategory?.name} /{type.name}
-                </option>
-              ))}
-            </select>
-            <p className="pt-1 text-xs text-[rgb(var(--muted)/1)]">
-              Solo aparecen tipos activos en categorías visibles y activas.
-            </p>
-          </div>
-        </Card>
-        {id && !product?.retiredAt ? (
-          <Card className="space-y-4">
-            <label htmlFor="product-description" className="font-medium">
-              Descripción
-            </label>
-            <textarea
-              id="product-description"
-              className="min-h-32 w-full rounded-md border p-3"
-              value={values.description}
-              onChange={(e) => set("description", e.target.value)}
-            />
-            <div className="grid gap-3 sm:grid-cols-2">
-              {(
-                [
-                  "active",
-                  "editorialApproved",
-                  "published",
-                  "commerciallyAvailable",
-                  "featured",
-                ] as const
-              ).map((key) => (
-                <label key={key} className="flex min-h-11 items-center gap-3">
-                  <input
-                    type="checkbox"
-                    checked={values[key]}
-                    onChange={(e) => set(key, e.target.checked)}
-                  />
-                  {
-                    {
-                      active: "Activo",
-                      editorialApproved: "Aprobado editorialmente",
-                      published: "Publicado",
-                      commerciallyAvailable: "Disponible comercialmente",
-                      featured: "Destacado",
-                    }[key]
-                  }
-                </label>
-              ))}
-            </div>
-          </Card>
-        ) : null}
-        <div className="flex flex-wrap gap-3">
-          <Button type="submit" disabled={busy || Boolean(product?.retiredAt)}>
-            {busy ? "Guardando…" : id ? "Guardar cambios" : "Crear producto"}
-          </Button>
-          {product && onMedia ? (
-            <Button type="button" variant="secondary" onClick={onMedia}>
-              Administrar imágenes
-            </Button>
-          ) : null}
-        </div>
-      </form>
-      {product ? (
-        <Card className="space-y-4">
-          <h2 className="ds-heading ds-heading-md">Ciclo de vida</h2>
-          {confirming ? (
-            <>
-              <p>
-                {product.retiredAt
-                  ? "Volverá a vigente, inactivo y no publicado."
-                  : "Dejará de aparecer públicamente; se conservarán identidad, variantes e imágenes."}
-              </p>
-              <div className="flex gap-3">
-                <Button
-                  variant="secondary"
-                  onClick={() => setConfirming(false)}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  variant={product.retiredAt ? "primary" : "danger"}
-                  onClick={() => void lifecycle()}
-                >
-                  {product.retiredAt
-                    ? "Restaurar producto"
-                    : "Retirar producto"}
-                </Button>
-              </div>
-            </>
-          ) : (
-            <Button
-              variant={product.retiredAt ? "primary" : "danger"}
-              onClick={() => setConfirming(true)}
-            >
-              {product.retiredAt ? "Restaurar producto" : "Retirar producto"}
-            </Button>
-          )}
-        </Card>
-      ) : null}
-    </div>
-  );
-}
 
 function ProductWorkspace({
   session,
@@ -695,42 +358,29 @@ function ProductWorkspace({
     );
   return (
     <div className="space-y-7">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-wrap items-end gap-4">
         <div>
           <span className="ds-eyebrow">Catálogo administrativo</span>
           <h1 className="ds-heading ds-heading-lg">Productos</h1>
         </div>
         <Button onClick={() => setMode("create")}>Crear producto</Button>
-      </div>
-      <form
-        className="flex flex-wrap items-end gap-3"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setPage(1);
-          void load();
-        }}
-      >
-        <Input
-          id="product-search"
-          label="Buscar productos"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-        <label className="flex min-h-11 items-center gap-2">
-          <input
-            type="checkbox"
-            checked={retired}
-            onChange={(e) => {
-              setRetired(e.target.checked);
-              setPage(1);
-            }}
+        <div className="flex-1 ml-auto mr-0">
+          <SearchProducts
+            q={q}
+            setQ={setQ}
+            retired={retired}
+            setRetired={setRetired}
+            setPage={setPage}
+            load={load}
           />
-          Mostrar retirados
-        </label>
-        <Button type="submit">Buscar</Button>
-      </form>
+        </div>
+      </div>
+
       {status ? (
-        <Notice text={status} error={!status.startsWith("Cargando")} />
+        <Notice
+          text={status}
+          variant={!status.startsWith("Cargando") ? "error" : "info"}
+        />
       ) : null}
       {data?.items.length ? (
         <>
@@ -744,31 +394,36 @@ function ProductWorkspace({
             aria-label="Tabla de productos"
             aria-describedby="product-table-help"
           >
-            <table className={`${table} min-w-[1296px]`}>
+            <table
+              className={`${table} min-w-[1296px] w-full text-sm text-left rtl:text-right text-body`}
+            >
               <caption className="sr-only">
                 {retired ? "Productos retirados" : "Productos vigentes"}.
                 {data.metadata.totalItems} resultados.
               </caption>
-              <thead>
+              <thead className="bg-neutral-secondary-soft border-b border-default">
                 <tr>
                   <th scope="col">Producto</th>
                   <th scope="col">SKU base</th>
                   <th scope="col">Clasificación</th>
                   <th scope="col">Estados</th>
-                  <th scope="col">Ciclo de vida</th>
+                  {/* <th scope="col">Ciclo de vida</th> */}
                   <th scope="col">Actualización</th>
                   <th scope="col">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {data.items.map((p) => (
-                  <tr key={p.id}>
-                    <th scope="row" className="p-4">
+                  <tr
+                    key={p.id}
+                    className="odd:bg-gray-200 even:bg-neutral-secondary-soft border-b border-default"
+                  >
+                    <td scope="row" className="p-4">
                       <span className="block font-semibold">{p.name}</span>
                       <span className="font-normal text-[rgb(var(--muted)/1)]">
                         /{p.slug}
                       </span>
-                    </th>
+                    </td>
                     <td>{p.baseVariant?.sku ?? "Disponible al editar"}</td>
                     <td>
                       {[
@@ -790,15 +445,16 @@ function ProductWorkspace({
                         </Badge>
                       </div>
                     </td>
-                    <td>{p.retiredAt ? "Retirado" : "Vigente"}</td>
+                    {/* <td>{p.retiredAt ? "Retirado" : "Vigente"}</td> */}
                     <td>
                       {new Intl.DateTimeFormat("es-CO", {
                         dateStyle: "medium",
                       }).format(new Date(p.updatedAt))}
                     </td>
                     <td>
-                      <div className="flex flex-col items-start gap-2">
+                      <div className="flex flex-nowrap gap-2">
                         <Button
+                          size="sm"
                           title={`Editar ${p.name}`}
                           variant="secondary"
                           onClick={() => {
@@ -808,16 +464,6 @@ function ProductWorkspace({
                         >
                           <Icon name="edit" />
                         </Button>
-                        <Button
-                          title={`Administrar imágenes de ${p.name}`}
-                          variant="secondary"
-                          onClick={() => {
-                            setId(p.id);
-                            setMode("media");
-                          }}
-                        >
-                          <Icon name="imageUp" />
-                        </Button>
                       </div>
                     </td>
                   </tr>
@@ -825,28 +471,7 @@ function ProductWorkspace({
               </tbody>
             </table>
           </div>
-          <nav
-            aria-label="Paginación de productos"
-            className="flex items-center gap-3"
-          >
-            <Button
-              variant="secondary"
-              disabled={page <= 1}
-              onClick={() => setPage(page - 1)}
-            >
-              Anterior
-            </Button>
-            <span aria-current="page">
-              Página {data.metadata.page} de {data.metadata.totalPages}
-            </span>
-            <Button
-              variant="secondary"
-              disabled={page >= data.metadata.totalPages}
-              onClick={() => setPage(page + 1)}
-            >
-              Siguiente
-            </Button>
-          </nav>
+          <Pagination page={page} setPage={setPage} data={data} />
         </>
       ) : data && !status ? (
         <Card>No hay productos para administrar.</Card>
@@ -970,7 +595,10 @@ function CategoryWorkspace({
           {selected ? `Editar ${selected.name}` : "Crear categoría"}
         </h1>
         {status ? (
-          <Notice text={status} error={status.startsWith("No")} />
+          <Notice
+            text={status}
+            variant={status.startsWith("No") ? "error" : "info"}
+          />
         ) : null}
         <form onSubmit={save} className="space-y-5">
           <Card className="space-y-5">
@@ -1094,7 +722,12 @@ function CategoryWorkspace({
         </label>
         <Button>Buscar</Button>
       </form>
-      {status ? <Notice text={status} error /> : null}
+      {status ? (
+        <Notice
+          text={status}
+          variant={!status.startsWith("Cargando") ? "error" : "info"}
+        />
+      ) : null}
       <div
         className={tableRegion}
         tabIndex={0}
@@ -1243,7 +876,7 @@ function Accounts({
             }[task.action]
           }
         </h1>
-        {status ? <Notice text={status} error /> : null}
+        {status ? <Notice text={status} variant="error" /> : null}
         <form onSubmit={submit} className="space-y-5">
           <Card className="space-y-5">
             {task.action === "create" ? (
@@ -1316,7 +949,7 @@ function Accounts({
           Crear administrador
         </Button>
       </div>
-      {status ? <Notice text={status} error /> : null}
+      {status ? <Notice text={status} variant="error" /> : null}
       <p id="accounts-help">
         Desplázate horizontalmente dentro de la tabla para consultar todas las
         columnas.
@@ -1448,48 +1081,13 @@ export function AdminApp() {
       <a href="#admin-main" className="skip-link">
         Ir al contenido principal
       </a>
-      <header className="border-b bg-[rgb(var(--surface)/1)]">
-        <Container
-          size="xl"
-          padding="lg"
-          className="flex min-h-20 flex-wrap items-center justify-between gap-4"
-        >
-          <div>
-            <p className="font-semibold">Mandoquita · Administración</p>
-            <p className="text-sm text-[rgb(var(--muted)/1)]">
-              Sesión: {session.account.username}
-            </p>
-          </div>
-          <nav aria-label="Administración" className="flex flex-wrap gap-2">
-            <Button
-              variant={section === "products" ? "primary" : "ghost"}
-              aria-current={section === "products" ? "page" : undefined}
-              onClick={() => setSection("products")}
-            >
-              Productos
-            </Button>
-            <Button
-              variant={section === "categories" ? "primary" : "ghost"}
-              aria-current={section === "categories" ? "page" : undefined}
-              onClick={() => setSection("categories")}
-            >
-              Categorías
-            </Button>
-            {superadmin ? (
-              <Button
-                variant={section === "accounts" ? "primary" : "ghost"}
-                aria-current={section === "accounts" ? "page" : undefined}
-                onClick={() => setSection("accounts")}
-              >
-                Cuentas de administradores
-              </Button>
-            ) : null}
-            <Button variant="ghost" onClick={() => void logout()}>
-              Salir
-            </Button>
-          </nav>
-        </Container>
-      </header>
+      <AdminHeader
+        session={session}
+        section={section}
+        superadmin={superadmin}
+        setSection={setSection}
+        logout={() => void logout()}
+      />
       <main id="admin-main" className="py-6">
         <Container size="wide" padding="lg">
           {section === "products" ? (
@@ -1499,7 +1097,7 @@ export function AdminApp() {
           ) : superadmin ? (
             <Accounts session={session} onExpired={expired} />
           ) : (
-            <Notice text="No tienes acceso a esta sección" error />
+            <Notice text="No tienes acceso a esta sección" variant="error" />
           )}
         </Container>
       </main>
