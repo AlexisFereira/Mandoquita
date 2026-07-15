@@ -146,13 +146,13 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
                 className="absolute inset-0 h-full w-full object-cover transition-opacity duration-200 motion-reduce:transition-none"
                 style={{ opacity: loadedSlides[index] ? 1 : 0 }}
               />
-              <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-inverse-surface/45 via-inverse-surface/70 to-transparent pb-16 pt-6 text-inverse-foreground sm:pb-20 sm:pt-12 lg:pt-16">
+              <div className="absolute inset-x-0 bottom-0 z-10  pb-16 pt-6 text-inverse-foreground sm:pb-20 sm:pt-12 lg:pt-16">
                 <Container size="wide" padding="lg">
-                  <h2 className="max-w-xl text-xl font-semibold tracking-[-0.03em] sm:text-2xl lg:text-3xl">
+                  <h2 className="max-w-xl text-xl font-semibold tracking-[-0.03em] sm:text-2xl lg:text-5xl">
                     {slide.title}
                   </h2>
                   {slide.description ? (
-                    <p className="mt-1 max-w-xl text-xs leading-5 text-inverse-muted sm:mt-2 sm:text-sm sm:leading-6 lg:text-base">
+                    <p className="mt-1 max-w-xl text-xs leading-5  sm:mt-2 sm:text-sm sm:leading-6 lg:text-base">
                       {slide.description}
                     </p>
                   ) : null}
@@ -174,7 +174,7 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
       </div>
 
       {computedSlides.length > 1 ? (
-        <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-b from-transparent to-inverse-surface/55 py-3">
+        <div className="absolute inset-x-0 bottom-0 z-20  py-3">
           <Container
             size="wide"
             padding="lg"
