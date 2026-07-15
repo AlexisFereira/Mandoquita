@@ -19,18 +19,39 @@ import { PaymentInformation } from "../src/features/homepage/payment-information
 import type { HomepagePayload } from "../src/types/catalog";
 import { APPLICATION_THEME_COLOR } from "../src/design-system/metadata";
 
-export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({ res }) => {
+export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
+  res,
+}) => {
   res.setHeader("Cache-Control", "private, no-store");
   return { props: await getHomepagePayload(prisma) };
 };
 
+const urlBase = "https://d139alfkeie86e.cloudfront.net";
+
 const carouselSlides = [
-  { title: "Productos que se adaptan a tu día", description: "Descubre opciones seleccionadas para tecnología, audio y hogar.", imageUrl: "/images/banners/banner-1.svg", action: { label: "Ver destacados", href: "#destacados" } },
-  { title: "Explora con claridad", description: "Encuentra productos y categorías de manera simple desde cualquier dispositivo.", imageUrl: "/images/banners/banner-2.svg" },
-  { title: "Estamos para orientarte", description: "Conversa con nosotros y recibe información personalizada sobre el producto que te interesa.", imageUrl: "/images/banners/banner-3.svg", action: { label: "Hablar por WhatsApp", href: "#contacto" } },
+  {
+    title: "Tu próximo conjunto favorito",
+    description: "Cómodos, versátiles y listos para combinar con tu estilo.",
+    imageUrl: `${urlBase}/images/banners/slide-ropa-mujer.png`,
+    action: { label: "Descubrir colección", href: "#destacados" },
+  },
+  {
+    title: "El detalle cambia el look",
+    description:
+      "Gorras, lentes y relojes para llevar tu estilo un paso más allá.",
+    imageUrl: `${urlBase}/images/banners/slide-accesorios.png`,
+    action: { label: "Explorar accesorios", href: "#destacados" },
+  },
+  {
+    title: "Tu estilo. Sin uniforme.",
+    description: "Oversize, estampadas y acid wash hechas para destacar.",
+    imageUrl: `${urlBase}/images/banners/slide-oversizes.png`,
+    action: { label: "Explorar colección", href: "#contacto" },
+  },
 ];
 
-const whatsappUrl = "https://wa.me/573506928681?text=Hola%2C%20vi%20el%20cat%C3%A1logo%20de%20Mandoquita%20y%20quisiera%20recibir%20informaci%C3%B3n%20sobre%20un%20producto.";
+const whatsappUrl =
+  "https://wa.me/573506928681?text=Hola%2C%20vi%20el%20cat%C3%A1logo%20de%20Mandoquita%20y%20quisiera%20recibir%20informaci%C3%B3n%20sobre%20un%20producto.";
 
 export function selectVisibleFeaturedProducts<T>(products: T[], limit: number) {
   return products.slice(0, limit);
@@ -51,34 +72,261 @@ function getViewAllCategoriesVisibility(categoryCount: number) {
     categoryCount <= 3 ? "sm:hidden" : "",
     categoryCount <= 4 ? "md:hidden" : "",
     categoryCount <= 7 ? "lg:hidden" : "",
-  ].filter(Boolean).join(" ");
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
-function MerchandisingSection({ id, title, description, children, tone = "default", layout = "stacked" }: { id: string; title: string; description?: string; children: React.ReactNode; tone?: "default" | "surface"; layout?: "stacked" | "split" }) {
+function MerchandisingSection({
+  id,
+  title,
+  description,
+  children,
+  tone = "default",
+  layout = "stacked",
+}: {
+  id: string;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
+  tone?: "default" | "surface";
+  layout?: "stacked" | "split";
+}) {
   const split = layout === "split";
-  return <section id={id} aria-labelledby={`${id}-title`} className={`py-10 sm:py-12 lg:py-16 ${tone === "surface" ? "bg-[rgb(var(--surface-muted)/1)]" : ""}`}><Container size="wide" padding="lg" className={split ? "space-y-5 sm:space-y-6 xl:flex xl:items-center xl:justify-between xl:gap-12 xl:space-y-0" : "space-y-5 sm:space-y-6"}><div className={split ? "space-y-2 xl:w-max xl:max-w-none xl:shrink-0" : "space-y-2"}><h2 id={`${id}-title`} className="text-balance text-2xl font-semibold tracking-[-0.02em] sm:text-3xl">{title}</h2>{description ? <p className={`max-w-2xl leading-7 text-[rgb(var(--muted)/1)] ${split ? "xl:whitespace-nowrap" : ""}`}>{description}</p> : null}</div>{children}</Container></section>;
+  return (
+    <section
+      id={id}
+      aria-labelledby={`${id}-title`}
+      className={`py-10 sm:py-12 lg:py-16 ${tone === "surface" ? "bg-[rgb(var(--surface-muted)/1)]" : ""}`}
+    >
+      <Container
+        size="wide"
+        padding="lg"
+        className={
+          split
+            ? "space-y-5 sm:space-y-6 xl:flex xl:items-center xl:justify-between xl:gap-12 xl:space-y-0"
+            : "space-y-5 sm:space-y-6"
+        }
+      >
+        <div
+          className={
+            split ? "space-y-2 xl:w-max xl:max-w-none xl:shrink-0" : "space-y-2"
+          }
+        >
+          <h2
+            id={`${id}-title`}
+            className="text-balance text-2xl font-semibold tracking-[-0.02em] sm:text-3xl"
+          >
+            {title}
+          </h2>
+          {description ? (
+            <p
+              className={`max-w-2xl leading-7 text-[rgb(var(--muted)/1)] ${split ? "xl:whitespace-nowrap" : ""}`}
+            >
+              {description}
+            </p>
+          ) : null}
+        </div>
+        {children}
+      </Container>
+    </section>
+  );
 }
 
-export default function HomePage({ featuredProducts, categories, selectedCategoryProducts }: HomepagePayload) {
+export default function HomePage({
+  featuredProducts,
+  categories,
+  selectedCategoryProducts,
+}: HomepagePayload) {
   const showsThreeFeatured = useMediaQuery("(min-width: 640px)");
   const showsFourFeatured = useMediaQuery("(min-width: 1024px)");
   const showsSixFeatured = useMediaQuery("(min-width: 1400px)");
-  const featuredLimit = showsSixFeatured ? 6 : showsFourFeatured ? 4 : showsThreeFeatured ? 3 : 2;
-  const visibleFeaturedProducts = selectVisibleFeaturedProducts(featuredProducts, featuredLimit);
-  const structuredData = { "@context": "https://schema.org", "@type": "ItemList", name: "Productos destacados de Mandoquita", itemListElement: visibleFeaturedProducts.map((product, index) => ({ "@type": "ListItem", position: index + 1, name: product.name })) };
+  const featuredLimit = showsSixFeatured
+    ? 6
+    : showsFourFeatured
+      ? 4
+      : showsThreeFeatured
+        ? 3
+        : 2;
+  const visibleFeaturedProducts = selectVisibleFeaturedProducts(
+    featuredProducts,
+    featuredLimit,
+  );
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Productos destacados de Mandoquita",
+    itemListElement: visibleFeaturedProducts.map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: product.name,
+    })),
+  };
 
-  return <>
-    <Head><title>Mandoquita | Catálogo de productos</title><meta name="description" content="Explora productos para tecnología, audio y hogar, y recibe atención personalizada de Mandoquita." /><meta name="robots" content="index,follow" /><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" /><meta name="theme-color" content={APPLICATION_THEME_COLOR} /><link rel="canonical" href="/" /><meta property="og:title" content="Mandoquita | Catálogo de productos" /><meta property="og:description" content="Productos elegidos para acompañar tu día a día." /><meta property="og:type" content="website" /></Head>
-    <Script id="homepage-products-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-    <a href="#main-content" className="skip-link">Ir al contenido principal</a><Header />
-    <main id="main-content">
-      <h1 className="sr-only">Catálogo Mandoquita</h1>
-      {carouselSlides.length ? <Carousel slides={carouselSlides} /> : null}
-      {categories.length ? <ScrollEntryMotion distance="sm"><MerchandisingSection id="categorias" title="Categorías" description="Explora el catálogo según tus intereses." tone="surface" layout="split"><ul className="flex flex-nowrap items-start justify-between gap-[30px] xl:justify-start">{categories.map((category, index) => <li key={category.slug} className={`shrink-0 ${getHomepageCategoryVisibility(index)}`}><CategoryLink title={category.name} href={`/categorias/${category.slug}`} imageUrl={category.imageUrl} imageAltText={category.imageAltText} /></li>)}{categories.length > 1 ? <li className={`shrink-0 ${getViewAllCategoriesVisibility(categories.length)}`}><CategoryLink title="Ver todas" href="/categorias" icon="categories" /></li> : null}</ul></MerchandisingSection></ScrollEntryMotion> : null}
-      {visibleFeaturedProducts.length ? <ScrollEntryMotion distance="sm"><MerchandisingSection id="destacados" title="Productos destacados" description="Conoce algunos de los productos seleccionados por Mandoquita."><CollectionGrid as="ul">{visibleFeaturedProducts.map((product) => <li key={product.id}><ProductCard product={product} featured /></li>)}</CollectionGrid><div className="flex justify-end"><Button variant="outline" href="/destacados">Ver más destacados</Button></div></MerchandisingSection></ScrollEntryMotion> : null}
-      <PaymentInformation />
-      {selectedCategoryProducts?.products.length ? <ScrollEntryMotion distance="sm"><MerchandisingSection id="seleccion-categoria" title={`Productos de ${selectedCategoryProducts.category.name}`} description="Descubre una selección de esta categoría para hoy." tone="surface"><CollectionGrid as="ul">{selectedCategoryProducts.products.map((product) => <li key={product.id}><ProductCard product={product} /></li>)}</CollectionGrid><div className="flex justify-end"><Button variant="secondary" href={`/categorias/${selectedCategoryProducts.category.slug}`}>Ver categoría {selectedCategoryProducts.category.name}</Button></div></MerchandisingSection></ScrollEntryMotion> : null}
-      <section id="contacto" className="py-10 sm:py-12 lg:py-16"><Container size="wide" padding="lg"><div className="grid overflow-hidden rounded-2xl bg-[rgb(var(--inverse-surface)/1)] text-[rgb(var(--inverse-foreground)/1)] lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)]"><div className="flex flex-col items-start justify-center px-6 py-10 sm:px-10 sm:py-12 lg:px-12"><span className="text-xs font-semibold uppercase tracking-[0.14em] text-[rgb(var(--inverse-muted)/1)]">Atención personalizada</span><h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em]">¿Quieres conocer mejor un producto?</h2><p className="mt-3 max-w-2xl leading-7 text-[rgb(var(--inverse-muted)/1)]">Escríbenos por WhatsApp y recibe información para resolver tus dudas.</p><Button variant="inverse" href={whatsappUrl} target="_blank" rel="noreferrer" className="mt-7">Hablar por WhatsApp</Button></div><div className="relative min-h-[260px] bg-[rgb(var(--surface)/1)] sm:min-h-[320px] lg:min-h-[360px]"><img src="/images/whatsapp-contact.png" alt="" width="1448" height="1086" sizes="(min-width: 1024px) 40vw, calc(100vw - 48px)" loading="lazy" className="absolute inset-0 h-full w-full object-cover" /></div></div></Container></section>
-    </main><Footer />
-  </>;
+  return (
+    <>
+      <Head>
+        <title>Mandoquita | Catálogo de productos</title>
+        <meta
+          name="description"
+          content="Explora productos para tecnología, audio y hogar, y recibe atención personalizada de Mandoquita."
+        />
+        <meta name="robots" content="index,follow" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=5"
+        />
+        <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
+        <link rel="canonical" href="/" />
+        <meta
+          property="og:title"
+          content="Mandoquita | Catálogo de productos"
+        />
+        <meta
+          property="og:description"
+          content="Productos elegidos para acompañar tu día a día."
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+      <Script
+        id="homepage-products-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <a href="#main-content" className="skip-link">
+        Ir al contenido principal
+      </a>
+      <Header />
+      <main id="main-content">
+        <h1 className="sr-only">Catálogo Mandoquita</h1>
+        {carouselSlides.length ? <Carousel slides={carouselSlides} /> : null}
+        {categories.length ? (
+          <ScrollEntryMotion distance="sm">
+            <MerchandisingSection
+              id="categorias"
+              title="Categorías"
+              description="Explora el catálogo según tus intereses."
+              tone="surface"
+              layout="split"
+            >
+              <ul className="flex flex-nowrap items-start justify-between gap-[30px] xl:justify-start">
+                {categories.map((category, index) => (
+                  <li
+                    key={category.slug}
+                    className={`shrink-0 ${getHomepageCategoryVisibility(index)}`}
+                  >
+                    <CategoryLink
+                      title={category.name}
+                      href={`/categorias/${category.slug}`}
+                      imageUrl={category.imageUrl}
+                      imageAltText={category.imageAltText}
+                    />
+                  </li>
+                ))}
+                {categories.length > 1 ? (
+                  <li
+                    className={`shrink-0 ${getViewAllCategoriesVisibility(categories.length)}`}
+                  >
+                    <CategoryLink
+                      title="Ver todas"
+                      href="/categorias"
+                      icon="categories"
+                    />
+                  </li>
+                ) : null}
+              </ul>
+            </MerchandisingSection>
+          </ScrollEntryMotion>
+        ) : null}
+        {visibleFeaturedProducts.length ? (
+          <ScrollEntryMotion distance="sm">
+            <MerchandisingSection
+              id="destacados"
+              title="Productos destacados"
+              description="Conoce algunos de los productos seleccionados por Mandoquita."
+            >
+              <CollectionGrid as="ul">
+                {visibleFeaturedProducts.map((product) => (
+                  <li key={product.id}>
+                    <ProductCard product={product} featured />
+                  </li>
+                ))}
+              </CollectionGrid>
+              <div className="flex justify-end">
+                <Button variant="outline" href="/destacados">
+                  Ver más destacados
+                </Button>
+              </div>
+            </MerchandisingSection>
+          </ScrollEntryMotion>
+        ) : null}
+        <PaymentInformation />
+        {selectedCategoryProducts?.products.length ? (
+          <ScrollEntryMotion distance="sm">
+            <MerchandisingSection
+              id="seleccion-categoria"
+              title={`Productos de ${selectedCategoryProducts.category.name}`}
+              description="Descubre una selección de esta categoría para hoy."
+              tone="surface"
+            >
+              <CollectionGrid as="ul">
+                {selectedCategoryProducts.products.map((product) => (
+                  <li key={product.id}>
+                    <ProductCard product={product} />
+                  </li>
+                ))}
+              </CollectionGrid>
+              <div className="flex justify-end">
+                <Button
+                  variant="secondary"
+                  href={`/categorias/${selectedCategoryProducts.category.slug}`}
+                >
+                  Ver categoría {selectedCategoryProducts.category.name}
+                </Button>
+              </div>
+            </MerchandisingSection>
+          </ScrollEntryMotion>
+        ) : null}
+        <section id="contacto" className="py-10 sm:py-12 lg:py-16">
+          <Container size="wide" padding="lg">
+            <div className="grid overflow-hidden rounded-2xl bg-[rgb(var(--inverse-surface)/1)] text-[rgb(var(--inverse-foreground)/1)] lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)]">
+              <div className="flex flex-col items-start justify-center px-6 py-10 sm:px-10 sm:py-12 lg:px-12">
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[rgb(var(--inverse-muted)/1)]">
+                  Atención personalizada
+                </span>
+                <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em]">
+                  ¿Quieres conocer mejor un producto?
+                </h2>
+                <p className="mt-3 max-w-2xl leading-7 text-[rgb(var(--inverse-muted)/1)]">
+                  Escríbenos por WhatsApp y recibe información para resolver tus
+                  dudas.
+                </p>
+                <Button
+                  variant="inverse"
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-7"
+                >
+                  Hablar por WhatsApp
+                </Button>
+              </div>
+              <div className="relative min-h-[260px] bg-[rgb(var(--surface)/1)] sm:min-h-[320px] lg:min-h-[360px]">
+                <img
+                  src="/images/whatsapp-contact.png"
+                  alt=""
+                  width="1448"
+                  height="1086"
+                  sizes="(min-width: 1024px) 40vw, calc(100vw - 48px)"
+                  loading="lazy"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+            </div>
+          </Container>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
 }
