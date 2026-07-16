@@ -4,6 +4,7 @@ import type {
   AdminProduct,
   AdminProductList,
   AdminProductType,
+  AdminCreateProductValues
 } from "../types";
 import { request } from "./AdminApiClient";
 
@@ -28,7 +29,7 @@ export const productsApi = {
     id: number,
     csrfToken: string,
     expectedUpdatedAt: string,
-    changes: Partial<AdminEditorValues>,
+    changes: Partial<AdminCreateProductValues>,
   ) => {
     const payload: Record<string, unknown> = { expectedUpdatedAt };
     Object.entries(changes).forEach(([key, value]) => {
@@ -52,6 +53,11 @@ export const productsApi = {
         payload[key] = typeof value === "string" ? value.trim() : value;
       }
     });
+
+    if (!payload.feature) {
+      delete payload.featuredOrder;
+    }
+
     return request<{ item: AdminProduct }>(`/api/admin/products/${id}`, {
       method: "PATCH",
       headers: { "x-csrf-token": csrfToken },

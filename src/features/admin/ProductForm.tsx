@@ -86,6 +86,20 @@ export function ProductForm({
     try {
       if (id && product) {
         const { baseSku: _baseSku, ...changes } = values;
+
+        // Limpiá featuredOrder si no es destacado
+        const changesCleaned: Partial<typeof changes> = { ...changes };
+        if (!changes.featured) {
+          changesCleaned.featuredOrder = "";
+        }
+
+        if (
+          changes.featured &&
+          (changes.featuredOrder == null || changes.featuredOrder === "")
+        ) {
+          delete changesCleaned.featuredOrder;
+        }
+
         const result = await adminApi.updateProduct(
           id,
           session.csrfToken,

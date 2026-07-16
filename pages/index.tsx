@@ -172,6 +172,9 @@ export default function HomePage({
     })),
   };
 
+  const ogImage =
+    "https://d139alfkeie86e.cloudfront.net/images/banners/banner-meta.png";
+
   return (
     <>
       <Head>
@@ -196,6 +199,22 @@ export default function HomePage({
           content="Productos elegidos para acompañar tu día a día."
         />
         <meta property="og:type" content="website" />
+        <meta
+          property="og:url"
+          content="https://main.d92kyqw1kgw5k.amplifyapp.com/"
+        />
+        <meta property="og:site_name" content="Mandoquita" />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Catálogo Mandoquita" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Mandoquita" />
+        <meta
+          name="twitter:description"
+          content="Catálogo de combos Mandoquita."
+        />
+        <meta name="twitter:image" content={ogImage} />
       </Head>
       <Script
         id="homepage-products-jsonld"
