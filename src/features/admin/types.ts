@@ -189,3 +189,5 @@ export type AdminSubcategoryList = {
 };
 
 
+export type AdminCreateProductValues = AdminEditorValues & { baseSku: string }
+
