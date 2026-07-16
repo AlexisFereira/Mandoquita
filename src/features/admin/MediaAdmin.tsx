@@ -13,25 +13,30 @@ import type {
   AdminProductMedia,
   AdminSession,
 } from "./types";
+import HeaderPage from "./components/headerPage";
+import { Icon } from "@/components";
+import { Modal } from "@/components/Modal";
 
 const acceptedTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
 
 function mediaError(error: unknown) {
+  const errorMsgMap: Record<number, string> = {
+    409: "Hay cambios más recientes. Tus cambios no se guardaron.",
+    413: "La imagen supera el límite permitido por el servidor.",
+    429: "Se alcanzó temporalmente el límite de cambios. Inténtalo más tarde.",
+    503: "No pudimos procesar la imagen en este momento. El catálogo no cambió.",
+    502: "No pudimos procesar la imagen en este momento. El catálogo no cambió.",
+    400: "La imagen o los datos no son válidos. El catálogo no cambió.",
+    404: "El recurso ya no está disponible. Recarga la información.",
+  };
+
   if (!(error instanceof AdminApiError))
     return "Ocurrió un problema inesperado. El catálogo no cambió.";
-  if (error.status === 409)
-    return "Hay cambios más recientes. Tus cambios no se guardaron.";
-  if (error.status === 413)
-    return "La imagen supera el límite permitido por el servidor.";
-  if (error.status === 429)
-    return "Se alcanzó temporalmente el límite de cambios. Inténtalo más tarde.";
-  if (error.status === 502 || error.status === 503)
-    return "No pudimos procesar la imagen en este momento. El catálogo no cambió.";
-  if (error.status === 400)
-    return "La imagen o los datos no son válidos. El catálogo no cambió.";
-  if (error.status === 404)
-    return "El recurso ya no está disponible. Recarga la información.";
-  return "No pudimos guardar el cambio. El catálogo no cambió.";
+
+  return (
+    errorMsgMap[error.status] ??
+    "No pudimos guardar el cambio. El catálogo no cambió."
+  );
 }
 
 function isExpired(error: unknown) {
@@ -353,25 +358,18 @@ function ProductGallery({
   const activeImage = typeof task === "object" ? task.image : null;
   return (
     <div className="space-y-8">
-      <Button
-        variant="ghost"
-        onClick={() => {
+      <HeaderPage
+        onBack={() => {
           if (
             !dirty ||
             window.confirm("Tienes cambios sin guardar. ¿Quieres descartarlos?")
           )
             onBack();
         }}
-      >
-        ← Volver a productos
-      </Button>
-      <div className="space-y-3">
-        <span className="ds-eyebrow">Producto</span>
-        <h1 className="ds-heading ds-heading-lg">{media.product.name}</h1>
-        <p className="text-sm text-[rgb(var(--muted)/1)]">
-          /{media.product.slug}
-        </p>
-      </div>
+        desc="Producto"
+        title={media.product.name}
+        subtitle={`/${media.product.slug}`}
+      />
       <div ref={summaryRef} tabIndex={-1}>
         {status ? (
           <PoliteStatus
@@ -439,348 +437,364 @@ function ProductGallery({
             <p>Este producto no tiene imágenes.</p>
           </Card>
         ) : (
-          <ol className="space-y-4">
-            {media.images.map((image, index) => (
-              <Card
-                as="li"
-                key={image.id}
-                className="grid gap-5 sm:grid-cols-[160px_minmax(0,1fr)] lg:grid-cols-[160px_minmax(0,1fr)_minmax(180px,auto)]"
-              >
+          <section className="grid md:col-auto grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="md:col-span-1">
+              {media.images.find((img) => img.isPrimary) ? (
                 <div className="aspect-square overflow-hidden rounded-md border border-[rgb(var(--border)/1)] bg-[rgb(var(--surface-muted)/1)]">
                   <img
-                    src={image.previewUrl}
-                    alt={image.altText}
+                    src={media.images.find((img) => img.isPrimary)?.previewUrl}
+                    alt={media.images.find((img) => img.isPrimary)?.altText}
                     className="h-full w-full object-contain"
                   />
                 </div>
-                <div className="space-y-2">
-                  <h3
-                    id={`product-image-${image.id}`}
-                    className="font-semibold"
-                  >
-                    Imagen {index + 1} de {media.images.length}
-                  </h3>
-                  <p className="[overflow-wrap:anywhere]">{image.altText}</p>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant={image.isPrimary ? "primary" : "neutral"}>
-                      {image.isPrimary ? "Principal" : "No principal"}
-                    </Badge>
-                    <Badge
-                      variant={
-                        image.referencedByVariants ? "warning" : "neutral"
-                      }
-                    >
-                      {image.referencedByVariants
-                        ? `Usada por variantes (${image.variantReferenceCount})`
-                        : "Sin referencias de variantes"}
-                    </Badge>
+              ) : (
+                "No imagen principal seleccionada aun"
+              )}
+            </div>
+            <div className="md:col-span-1 xl:overflow-y-auto xl:overflow-hidden space-y-2 xl:max-h-[600px]">
+              {media.images.map((image, index) => (
+                <div key={image.id} className="grid grid-cols-12 gap-3 p-2">
+                  <div className="aspect-square overflow-hidden col-span-2 rounded-md border border-[rgb(var(--border)/1)] bg-[rgb(var(--surface-muted)/1)]">
+                    <img
+                      src={image.previewUrl}
+                      alt={image.altText}
+                      className="h-full w-full object-contain"
+                    />
                   </div>
-                </div>
-                <div className="flex flex-wrap content-start gap-2">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => {
-                      setAltText(image.altText);
-                      setTask({ type: "alt", image });
-                    }}
-                  >
-                    Editar texto alternativo
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    onClick={() => setTask({ type: "replace", image })}
-                  >
-                    Reemplazar imagen
-                  </Button>
-                  {!image.referencedByVariants ? (
+                  <div className="space-y-2 col-span-6">
+                    <h3
+                      id={`product-image-${image.id}`}
+                      className="font-semibold"
+                    >
+                      Imagen {index + 1} de {media.images.length}
+                    </h3>
+                    <p className="[overflow-wrap:anywhere]">{image.altText}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {image.isPrimary ? (
+                        <Badge variant="primary">Principal</Badge>
+                      ) : null}
+                      <Badge
+                        variant={
+                          image.referencedByVariants ? "warning" : "neutral"
+                        }
+                      >
+                        {image.referencedByVariants
+                          ? `Usada por variantes (${image.variantReferenceCount})`
+                          : "Sin referencias de variantes"}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className="col-span-4 align-content-center flex items-center justify-end gap-2">
                     <Button
                       size="sm"
-                      variant="danger"
-                      onClick={() => setTask({ type: "remove", image })}
+                      variant="secondary"
+                      onClick={() => {
+                        setAltText(image.altText);
+                        setTask({ type: "alt", image });
+                      }}
                     >
-                      Eliminar imagen
+                      <Icon name="edit" />
                     </Button>
-                  ) : (
-                    <p className="text-sm text-[rgb(var(--danger)/1)]">
-                      No puedes eliminar esta imagen porque está usada por
-                      variantes.
-                    </p>
-                  )}
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => setTask({ type: "replace", image })}
+                    >
+                      <Icon name="switch" />
+                    </Button>
+                    {!image.referencedByVariants ? (
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        onClick={() => setTask({ type: "remove", image })}
+                      >
+                        <Icon name="trash" />
+                      </Button>
+                    ) : (
+                      <p className="text-sm text-[rgb(var(--danger)/1)]">
+                        No puedes eliminar esta imagen porque está usada por
+                        variantes.
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </Card>
-            ))}
-          </ol>
+              ))}
+            </div>
+          </section>
         )}
       </section>
-      {task === "add" ? (
-        <UploadTask
-          title={`Agregar imagen a ${media.product.name}`}
-          kind="product"
-          csrfToken={session.csrfToken}
-          confirmLabel="Agregar a la galería"
-          saving={saving}
-          onExpired={onExpired}
-          onCancel={() => setTask("")}
-          onConfirm={(upload, text) =>
-            mutate(
-              () =>
-                adminApi.addProductImage(productId, session.csrfToken, {
-                  expectedProductUpdatedAt: media.product.updatedAt,
-                  uploadId: upload.id,
-                  altText: text,
-                  position: media.images.length,
-                  isPrimary: false,
-                }),
-              "Imagen agregada a la galería",
-            )
-          }
-        />
-      ) : null}
-      {task === "reorder" ? (
-        <Card as="section" className="space-y-5">
-          <h2 className="ds-heading ds-heading-md">Reordenar galería</h2>
-          <ol className="space-y-3">
-            {order.map((image, index) => (
-              <li
-                key={image.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-[rgb(var(--border)/1)] p-3"
+
+      <Modal size="lg" open={Boolean(task)} onClose={() => setTask("")}>
+        {task === "add" ? (
+          <UploadTask
+            title={`Agregar imagen a ${media.product.name}`}
+            kind="product"
+            csrfToken={session.csrfToken}
+            confirmLabel="Agregar a la galería"
+            saving={saving}
+            onExpired={onExpired}
+            onCancel={() => setTask("")}
+            onConfirm={(upload, text) =>
+              mutate(
+                () =>
+                  adminApi.addProductImage(productId, session.csrfToken, {
+                    expectedProductUpdatedAt: media.product.updatedAt,
+                    uploadId: upload.id,
+                    altText: text,
+                    position: media.images.length,
+                    isPrimary: false,
+                  }),
+                "Imagen agregada a la galería",
+              )
+            }
+          />
+        ) : null}
+        {task === "reorder" ? (
+          <Card as="section" className="space-y-5">
+            <h2 className="ds-heading ds-heading-md">Reordenar galería</h2>
+            <ol className="space-y-3">
+              {order.map((image, index) => (
+                <li
+                  key={image.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-[rgb(var(--border)/1)] p-3"
+                >
+                  <span>
+                    {index + 1}. {image.altText}
+                  </span>
+                  <span className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      disabled={index === 0}
+                      aria-label={
+                        index === 0
+                          ? "Mover antes no disponible: ya es la primera imagen"
+                          : `Mover antes imagen ${index + 1}`
+                      }
+                      onClick={() => move(index, -1)}
+                    >
+                      Mover antes
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      disabled={index === order.length - 1}
+                      aria-label={
+                        index === order.length - 1
+                          ? "Mover después no disponible: ya es la última imagen"
+                          : `Mover después imagen ${index + 1}`
+                      }
+                      onClick={() => move(index, 1)}
+                    >
+                      Mover después
+                    </Button>
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <div className="flex gap-3">
+              <Button
+                disabled={saving}
+                onClick={() =>
+                  void mutate(
+                    () =>
+                      adminApi.saveProductImageOrder(
+                        productId,
+                        session.csrfToken,
+                        {
+                          expectedProductUpdatedAt: media.product.updatedAt,
+                          imageIds: order.map((image) => image.id),
+                          primaryImageId:
+                            media.images.find((image) => image.isPrimary)?.id ??
+                            null,
+                        },
+                      ),
+                    "Orden de galería guardado",
+                  )
+                }
               >
-                <span>
-                  {index + 1}. {image.altText}
-                </span>
-                <span className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    disabled={index === 0}
-                    aria-label={
-                      index === 0
-                        ? "Mover antes no disponible: ya es la primera imagen"
-                        : `Mover antes imagen ${index + 1}`
-                    }
-                    onClick={() => move(index, -1)}
-                  >
-                    Mover antes
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    disabled={index === order.length - 1}
-                    aria-label={
-                      index === order.length - 1
-                        ? "Mover después no disponible: ya es la última imagen"
-                        : `Mover después imagen ${index + 1}`
-                    }
-                    onClick={() => move(index, 1)}
-                  >
-                    Mover después
-                  </Button>
-                </span>
-              </li>
-            ))}
-          </ol>
-          <div className="flex gap-3">
-            <Button
-              disabled={saving}
-              onClick={() =>
-                void mutate(
-                  () =>
-                    adminApi.saveProductImageOrder(
-                      productId,
-                      session.csrfToken,
-                      {
-                        expectedProductUpdatedAt: media.product.updatedAt,
-                        imageIds: order.map((image) => image.id),
-                        primaryImageId:
-                          media.images.find((image) => image.isPrimary)?.id ??
-                          null,
-                      },
-                    ),
-                  "Orden de galería guardado",
-                )
-              }
-            >
-              Guardar orden
-            </Button>
-            <Button variant="secondary" onClick={() => setTask("")}>
-              Cancelar reordenación
-            </Button>
-          </div>
-        </Card>
-      ) : null}
-      {task === "primary" ? (
-        <Card as="section" className="space-y-5">
-          <fieldset className="space-y-3">
-            <legend className="ds-heading ds-heading-md">
-              Imagen principal
-            </legend>
-            <label className="flex min-h-11 items-center gap-3">
-              <input
-                type="radio"
-                name="primary-image"
-                checked={primaryId === null}
-                onChange={() => setPrimaryId(null)}
-              />{" "}
-              Sin imagen principal
-            </label>
-            {media.images.map((image, index) => (
-              <label
-                key={image.id}
-                className="flex min-h-11 items-center gap-3"
-              >
+                Guardar orden
+              </Button>
+              <Button variant="secondary" onClick={() => setTask("")}>
+                Cancelar reordenación
+              </Button>
+            </div>
+          </Card>
+        ) : null}
+        {task === "primary" ? (
+          <Card as="section" className="space-y-5">
+            <fieldset className="space-y-3">
+              <legend className="ds-heading ds-heading-md">
+                Imagen principal
+              </legend>
+              <label className="flex min-h-11 items-center gap-3">
                 <input
                   type="radio"
                   name="primary-image"
-                  checked={primaryId === image.id}
-                  onChange={() => setPrimaryId(image.id)}
+                  checked={primaryId === null}
+                  onChange={() => setPrimaryId(null)}
                 />{" "}
-                Imagen {index + 1}: {image.altText}
+                Sin imagen principal
               </label>
-            ))}
-          </fieldset>
-          <div className="flex gap-3">
-            <Button
-              disabled={saving}
-              onClick={() =>
-                void mutate(
-                  () =>
-                    adminApi.saveProductImageOrder(
-                      productId,
-                      session.csrfToken,
-                      {
-                        expectedProductUpdatedAt: media.product.updatedAt,
-                        imageIds: media.images.map((image) => image.id),
-                        primaryImageId: primaryId,
-                      },
-                    ),
-                  primaryId
-                    ? "Imagen principal actualizada"
-                    : "El producto no tiene imagen principal",
-                )
-              }
-            >
-              Guardar imagen principal
-            </Button>
-            <Button variant="secondary" onClick={() => setTask("")}>
-              Cancelar
-            </Button>
-          </div>
-        </Card>
-      ) : null}
-      {typeof task === "object" && task.type === "alt" && activeImage ? (
-        <Card as="section" className="max-w-[720px] space-y-5">
-          <h2 className="ds-heading ds-heading-md">Editar texto alternativo</h2>
-          <Input
-            id="edit-media-alt"
-            label="Texto alternativo"
-            helperText={`${altText.length}/240 caracteres`}
-            value={altText}
-            maxLength={241}
-            onChange={(event) => setAltText(event.target.value)}
+              {media.images.map((image, index) => (
+                <label
+                  key={image.id}
+                  className="flex min-h-11 items-center gap-3"
+                >
+                  <input
+                    type="radio"
+                    name="primary-image"
+                    checked={primaryId === image.id}
+                    onChange={() => setPrimaryId(image.id)}
+                  />{" "}
+                  Imagen {index + 1}: {image.altText}
+                </label>
+              ))}
+            </fieldset>
+            <div className="flex gap-3">
+              <Button
+                disabled={saving}
+                onClick={() =>
+                  void mutate(
+                    () =>
+                      adminApi.saveProductImageOrder(
+                        productId,
+                        session.csrfToken,
+                        {
+                          expectedProductUpdatedAt: media.product.updatedAt,
+                          imageIds: media.images.map((image) => image.id),
+                          primaryImageId: primaryId,
+                        },
+                      ),
+                    primaryId
+                      ? "Imagen principal actualizada"
+                      : "El producto no tiene imagen principal",
+                  )
+                }
+              >
+                Guardar imagen principal
+              </Button>
+              <Button variant="secondary" onClick={() => setTask("")}>
+                Cancelar
+              </Button>
+            </div>
+          </Card>
+        ) : null}
+        {typeof task === "object" && task.type === "alt" && activeImage ? (
+          <Card as="section" className="max-w-[720px] space-y-5">
+            <h2 className="ds-heading ds-heading-md">
+              Editar texto alternativo
+            </h2>
+            <Input
+              id="edit-media-alt"
+              label="Texto alternativo"
+              helperText={`${altText.length}/240 caracteres`}
+              value={altText}
+              maxLength={241}
+              onChange={(event) => setAltText(event.target.value)}
+            />
+            <div className="flex gap-3">
+              <Button
+                disabled={
+                  !validAltText(altText) ||
+                  altText.trim() === activeImage.altText ||
+                  saving
+                }
+                onClick={() =>
+                  void mutate(
+                    () =>
+                      adminApi.updateProductImage(
+                        productId,
+                        activeImage.id,
+                        session.csrfToken,
+                        {
+                          action: "metadata",
+                          expectedProductUpdatedAt: media.product.updatedAt,
+                          expectedImageUpdatedAt: activeImage.updatedAt,
+                          altText: altText.trim(),
+                        },
+                      ),
+                    "Texto alternativo actualizado",
+                  )
+                }
+              >
+                Guardar texto alternativo
+              </Button>
+              <Button variant="secondary" onClick={() => setTask("")}>
+                Cancelar
+              </Button>
+            </div>
+          </Card>
+        ) : null}
+        {typeof task === "object" && task.type === "replace" && activeImage ? (
+          <UploadTask
+            title="Reemplazar imagen"
+            kind="product"
+            csrfToken={session.csrfToken}
+            initialAlt={activeImage.altText}
+            confirmLabel="Guardar reemplazo"
+            saving={saving}
+            onExpired={onExpired}
+            onCancel={() => setTask("")}
+            onConfirm={(upload, text) =>
+              mutate(
+                () =>
+                  adminApi.updateProductImage(
+                    productId,
+                    activeImage.id,
+                    session.csrfToken,
+                    {
+                      action: "replace",
+                      expectedProductUpdatedAt: media.product.updatedAt,
+                      expectedImageUpdatedAt: activeImage.updatedAt,
+                      uploadId: upload.id,
+                      altText: text,
+                    },
+                  ),
+                "Imagen reemplazada",
+              )
+            }
           />
-          <div className="flex gap-3">
-            <Button
-              disabled={
-                !validAltText(altText) ||
-                altText.trim() === activeImage.altText ||
-                saving
-              }
-              onClick={() =>
-                void mutate(
-                  () =>
-                    adminApi.updateProductImage(
-                      productId,
-                      activeImage.id,
-                      session.csrfToken,
-                      {
-                        action: "metadata",
-                        expectedProductUpdatedAt: media.product.updatedAt,
-                        expectedImageUpdatedAt: activeImage.updatedAt,
-                        altText: altText.trim(),
-                      },
-                    ),
-                  "Texto alternativo actualizado",
-                )
-              }
-            >
-              Guardar texto alternativo
-            </Button>
-            <Button variant="secondary" onClick={() => setTask("")}>
-              Cancelar
-            </Button>
-          </div>
-        </Card>
-      ) : null}
-      {typeof task === "object" && task.type === "replace" && activeImage ? (
-        <UploadTask
-          title="Reemplazar imagen"
-          kind="product"
-          csrfToken={session.csrfToken}
-          initialAlt={activeImage.altText}
-          confirmLabel="Guardar reemplazo"
-          saving={saving}
-          onExpired={onExpired}
-          onCancel={() => setTask("")}
-          onConfirm={(upload, text) =>
-            mutate(
-              () =>
-                adminApi.updateProductImage(
-                  productId,
-                  activeImage.id,
-                  session.csrfToken,
-                  {
-                    action: "replace",
-                    expectedProductUpdatedAt: media.product.updatedAt,
-                    expectedImageUpdatedAt: activeImage.updatedAt,
-                    uploadId: upload.id,
-                    altText: text,
-                  },
-                ),
-              "Imagen reemplazada",
-            )
-          }
-        />
-      ) : null}
-      {typeof task === "object" && task.type === "remove" && activeImage ? (
-        <Card as="section" className="max-w-[720px] space-y-4">
-          <h2 className="ds-heading ds-heading-md">Eliminar imagen</h2>
-          <p>
-            La imagen “{activeImage.altText}” desaparecerá del catálogo y esta
-            acción no ofrece deshacer.
-          </p>
-          {activeImage.isPrimary ? (
-            <p>El producto quedará sin imagen principal.</p>
-          ) : null}
-          <div className="flex gap-3">
-            <Button variant="secondary" onClick={() => setTask("")}>
-              Conservar imagen
-            </Button>
-            <Button
-              variant="danger"
-              disabled={saving}
-              onClick={() =>
-                void mutate(
-                  () =>
-                    adminApi.removeProductImage(
-                      productId,
-                      activeImage.id,
-                      session.csrfToken,
-                      {
-                        expectedProductUpdatedAt: media.product.updatedAt,
-                        expectedImageUpdatedAt: activeImage.updatedAt,
-                      },
-                    ),
-                  "Imagen eliminada",
-                )
-              }
-            >
-              Eliminar imagen
-            </Button>
-          </div>
-        </Card>
-      ) : null}
+        ) : null}
+        {typeof task === "object" && task.type === "remove" && activeImage ? (
+          <>
+            <h2 className="ds-heading ds-heading-md">Eliminar imagen</h2>
+            <p>
+              La imagen “{activeImage.altText}” desaparecerá del catálogo y esta
+              acción no ofrece deshacer.
+            </p>
+            {activeImage.isPrimary ? (
+              <p>El producto quedará sin imagen principal.</p>
+            ) : null}
+            <div className="flex gap-3">
+              <Button variant="secondary" onClick={() => setTask("")}>
+                Conservar imagen
+              </Button>
+              <Button
+                variant="danger"
+                disabled={saving}
+                onClick={() =>
+                  void mutate(
+                    () =>
+                      adminApi.removeProductImage(
+                        productId,
+                        activeImage.id,
+                        session.csrfToken,
+                        {
+                          expectedProductUpdatedAt: media.product.updatedAt,
+                          expectedImageUpdatedAt: activeImage.updatedAt,
+                        },
+                      ),
+                    "Imagen eliminada",
+                  )
+                }
+              >
+                Eliminar imagen
+              </Button>
+            </div>
+          </>
+        ) : null}
+      </Modal>
     </div>
   );
 }

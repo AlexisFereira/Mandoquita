@@ -19,7 +19,7 @@ import { Notice } from "./components/Notice";
 import AdminHeader from "./components/adminHeader";
 import Pagination from "./components/pagination";
 import SearchProducts from "./components/searchProducts";
-import { ProductForm } from "./components/ProductForm";
+import { ProductForm } from "./ProductForm";
 
 const tableRegion =
   "overflow-x-auto rounded-md border border-[rgb(var(--border)/1)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgb(var(--focus)/1)]";

@@ -1,9 +1,9 @@
 import { PoliteStatus, Button, Badge, Card, Input } from "@/components";
 import React, { useState, useEffect } from "react";
-import { emptyProduct, message, ProductFormValues } from "../AdminApp";
-import { adminApi, AdminApiError } from "../api";
-import { Notice } from "./Notice";
-import type { AdminSession, AdminProduct, AdminProductType } from "../types";
+import { emptyProduct, message, ProductFormValues } from "./AdminApp";
+import { adminApi, AdminApiError } from "./api";
+import { Notice } from "./components/Notice";
+import type { AdminSession, AdminProduct, AdminProductType } from "./types";
 
 export function ProductForm({
   session,
