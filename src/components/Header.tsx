@@ -83,7 +83,7 @@ export function Header() {
               width="685"
               height="264"
               onError={() => setLogoFailed(true)}
-              className="h-[50px] w-auto object-contain invert"
+              className="h-[50px] w-auto object-contain"
             />
           )}
         </Link>
