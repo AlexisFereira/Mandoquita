@@ -17,7 +17,7 @@ import { getHomepagePayload } from "../src/server/homepageService";
 import { useMediaQuery } from "../src/hooks/use-media-query";
 import { PaymentInformation } from "../src/features/homepage/payment-information";
 import type { HomepagePayload } from "../src/types/catalog";
-import { APPLICATION_THEME_COLOR } from "../src/design-system/metadata";
+import HeadMetas from "./components/HeadMetas";
 
 export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
   res,
@@ -172,50 +172,9 @@ export default function HomePage({
     })),
   };
 
-  const ogImage =
-    "https://d139alfkeie86e.cloudfront.net/images/banners/banner-meta.png";
-
   return (
     <>
-      <Head>
-        <title>Mandoquita | Catálogo de productos</title>
-        <meta
-          name="description"
-          content="Explora productos para tecnología, audio y hogar, y recibe atención personalizada de Mandoquita."
-        />
-        <meta name="robots" content="index,follow" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=5"
-        />
-        <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
-        <link rel="canonical" href="/" />
-        <meta
-          property="og:title"
-          content="Mandoquita | Catálogo de productos"
-        />
-        <meta
-          property="og:description"
-          content="Productos elegidos para acompañar tu día a día."
-        />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:url"
-          content="https://main.d92kyqw1kgw5k.amplifyapp.com/"
-        />
-        <meta property="og:site_name" content="Mandoquita" />
-        <meta property="og:image" content={ogImage} />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="Catálogo Mandoquita" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Mandoquita" />
-        <meta
-          name="twitter:description"
-          content="Catálogo de combos Mandoquita."
-        />
-        <meta name="twitter:image" content={ogImage} />
-      </Head>
+      <HeadMetas />
       <Script
         id="homepage-products-jsonld"
         type="application/ld+json"
@@ -225,6 +184,7 @@ export default function HomePage({
         Ir al contenido principal
       </a>
       <Header />
+
       <main id="main-content">
         <h1 className="sr-only">Catálogo Mandoquita</h1>
         {carouselSlides.length ? <Carousel slides={carouselSlides} /> : null}
