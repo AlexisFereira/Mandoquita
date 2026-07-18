@@ -7,11 +7,27 @@ services:
       POSTGRES_DB: mandoquita_catalog
     ports:
       - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d mandoquita_catalog"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/mandoquita_catalog
+    depends_on:
+      db:
+        condition: service_healthy
+    # Usa el prisma local, no npx (que sale a la red)
+    command: ["npx", "prisma", "migrate", "deploy"]
+    # No necesita seguir corriendo
+    restart: "no"
 
   backend:
     build:
@@ -23,19 +39,8 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      db:
-        condition: service_healthy
-    command: npm start
+      migrate:
+        condition: service_completed_successfully
 
-  test:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: test
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/mandoquita_catalog
-      NODE_ENV: test
-    depends_on:
-      db:
-        condition: service_healthy
-    command: ["npx", "vitest", "run", "--environment", "node", "tests/api/catalogService.test.ts", "tests/api/productsRoutes.test.ts"]
+volumes:
+  pgdata:
