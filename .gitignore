@@ -34,3 +34,6 @@ pnpm-debug.log*
 .vscode/
 *.swp
 *.swo
+
+# Local-only: contiene URL de producción
+.env.production
