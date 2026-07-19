@@ -89,34 +89,42 @@ model CategorySlugAlias {
 }
 
 model Subcategory {
-  id           String        @id
-  slug         String        @unique
-  name         String
-  sourceOrder  Int
-  active       Boolean       @default(true)
-  categoryId   String
-  category     Category      @relation(fields: [categoryId], references: [id])
-  productTypes ProductType[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id                 String              @id
+  slug               String              @unique
+  name               String
+  sourceOrder        Int
+  active             Boolean             @default(true)
+  categoryId         String
+  category           Category            @relation(fields: [categoryId], references: [id])
+  productTypes       ProductType[]
+  retiredAt          DateTime?           // ← nuevo
+  retiredByAccountId String?             // ← nuevo
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 
   @@unique([categoryId, sourceOrder])
   @@index([categoryId, active, sourceOrder])
+  @@index([retiredAt])                   // ← nuevo índice
 }
 
+
 model ProductType {
-  name          String      @id
-  sourceOrder   Int
-  active        Boolean     @default(true)
-  subcategoryId String
-  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
-  products      Product[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  name              String         @id
+  sourceOrder       Int
+  active            Boolean        @default(true)
+  subcategoryId     String
+  subcategory       Subcategory    @relation(fields: [subcategoryId], references: [id])
+  products          Product[]
+  retiredAt         DateTime?      // ← nuevo
+  retiredByAccountId String?       // ← nuevo
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 
   @@unique([subcategoryId, sourceOrder])
   @@index([subcategoryId, active, sourceOrder])
+  @@index([retiredAt])              // ← nuevo índice
 }
+
 
 model Product {
   id                    Int                  @id @default(autoincrement())

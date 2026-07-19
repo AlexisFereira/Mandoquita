@@ -18,29 +18,14 @@ services:
   migrate:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.migrate
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/mandoquita_catalog
     depends_on:
       db:
         condition: service_healthy
-    # Usa el prisma local, no npx (que sale a la red)
     command: ["npx", "prisma", "migrate", "deploy"]
-    # No necesita seguir corriendo
     restart: "no"
-
-  backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/mandoquita_catalog
-      NODE_ENV: production
-    ports:
-      - "3000:3000"
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
 
 volumes:
   pgdata:
