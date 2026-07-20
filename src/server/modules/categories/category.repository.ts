@@ -2,7 +2,7 @@ import type { Category, Prisma, PrismaClient } from "@prisma/client";
 import type {
   CreateCategoryInput,
   UpdateCategoryInput,
-} from "./category.repository.types";
+} from "./category.types";
 
 export type CategoryRepository = {
   findById(id: string): Promise<Category | null>;
@@ -37,3 +37,5 @@ export type CategoryRepository = {
  * o un Prisma.TransactionClient, para soportar transacciones.
  */
 export type Db = PrismaClient | Prisma.TransactionClient;
+
+

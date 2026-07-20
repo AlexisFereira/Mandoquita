@@ -1,5 +1,8 @@
 import type { SubcategoryRepository } from "../subcategory.repository";
-import type { ListSubcategoriesInput } from "../schemas/list-subcategories.schema";
+import {
+  listSubcategoriesSchema,
+  type ListSubcategoriesInput,
+} from "../schemas/list-subcategories.schema";
 import type { Subcategory } from "@prisma/client";
 
 export type ListSubcategoriesResult = {
@@ -17,7 +20,8 @@ export async function listSubcategories(
   repo: SubcategoryRepository,
   raw: Record<string, string | string[] | undefined>,
 ): Promise<ListSubcategoriesResult> {
-  // Normalizar arrays a string (query params pueden venir como array)
+  // Normalizar query params: si vienen como array, fallar.
+  // Next.js query params pueden ser string | string[] | undefined.
   const normalized: Record<string, string> = {};
   for (const [key, value] of Object.entries(raw)) {
     if (Array.isArray(value)) {
@@ -28,18 +32,21 @@ export async function listSubcategories(
 
   const input = listSubcategoriesSchema.parse(normalized);
 
-  // Listar todas las subcategorías que coincidan con los filtros base
-  const all = await repo.findManyWithFilters({
+  // Calcular skip antes de la query
+  const skip = (input.page - 1) * input.limit;
+
+  // Pedimos al repo la página + el total en una sola operación
+  const { items, totalItems } = await repo.findManyWithFiltersPaginated({
     categoryId: input.categoryId,
     retired: input.retired,
     q: input.q,
+    skip,
+    take: input.limit,
   });
 
-  const totalItems = all.length;
+  // Calcular paginación final con el total real
   const totalPages = Math.max(1, Math.ceil(totalItems / input.limit));
   const page = Math.min(input.page, totalPages);
-  const skip = (page - 1) * input.limit;
-  const items = all.slice(skip, skip + input.limit);
 
   return {
     items,

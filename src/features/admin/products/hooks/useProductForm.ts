@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
-import { AdminApiError, adminApi } from "../../api";
-import type { AdminProduct, AdminProductType, AdminSession } from "../../types";
+import { adminApi, AdminApiError } from "../../api";
+import type {
+  AdminProduct,
+  AdminProductType,
+  AdminCategory,
+  AdminSubcategory,
+  AdminSession,
+} from "../../types";
 import { emptyProduct, type ProductFormValues } from "../types";
-import {
-  PRODUCT_VALIDATION_MESSAGE,
-  isProductFormValid,
-} from "../validation";
 import { adminErrorMessage } from "../../utils/error-messages";
+import { isProductFormValid, PRODUCT_VALIDATION_MESSAGE } from "../validation";
 
 export type UseProductForm = {
   product: AdminProduct | null;
   setProduct: (next: AdminProduct) => void;
-  types: AdminProductType[];
+  categories: AdminCategory[];
+  subcategories: AdminSubcategory[];
+  productTypes: AdminProductType[];
   values: ProductFormValues;
   status: string;
   busy: boolean;
@@ -28,16 +33,20 @@ export function useProductForm(
   onExpired: () => void,
 ): UseProductForm {
   const [product, setProduct] = useState<AdminProduct | null>(null);
-  const [types, setTypes] = useState<AdminProductType[]>([]);
+  const [categories, setCategories] = useState<AdminCategory[]>([]);
+  const [subcategories, setSubcategories] = useState<AdminSubcategory[]>([]);
+  const [productTypes, setProductTypes] = useState<AdminProductType[]>([]);
   const [values, setValues] = useState<ProductFormValues>(emptyProduct);
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(Boolean(id));
 
   useEffect(() => {
-    void adminApi
-      .productTypes()
-      .then(({ items }) => setTypes(items))
-      .catch(() => null);
+    // Cargar las 3 listas en paralelo
+    void Promise.all([
+      adminApi.categories("", 1, false).then((r) => setCategories(r.items)),
+      adminApi.subcategories("", 1).then((r) => setSubcategories(r.items)),
+      adminApi.productTypes("", 1).then((r) => setProductTypes(r.items)),
+    ]).catch(() => null);
 
     if (!id) return;
 
@@ -60,8 +69,7 @@ export function useProductForm(
           productTypeId: item.productType?.name ?? "",
           seoTitle: item.seoTitle ?? "",
           seoDescription: item.seoDescription ?? "",
-          featuredOrder:
-            item.featuredOrder == null ? "" : String(item.featuredOrder),
+          featuredOrder: item.featuredOrder == null ? "" : String(item.featuredOrder),
           active: item.active,
           editorialApproved: item.editorialApproved,
           published: item.published,
@@ -87,13 +95,18 @@ export function useProductForm(
 
   async function save(event: React.FormEvent) {
     event.preventDefault();
+
+    // 1) Validación local antes de mandar al backend
     if (!isProductFormValid(values, Boolean(id))) {
       setStatus(PRODUCT_VALIDATION_MESSAGE);
       return;
     }
+
     setBusy(true);
     setStatus("");
+
     try {
+
       if (id && product) {
         const { baseSku: _baseSku, ...changes } = values;
         const changesCleaned: Partial<typeof changes> = { ...changes };
@@ -106,6 +119,7 @@ export function useProductForm(
         ) {
           delete changesCleaned.featuredOrder;
         }
+
         const result = await adminApi.updateProduct(
           id,
           session.csrfToken,
@@ -135,10 +149,13 @@ export function useProductForm(
     }
   }
 
+
   return {
     product,
     setProduct,
-    types,
+    categories,
+    subcategories,
+    productTypes,
     values,
     status,
     busy,

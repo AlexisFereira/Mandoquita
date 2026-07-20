@@ -17,7 +17,7 @@ export async function retireProductType(
   name: string,
   raw: unknown,
   actorAccountId: string,
-): Promise<import("@prisma/client").ProductType> {
+): Promise<import("@prisma/client").ProductType | null> {
   const input = retireSchema.parse(raw);
 
   const current = await repo.findByName(name);

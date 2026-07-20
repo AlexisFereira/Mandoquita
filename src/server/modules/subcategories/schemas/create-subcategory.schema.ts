@@ -13,7 +13,7 @@ export const createSubcategorySchema = z
   .object({
     slug: slugSchema,
     name: z.string().trim().min(1).max(160),
-    categoryId: z.string().uuid(),
+    categoryId: z.string().min(1),
     active: z.boolean().optional(),
   })
   .strict();

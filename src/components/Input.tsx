@@ -27,6 +27,7 @@ export type InputProps = Omit<
   invalid?: boolean;
   success?: boolean;
   className?: string;
+  disabled?: boolean;
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -65,7 +66,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       : "border-[rgb(var(--border)/1)]";
 
   const inputClasses = [
-    "peer w-full rounded-md border bg-[rgb(var(--surface)/1)] px-4 text-[rgb(var(--foreground)/1)] transition duration-150 placeholder:text-[rgb(var(--muted)/1)] disabled:cursor-not-allowed disabled:opacity-60",
+    "peer w-full rounded-md max-h-10 border disabled:bg-gray-100 bg-[rgb(var(--surface)/1)] px-4 text-[rgb(var(--foreground)/1)] transition duration-150 placeholder:text-[rgb(var(--muted)/1)] disabled:cursor-not-allowed disabled:opacity-60",
     inputSizeClasses[size],
     borderColor,
     hasLeftIcon ? "pl-10" : null,
@@ -86,7 +87,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     <div className="w-full space-y-2">
       <label
         htmlFor={inputId}
-        className="block text-sm font-medium text-[rgb(var(--foreground)/1)]"
+        className={`block text-sm mb-1 font-medium text-[rgb(var(--foreground)/1)] ${
+          props.disabled ? "opacity-60 text-gray-400" : ""
+        }`}
       >
         {label}
       </label>

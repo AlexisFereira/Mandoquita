@@ -23,19 +23,22 @@ function LinkNav({
   );
 }
 
+type possibleSections = "products" | "categories" | "accounts" | "taxonomy";
+
 const AdminHeader: React.FC<{
   session: { account: { username: string } };
-  section: "products" | "categories" | "accounts";
+  section: possibleSections;
   superadmin: boolean;
-  setSection: (section: "products" | "categories" | "accounts") => void;
+  setSection: (section: possibleSections) => void;
   logout: () => void;
 }> = ({ session, section, superadmin, setSection, logout }) => {
   const navOptions: {
     label: string;
-    section: "products" | "categories" | "accounts";
+    section: possibleSections;
   }[] = [
     { label: "Productos", section: "products" },
     { label: "Categorías", section: "categories" },
+    { label: "Taxonomía", section: "taxonomy" },
   ];
 
   if (superadmin) {

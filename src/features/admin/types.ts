@@ -58,11 +58,6 @@ export type AdminProduct = AdminProductSummary & {
   baseVariant?: { id: string; sku: string; active: boolean } | null;
 };
 
-export type AdminProductType = {
-  name: string;
-  subcategory: TaxonomyNode;
-  category: TaxonomyNode;
-};
 
 export type AdminFilters = {
   q: string;
@@ -187,6 +182,35 @@ export type AdminSubcategoryList = {
     totalItems: number;
   };
 };
+
+
+export type AdminProductType = {
+  name: string;
+  sourceOrder: number;
+  active: boolean;
+  subcategoryId: string;
+  createdAt: string;
+  updatedAt: string;
+  subcategory?: {
+    id: string;
+    slug: string;
+    name: string;
+    category?: { id: string; slug: string; name: string };
+  } | null;
+  dependencies?: { products: number };
+  id?: string;
+};
+
+export type AdminProductTypeList = {
+  items: AdminProductType[];
+  metadata: {
+    page: number;
+    limit: number;
+    totalItems: number;
+    totalPages: number
+  };
+};
+
 
 
 export type AdminCreateProductValues = AdminEditorValues & { baseSku: string }

@@ -34,4 +34,13 @@ export type SubcategoryRepository = {
   restore(id: string): Promise<Subcategory | null>;
   countProductTypes(subcategoryId: string): Promise<number>;
   countProductsBySubcategory(subcategoryId: string): Promise<number>;
+
+  findManyWithFiltersPaginated(args: {
+    categoryId?: string;
+    retired: boolean;
+    q?: string;
+    skip: number;
+    take: number;
+  }): Promise<{ items: Subcategory[]; totalItems: number }>;
+
 };

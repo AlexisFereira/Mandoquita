@@ -61,7 +61,9 @@ export function ProductForm({
         <form onSubmit={form.save} className="space-y-6 flex-12 lg:flex-8">
           <ProductFormBasics
             values={form.values}
-            types={form.types}
+            categories={form.categories}
+            subcategories={form.subcategories}
+            productTypes={form.productTypes}
             id={id}
             busy={busy}
             set={form.set}

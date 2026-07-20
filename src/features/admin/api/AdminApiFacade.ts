@@ -18,6 +18,7 @@ import { categoriesApi } from "./CategoriesApi";
 import { productMediaApi } from "./ProductMediaApi";
 import { productsApi } from "./ProductsApi";
 import { subcategoriesApi } from "./SubcategoriesApi";
+import { productTypesApi } from "./ProductTypesApi";
 export { AdminApiError } from "./AdminApiClient";
 
 // ────────────────────────────────────────────────────────────────
@@ -41,19 +42,21 @@ const products = (filters: Parameters<typeof productsApi.list>[0], page: number)
 const product = (id: number) => productsApi.get(id);
 const createProduct = (csrfToken: string, body: object) =>
   productsApi.create(csrfToken, body);
+
 const updateProduct = (
   id: number,
   csrfToken: string,
   expectedUpdatedAt: string,
   changes: Parameters<typeof productsApi.update>[3],
 ) => productsApi.update(id, csrfToken, expectedUpdatedAt, changes);
+
 const productLifecycle = (
   id: number,
   action: "retire" | "restore",
   csrfToken: string,
   expectedUpdatedAt: string,
 ) => productsApi.lifecycle(id, action, csrfToken, expectedUpdatedAt);
-const productTypes = () => productsApi.types();
+
 
 // ────────────────────────────────────────────────────────────────
 // Product media
@@ -148,6 +151,27 @@ const removeSubcategory = (
   body: Parameters<typeof subcategoriesApi.remove>[2],
 ) => subcategoriesApi.remove(id, csrfToken, body);
 
+
+// ────────────────────────────────────────────────────────────────
+// Product types (NEW)
+// ──────────────────────────────────────────────────────────────── 
+
+const productTypes = (q = "", page = 1, subcategoryId?: string, active?: boolean) =>
+  productTypesApi.list(q, page, subcategoryId, active);
+
+const productType = (name: string) => productTypesApi.get(name);
+
+const createProductType = (csrfToken: string, body: Parameters<typeof productTypesApi.create>[1]) =>
+  productTypesApi.create(csrfToken, body);
+
+const updateProductType = (name: string, csrfToken: string, body: Parameters<typeof productTypesApi.update>[2]) =>
+  productTypesApi.update(name, csrfToken, body);
+
+const removeProductType = (name: string, csrfToken: string, body: Parameters<typeof productTypesApi.remove>[2]) =>
+  productTypesApi.remove(name, csrfToken, body);
+
+
+
 /**
  * Objeto `adminApi` con la misma forma que la versión monolítica anterior.
  * Todos los consumidores existentes pueden seguir usando
@@ -201,4 +225,10 @@ export const adminApi = {
   createSubcategory,
   updateSubcategory,
   removeSubcategory,
+
+  // Product types
+  productType,
+  createProductType,
+  updateProductType,
+  removeProductType,
 };

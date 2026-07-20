@@ -1,4 +1,5 @@
 import type { ProductType } from "@prisma/client";
+import type { PrismaClient, Prisma } from "@prisma/client";
 import type {
   Db,
   ProductTypeRepository,
@@ -6,7 +7,7 @@ import type {
 import type {
   CreateProductTypeInput,
   UpdateProductTypeInput,
-} from "./productType.repository.types";
+} from "./productType.types";
 
 const productTypeSelect = {
   name: true,
@@ -118,5 +119,6 @@ export function createPrismaProductTypeRepository(
 
   };
 }
+
 
 

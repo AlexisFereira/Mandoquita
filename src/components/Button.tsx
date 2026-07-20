@@ -7,19 +7,16 @@ import type {
   PropsWithChildren,
 } from "react";
 
+const btnClassNameBase =
+  "inline-flex items-center justify-center rounded-full text-sm font-semibold disabled:bg-gray-100 disabled:cursor-not-allowed min-h-10";
+
 const buttonClassNames = {
-  primary:
-    "inline-flex min-h-11 items-center justify-center rounded-full text-sm font-semibold transition duration-200 hover:-translate-y-0.5 motion-reduce:transform-none disabled:cursor-not-allowed disabled:opacity-60",
-  danger:
-    "inline-flex min-h-11 items-center justify-center rounded-full text-sm font-semibold transition duration-200 hover:-translate-y-0.5 motion-reduce:transform-none disabled:cursor-not-allowed disabled:opacity-60",
-  secondary:
-    "inline-flex min-h-11 items-center justify-center rounded-full text-sm font-semibold transition duration-200 hover:-translate-y-0.5 motion-reduce:transform-none disabled:cursor-not-allowed disabled:opacity-60",
-  ghost:
-    "inline-flex min-h-11 items-center justify-center rounded-full text-sm font-semibold transition-colors duration-200 hover:bg-[rgb(var(--primary)/0.08)] disabled:cursor-not-allowed disabled:opacity-60",
-  outline:
-    "inline-flex min-h-11 items-center justify-center rounded-full text-sm font-semibold transition duration-200 hover:-translate-y-0.5 motion-reduce:transform-none disabled:cursor-not-allowed disabled:opacity-60",
-  inverse:
-    "inline-flex min-h-11 items-center justify-center rounded-full text-sm font-semibold transition duration-200 hover:-translate-y-0.5 motion-reduce:transform-none disabled:cursor-not-allowed disabled:opacity-60",
+  primary: `${btnClassNameBase}`,
+  danger: `${btnClassNameBase} `,
+  secondary: `${btnClassNameBase} `,
+  ghost: `${btnClassNameBase} transition-colors duration-200 hover:bg-[rgb(var(--primary)/0.08)]`,
+  outline: `${btnClassNameBase} `,
+  inverse: `${btnClassNameBase} `,
 } as const;
 
 const buttonSizeClasses = {
@@ -102,7 +99,7 @@ export function Button(props: ButtonProps) {
   const {
     children,
     variant = "primary",
-    size = "md",
+    size = "sm",
     className = "",
     style,
     onKeyDown,

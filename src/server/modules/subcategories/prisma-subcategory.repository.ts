@@ -125,5 +125,31 @@ export function createPrismaSubcategoryRepository(
     },
 
     async findManyWithFilters({ categoryId, retired, q }) { const where: Prisma.SubcategoryWhereInput = { ...(categoryId ? { categoryId } : {}), ...(retired ? { retiredAt: { not: null } } : { retiredAt: null }), ...(q ? { OR: [{ name: { contains: q, mode: "insensitive" as const } }, { slug: { contains: q, mode: "insensitive" as const } },], } : {}), }; const list = await db.subcategory.findMany({ where, select: subcategorySelect, orderBy: [{ sourceOrder: "asc" }, { id: "asc" }], }); return list as Subcategory[]; },
+    async findManyWithFiltersPaginated({ categoryId, retired, q, skip, take }) {
+      const where: Prisma.SubcategoryWhereInput = {
+        ...(categoryId ? { categoryId } : {}),
+        ...(retired ? { retiredAt: { not: null } } : { retiredAt: null }),
+        ...(q
+          ? {
+            OR: [
+              { name: { contains: q, mode: "insensitive" as const } },
+              { slug: { contains: q, mode: "insensitive" as const } },
+            ],
+          }
+          : {}),
+      };
+      const [items, totalItems] = await Promise.all([
+        db.subcategory.findMany({
+          where,
+          skip,
+          take,
+          select: subcategorySelect,
+          orderBy: [{ sourceOrder: "asc" }, { id: "asc" }],
+        }),
+        db.subcategory.count({ where }),
+      ]);
+      return { items: items as Subcategory[], totalItems };
+    },
+
   };
 }

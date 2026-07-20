@@ -6,7 +6,7 @@ import type {
 import type {
   CreateCategoryInput,
   UpdateCategoryInput,
-} from "./category.repository.types";
+} from "./category.types";
 
 const categorySelect = {
   id: true,

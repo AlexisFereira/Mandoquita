@@ -11,8 +11,9 @@ import { ProductWorkspace } from "./products/ProductWorkspace";
 import { CategoryWorkspace } from "./categories/CategoryWorkspace";
 import { Accounts } from "./accounts/Accounts";
 import { useAdminSession } from "./hooks/useAdminSession";
+import { TaxonomyWorkspace } from "./taxonomy/TaxonomyWorkspace";
 
-type AdminSection = "products" | "categories" | "accounts";
+type AdminSection = "products" | "categories" | "accounts" | "taxonomy";
 
 export function AdminApp() {
   const { session, checking, notice, accessGranted, expired, logout } =
@@ -61,6 +62,8 @@ export function AdminApp() {
             <ProductWorkspace session={session} onExpired={expired} />
           ) : section === "categories" ? (
             <CategoryWorkspace session={session} onExpired={expired} />
+          ) : section === "taxonomy" ? (
+            <TaxonomyWorkspace />
           ) : superadmin ? (
             <Accounts session={session} onExpired={expired} />
           ) : (

@@ -1,5 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 
+
 export type ProductFormValues = {
   name: string;
   slug: string;
@@ -73,3 +74,4 @@ export const PRODUCT_FLAG_LABELS: Record<ProductFlagKey, string> = {
   commerciallyAvailable: "Disponible comercialmente",
   featured: "Destacado",
 };
+
