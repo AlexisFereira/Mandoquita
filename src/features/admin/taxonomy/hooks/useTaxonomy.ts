@@ -43,12 +43,11 @@ export function useTaxonomy() {
       const subcategories = subcategoriesRes.items;
       const productTypes = productTypesRes.items;
 
-      // Armar árbol jerárquico
       const tree = categories.map((category) => ({
         kind: "category" as const,
         data: category,
         children: subcategories
-          .filter((s) => s.categoryId === category.id)
+          .filter((s) => s.categoryId === category.id && s.active)
           .map((subcategory) => ({
             kind: "subcategory" as const,
             data: subcategory,

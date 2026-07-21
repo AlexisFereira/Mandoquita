@@ -5,7 +5,8 @@ import { Notice } from "../components/Notice";
 import { useTaxonomy, type TaxonomyNode } from "./hooks/useTaxonomy";
 import { TaxonomyCreateModal, type TaxonomyKind } from "./TaxonomyCreateModal";
 import { useAdminSession } from "../hooks/useAdminSession";
-import { adminApi } from "../api-back";
+import { Icon } from "@/components";
+import { useTaxonomyMutations } from "./hooks/useTaxonomyMutations";
 
 export function TaxonomyWorkspace() {
   const { tree, loading, error, refresh } = useTaxonomy();
@@ -86,33 +87,6 @@ export function TaxonomyWorkspace() {
           csrfToken={session?.csrfToken ?? ""}
           onClose={() => setModal(null)}
           onSuccess={() => void refresh()}
-          onCreate={async (body) => {
-            debugger;
-            if (!session?.csrfToken) throw new Error("Sin sesión");
-
-            if (modal.kind === "category") {
-              return await fetch("/api/admin/categories", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "x-csrf-token": session.csrfToken,
-                },
-                body: JSON.stringify(body),
-              }).then((r) => r.json());
-            }
-            if (modal.kind === "subcategory") {
-              return await fetch("/api/admin/subcategories", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "x-csrf-token": session.csrfToken,
-                },
-                body: JSON.stringify(body),
-              }).then((r) => r.json());
-            }
-
-            return await adminApi.createProductType(session.csrfToken, body);
-          }}
         />
       ) : null}
     </div>
@@ -128,7 +102,11 @@ function CategoryRow({
   onAddSubcategory: (category: any) => void;
   onAddProductType: (subcategory: any) => void;
 }) {
+  const { session } = useAdminSession();
+  const { archive, create } = useTaxonomyMutations(session?.csrfToken ?? "");
   const [open, setOpen] = useState(true);
+  const { tree, loading, error, refresh } = useTaxonomy();
+
   return (
     <Card className="space-y-3">
       <div className="flex items-center justify-between">
@@ -136,20 +114,35 @@ function CategoryRow({
           type="button"
           onClick={() => setOpen(!open)}
           className="flex items-center gap-2 text-left"
+          aria-expanded={open}
         >
-          <span>{open ? "▼" : "▶"}</span>
+          <span>
+            <Icon name={!open ? "arrowDown" : "arrowRight"} />
+          </span>
           <span className="ds-heading ds-heading-md">{node.data.name}</span>
           <span className="text-xs text-[rgb(var(--muted)/1)]">
             ({node.children.length} subcategorías)
           </span>
         </button>
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => onAddSubcategory(node.data)}
-        >
-          + Subcategoría
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => onAddSubcategory(node.data)}
+          >
+            + Subcategoría
+          </Button>
+          <Button
+            onClick={() =>
+              archive("category", node.data.id, node.data.updatedAt, () =>
+                refresh(),
+              )
+            }
+            variant="secondary"
+          >
+            Eliminar Categoria
+          </Button>
+        </div>
       </div>
 
       {open && (
@@ -182,24 +175,58 @@ function SubcategoryRow({
   node: Extract<TaxonomyNode, { kind: "subcategory" }>;
   onAddProductType: (subcategory: any) => void;
 }) {
+  const { session } = useAdminSession();
+  const { archive } = useTaxonomyMutations(session?.csrfToken ?? "");
+  const { refresh } = useTaxonomy();
   return (
     <div className="space-y-1 border-l-2 border-[rgb(var(--border)/1)] pl-4">
       <div className="flex items-center justify-between">
         <span className="font-medium">{node.data.name}</span>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => onAddProductType(node.data)}
-        >
-          + Tipo
-        </Button>
+        <div className="flex items-center gap-2">
+          <span
+            role="button"
+            className="border p-1 rounded-sm"
+            onClick={() => onAddProductType(node.data)}
+          >
+            <Icon name="plus" /> Agregar Tipo
+          </span>
+          <span
+            role="button"
+            className="border p-1 rounded-sm"
+            onClick={() =>
+              archive("subcategory", node.data.id, node.data.updatedAt, refresh)
+            }
+          >
+            <Icon name="trash" />
+          </span>
+        </div>
       </div>
       {node.children.length > 0 && (
         <ul className="ml-4 space-y-1 text-sm">
           {node.children.map((pt) =>
             pt.kind === "productType" ? (
-              <li key={pt.data.name} className="text-[rgb(var(--muted)/1)]">
-                • {pt.data.name}
+              <li
+                key={`${pt.data.id}${pt.data.name}`}
+                className="text-[rgb(var(--muted)/1)] rounded-xs bg-gray-50 grid grid-cols-12 items-center gap-2"
+              >
+                <span className="col-span-6 md:col-span-3">
+                  • {pt.data.name}
+                </span>
+                {pt.children.length < 1 && (
+                  <span
+                    role="button"
+                    onClick={() =>
+                      archive(
+                        "productType",
+                        pt.data.name,
+                        pt.data.updatedAt,
+                        () => refresh(),
+                      )
+                    }
+                  >
+                    <Icon name="trash" />
+                  </span>
+                )}
               </li>
             ) : null,
           )}

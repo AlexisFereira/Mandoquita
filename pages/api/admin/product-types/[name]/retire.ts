@@ -36,12 +36,14 @@ export async function handleAdminProductTypeRetire(
 
     const result = await prisma.$transaction(async (tx) => {
       const txRepo = createPrismaProductTypeRepository(tx);
+
       const item = await retireProductType(
         txRepo,
         name,
         req.body,
         authorized.account.id,
       );
+
       await tx.productAdminAuditEvent.create({
         data: {
           requestId: productAdminRequestId(req),

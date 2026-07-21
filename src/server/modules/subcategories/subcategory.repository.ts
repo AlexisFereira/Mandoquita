@@ -41,6 +41,6 @@ export type SubcategoryRepository = {
     q?: string;
     skip: number;
     take: number;
+    active?: boolean;
   }): Promise<{ items: Subcategory[]; totalItems: number }>;
-
 };

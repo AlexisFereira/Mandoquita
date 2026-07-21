@@ -1,11 +1,6 @@
 import type { AdminSubcategory, AdminSubcategoryList } from "../types";
 import { mutationHeaders, request } from "./AdminApiClient";
 
-/**
- * CRUD de subcategorías. No tienen `retiredAt` (se archivan con `active: false`),
- * no tienen imagen, no tienen versionado. `sourceOrder` proviene del upstream y
- * no se reordena libremente.
- */
 export const subcategoriesApi = {
   list: (q = "", page = 1, categoryId?: string, active?: boolean) => {
     const params = new URLSearchParams({ page: String(page), limit: "20" });
@@ -25,12 +20,12 @@ export const subcategoriesApi = {
       name: string;
       slug: string;
       categoryId: string;
-      sourceOrder: number;
+      active?: boolean;
     },
   ) =>
     request<{ item: AdminSubcategory }>("/api/admin/subcategories", {
       method: "POST",
-      headers: mutationHeaders(csrfToken),
+      headers: { "x-csrf-token": csrfToken },
       body: JSON.stringify(body),
     }),
   update: (
@@ -55,9 +50,9 @@ export const subcategoriesApi = {
     ),
   remove: (id: string, csrfToken: string, body: { expectedUpdatedAt: string }) =>
     request<{ item: AdminSubcategory }>(
-      `/api/admin/subcategories/${encodeURIComponent(id)}`,
+      `/api/admin/subcategories/${encodeURIComponent(id)}/retire`,
       {
-        method: "DELETE",
+        method: "POST",
         headers: mutationHeaders(csrfToken),
         body: JSON.stringify(body),
       },

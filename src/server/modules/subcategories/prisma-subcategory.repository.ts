@@ -95,11 +95,14 @@ export function createPrismaSubcategoryRepository(
           updatedAt: now,
         },
       });
+
       if (!result.count) return null;
       const updated = await db.subcategory.findUnique({
         where: { id },
         select: subcategorySelect,
       });
+
+      console.log('updated', updated)
       return updated as Subcategory;
     },
 
@@ -117,14 +120,17 @@ export function createPrismaSubcategoryRepository(
     },
 
     async countProductTypes(subcategoryId) {
-      return db.productType.count({ where: { subcategoryId } });
+      return db.productType.count({ where: { subcategoryId, active: true } });
     },
 
     async countProductsBySubcategory(subcategoryId) {
       return db.product.count({ where: { productType: { subcategoryId } } });
     },
 
-    async findManyWithFilters({ categoryId, retired, q }) { const where: Prisma.SubcategoryWhereInput = { ...(categoryId ? { categoryId } : {}), ...(retired ? { retiredAt: { not: null } } : { retiredAt: null }), ...(q ? { OR: [{ name: { contains: q, mode: "insensitive" as const } }, { slug: { contains: q, mode: "insensitive" as const } },], } : {}), }; const list = await db.subcategory.findMany({ where, select: subcategorySelect, orderBy: [{ sourceOrder: "asc" }, { id: "asc" }], }); return list as Subcategory[]; },
+    async findManyWithFilters({ categoryId, retired, q }) {
+      const where: Prisma.SubcategoryWhereInput = { ...(categoryId ? { categoryId } : {}), ...(retired ? { retiredAt: { not: null } } : { retiredAt: null }), ...(q ? { OR: [{ name: { contains: q, mode: "insensitive" as const } }, { slug: { contains: q, mode: "insensitive" as const } },], } : {}), }; const list = await db.subcategory.findMany({ where, select: subcategorySelect, orderBy: [{ sourceOrder: "asc" }, { id: "asc" }], }); return list as Subcategory[];
+    },
+
     async findManyWithFiltersPaginated({ categoryId, retired, q, skip, take }) {
       const where: Prisma.SubcategoryWhereInput = {
         ...(categoryId ? { categoryId } : {}),

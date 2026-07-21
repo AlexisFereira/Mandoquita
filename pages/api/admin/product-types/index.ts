@@ -45,7 +45,6 @@ export async function handleAdminProductTypes(
       return res.status(200).json(result);
     }
 
-    // POST: crear
     const created = await prisma.$transaction(async (tx) => {
       const txProductTypeRepo = createPrismaProductTypeRepository(tx);
       const txSubcategoryRepo = createPrismaSubcategoryRepository(tx);
@@ -63,7 +62,7 @@ export async function handleAdminProductTypes(
           outcome: "SUCCESS",
           actorAccountId: authorized.account.id,
           sessionIdHash: authorized.sessionIdHash,
-          categoryId: created.subcategoryId, // podríamos guardar el subcategoryId en otro campo
+          categoryId: created.subcategoryId,
           changedFields: ["productType"],
         },
       });
@@ -78,3 +77,4 @@ export async function handleAdminProductTypes(
 }
 
 export default handleAdminProductTypes;
+

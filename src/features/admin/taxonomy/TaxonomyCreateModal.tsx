@@ -5,6 +5,7 @@ import { Input } from "../../../components/Input";
 import { Notice } from "../components/Notice";
 import { adminApi, AdminApiError } from "../api";
 import type { AdminCategory, AdminSubcategory } from "../types";
+import { Icon } from "@/components/Icon";
 
 export type TaxonomyKind = "category" | "subcategory" | "productType";
 
@@ -69,13 +70,12 @@ export function TaxonomyCreateModal({
           name: name.trim(),
           slug,
           categoryId: parent.data.id,
-          sourceOrder: 0,
         });
       } else {
         if (!parent || parent.kind !== "subcategory") {
           throw new Error("Falta la subcategoría padre.");
         }
-        const resp = await adminApi.createProductType(csrfToken, {
+        await adminApi.createProductType(csrfToken, {
           name: name.trim(),
           subcategoryId: parent.data.id,
         });
@@ -84,7 +84,6 @@ export function TaxonomyCreateModal({
       onSuccess();
       onClose();
     } catch (cause) {
-      console.log("AdminApiError", cause);
       if (cause instanceof AdminApiError) {
         setStatus(`Error ${cause.status}: ${cause.message ?? "sin detalle"}`);
       } else if (cause instanceof Error) {
@@ -122,7 +121,7 @@ export function TaxonomyCreateModal({
             aria-label="Cerrar"
             className="text-2xl leading-none"
           >
-            ×
+            <Icon name="x" />
           </button>
         </div>
 

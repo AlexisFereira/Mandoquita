@@ -29,8 +29,8 @@ export const categoryLifecycleSchema = z.object({
   expectedUpdatedAt: z.string().datetime({ offset: true }),
 }).strict();
 
-export class CategoryAdminNotFoundError extends Error {}
-export class CategoryAdminConflictError extends Error {}
+export class CategoryAdminNotFoundError extends Error { }
+export class CategoryAdminConflictError extends Error { }
 export class CategoryDependenciesError extends Error {
   constructor(public dependencies: { subcategories: number; productTypes: number; products: number }) {
     super("Category has protected dependencies");
@@ -71,8 +71,8 @@ async function assertCategorySlugAvailable(db: Db, value: string, currentId?: st
 
 export async function categoryDependencies(db: Db, categoryId: string) {
   const [subcategories, productTypes, products] = await Promise.all([
-    db.subcategory.count({ where: { categoryId } }),
-    db.productType.count({ where: { subcategory: { categoryId } } }),
+    db.subcategory.count({ where: { categoryId, active: true } }),
+    db.productType.count({ where: { subcategory: { categoryId }, active: true } }),
     db.product.count({ where: { productType: { subcategory: { categoryId } } } }),
   ]);
   return { subcategories, productTypes, products };
@@ -89,12 +89,14 @@ export async function listAdminCategories(db: Db, raw: Record<string, string | s
     return [key, value];
   })));
   const where: Prisma.CategoryWhereInput = {
-      version: { status: "ACTIVE" },
-      ...(query.retired ? { retiredAt: { not: null } } : { retiredAt: null }),
-      ...(query.q ? { OR: [
+    version: { status: "ACTIVE" },
+    ...(query.retired ? { retiredAt: { not: null } } : { retiredAt: null }),
+    ...(query.q ? {
+      OR: [
         { name: { contains: query.q, mode: "insensitive" } },
         { slug: { contains: query.q, mode: "insensitive" } },
-      ] } : {}),
+      ]
+    } : {}),
   };
   const totalItems = await db.category.count({ where });
   const totalPages = Math.max(1, Math.ceil(totalItems / query.limit));
@@ -133,11 +135,13 @@ export async function createCategory(db: Db, raw: unknown) {
   const versions = await db.taxonomyVersion.findMany({ where: { status: "ACTIVE" }, select: { id: true } });
   if (versions.length !== 1) throw new CategoryAdminConflictError("Exactly one active taxonomy is required");
   const aggregate = await db.category.aggregate({ where: { versionId: versions[0].id }, _max: { sortOrder: true } });
-  const category = await db.category.create({ data: {
-    id: randomUUID(), versionId: versions[0].id, slug: input.slug, name: input.name,
-    description: input.description ?? null, sortOrder: (aggregate._max.sortOrder ?? 0) + 1,
-    active: false, visible: false,
-  }, select: categorySelect });
+  const category = await db.category.create({
+    data: {
+      id: randomUUID(), versionId: versions[0].id, slug: input.slug, name: input.name,
+      description: input.description ?? null, sortOrder: (aggregate._max.sortOrder ?? 0) + 1,
+      active: false, visible: false,
+    }, select: categorySelect
+  });
   return mapCategory(category, { subcategories: 0, productTypes: 0, products: 0 });
 }
 
@@ -174,14 +178,20 @@ export async function updateCategory(db: Db, id: string, raw: unknown) {
 export async function retireCategory(db: Db, id: string, raw: unknown, actorAccountId: string) {
   const input = categoryLifecycleSchema.parse(raw);
   const current = await db.category.findUnique({ where: { id }, select: categorySelect });
+
   if (!current) throw new CategoryAdminNotFoundError("Category not found");
   const dependencies = await categoryDependencies(db, id);
-  if (Object.values(dependencies).some((count) => count > 0)) throw new CategoryDependenciesError(dependencies);
+
+  if (Object.values(dependencies).some((count) => count > 0))
+    throw new CategoryDependenciesError(dependencies);
+
   const result = await db.category.updateMany({
     where: { id, retiredAt: null, updatedAt: new Date(input.expectedUpdatedAt) },
     data: { retiredAt: new Date(), retiredByAccountId: actorAccountId, active: false, visible: false },
   });
-  if (!result.count) throw new CategoryAdminConflictError("Category changed or is already retired");
+
+  if (!result.count)
+    throw new CategoryAdminConflictError("Category changed or is already retired");
   return getAdminCategory(db, id);
 }
 

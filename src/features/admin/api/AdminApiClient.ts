@@ -39,6 +39,7 @@ export async function request<T>(
       ...init?.headers,
     },
   });
+
   if (!response.ok) {
     const body = (await response.json().catch(() => null)) as {
       error?: string;

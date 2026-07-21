@@ -1,6 +1,7 @@
 import type { NextApiResponse } from "next";
 import { Prisma } from "@prisma/client";
-
+import { ProductTypeDependenciesError } from "../productTypes/productType.errors";
+import { SubcategoryDependenciesError } from "../subcategories/subcategory.errors";
 /**
  * Errores que cualquier módulo puede lanzar. Sirven como contrato.
  */
@@ -58,6 +59,23 @@ export function mapAdminErrorToHttp(
     });
     return true;
   }
+
+  if (error instanceof SubcategoryDependenciesError) {
+    res.status(409).json({
+      error: error.message,
+      dependencies: (error as any).dependencies,
+    });
+    return true;
+  }
+
+  if (error instanceof ProductTypeDependenciesError) {
+    res.status(409).json({
+      error: error.message,
+      dependencies: { products: (error as any).productCount },
+    });
+    return true;
+  }
+
   if (error instanceof AdminValidationError) {
     res.status(400).json({
       error: "Validation failed",
@@ -79,5 +97,11 @@ export function mapAdminErrorToHttp(
     res.status(409).json({ error: "Unique constraint violated" });
     return true;
   }
+
+  if (error instanceof AdminDependenciesError) {
+    res.status(409).json({ error: error.message, dependencies: error.dependencies, });
+    return true;
+  }
   return false;
 }
+

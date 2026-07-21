@@ -42,6 +42,7 @@ export async function listSubcategories(
     q: input.q,
     skip,
     take: input.limit,
+    active: true,
   });
 
   // Calcular paginación final con el total real

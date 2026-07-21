@@ -39,7 +39,6 @@ export async function retireProductType(
   }
 
   const retired = await repo.setActive(name, false);
-  // Actualizar retiredAt + retiredByAccountId
   if (!retired) {
     throw new ProductTypeAdminConflictError(
       "ProductType could not be retired",

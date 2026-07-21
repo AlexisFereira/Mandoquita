@@ -58,7 +58,7 @@ export function useTaxonomyMutations(csrfToken: string) {
     }
   };
 
-  const archive = async (kind: TaxonomyKind, id: string, expectedUpdatedAt: string) => {
+  const archive = async (kind: TaxonomyKind, id: string, expectedUpdatedAt: string, callBack: () => void) => {
     setBusy(true);
     setError(null);
     try {
@@ -75,9 +75,12 @@ export function useTaxonomyMutations(csrfToken: string) {
             expectedUpdatedAt,
           });
         case "productType":
-          return await adminApi.removeProductType(id, csrfToken, {
+          const resp = await adminApi.removeProductType(id, csrfToken, {
             expectedUpdatedAt,
           });
+          console.log({ resp })
+          callBack();
+          return resp;
       }
     } catch (cause) {
       const message =

@@ -87,7 +87,7 @@ export function createPrismaProductTypeRepository(
     },
 
     async countProducts(name) {
-      return db.product.count({ where: { productType: { name } } });
+      return db.product.count({ where: { productType: { name, active: true } } });
     },
 
     async findManyWithFilters({ subcategoryId, retired, q }) {

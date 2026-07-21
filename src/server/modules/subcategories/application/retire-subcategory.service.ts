@@ -25,9 +25,10 @@ export async function retireSubcategory(
     throw new SubcategoryNotFoundError(id);
   }
 
-  // No se puede retirar si tiene dependencias
+
   const productTypesCount = await repo.countProductTypes(id);
   const productsCount = await repo.countProductsBySubcategory(id);
+
   if (productTypesCount > 0 || productsCount > 0) {
     throw new SubcategoryDependenciesError({
       productTypes: productTypesCount,
