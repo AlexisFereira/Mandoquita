@@ -12,7 +12,13 @@ export type CategoryLinkProps = {
   icon?: IconName;
 };
 
-export function CategoryLink({ title, href, imageUrl, imageAltText, icon }: CategoryLinkProps) {
+export function CategoryLink({
+  title,
+  href,
+  imageUrl,
+  imageAltText,
+  icon,
+}: CategoryLinkProps) {
   const resolvedImageUrl =
     resolvePublicAssetUrl(imageUrl) ?? "/images/banners/default-banner.svg";
 
@@ -22,9 +28,9 @@ export function CategoryLink({ title, href, imageUrl, imageAltText, icon }: Cate
       aria-label={title}
       className="group flex w-[100px] flex-col items-center gap-2 rounded-md no-underline"
     >
-      <span className="flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full bg-[rgb(var(--background)/1)]">
+      <span className="flex h-[100px] w-[100px] text-primary items-center justify-center overflow-hidden rounded-full bg-[rgb(var(--background)/1)]">
         {icon ? (
-          <Icon name={icon} size="lg" className="text-[rgb(var(--foreground)/1)]" />
+          <Icon name={icon} size="lg" className="text-primary" />
         ) : (
           <img
             src={resolvedImageUrl}

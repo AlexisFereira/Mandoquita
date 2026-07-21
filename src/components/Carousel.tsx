@@ -109,7 +109,7 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
           setIsFocusedWithin(false);
       }}
     >
-      <div className="relative h-[280px] w-full sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[480px]">
+      <div className="relative h-[70dvh]  w-full sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[480px]">
         {computedSlides.map((slide, index) => (
           <article
             key={slide.title}
@@ -148,7 +148,7 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
               />
               <div className="absolute inset-x-0 bottom-0 z-10  pb-16 pt-6 text-inverse-foreground sm:pb-20 sm:pt-12 lg:pt-16">
                 <Container size="wide" padding="lg">
-                  <h2 className="max-w-xl text-xl font-semibold tracking-[-0.03em] sm:text-2xl lg:text-5xl">
+                  <h2 className="max-w-xl text-4xl font-semibold tracking-[-0.03em] sm:text-2xl lg:text-5xl">
                     {slide.title}
                   </h2>
                   {slide.description ? (

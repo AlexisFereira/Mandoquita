@@ -50,7 +50,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
           )}
         </div>
 
-        <div className="flex h-full flex-col gap-4 p-5">
+        <div className="flex h-full flex-col md:gap-4 p-2 md:p-5 gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="neutral" className="max-w-full min-w-0">
               <span className="block truncate" title={product.category.name}>
@@ -62,19 +62,20 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
             </span>
           </div>
           <div className="space-y-1.5">
-            <h3 className="text-xl font-semibold tracking-[-0.02em] text-[rgb(var(--foreground)/1)]">
+            <h3 className="md:text-xl font-semibold tracking-[-0.02em] text-[rgb(var(--foreground)/1)]">
               {product.name}
             </h3>
           </div>
 
           <div
             data-product-card-offer-row="true"
-            className="mt-auto flex flex-col items-start gap-3 pt-2 @min-[280px]:flex-row @min-[280px]:items-center @min-[280px]:justify-between @min-[280px]:gap-4"
+            className="mt-auto text-primary flex gap-1 justify-end pt-2 @min-[280px]:flex-row @min-[280px]:items-center @min-[280px]:gap-4"
           >
             {/* <ProductOffer product={product} />  */}
-            <span className="text-sm font-semibold text-[rgb(var(--foreground)/1)] underline decoration-transparent underline-offset-4 transition group-hover:decoration-current">
-              Ver detalles
+            <span className="text-sm font-semibold align-center items-center underline decoration-transparent underline-offset-4 transition group-hover:decoration-current">
+              Ver
             </span>
+            <Icon name="chevronRight" />
           </div>
         </div>
       </Link>

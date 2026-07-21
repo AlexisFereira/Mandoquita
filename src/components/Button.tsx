@@ -27,7 +27,7 @@ const buttonSizeClasses = {
 
 const sharedProps = {
   borderStyle: "solid",
-  borderWidth: "1px",
+  borderWidth: "2px",
   boxShadow: "var(--shadow-md)",
 };
 
@@ -46,30 +46,30 @@ const variantStyles = {
   },
   secondary: {
     backgroundColor: "rgb(var(--surface) / 1)",
-    color: "rgb(var(--foreground) / 1)",
+    color: "rgb(var(--primary) / 1)",
     borderColor: "rgb(var(--border) / 1)",
     ...sharedProps,
   },
   ghost: {
     backgroundColor: "transparent",
-    color: "rgb(var(--foreground) / 1)",
+    color: "rgb(var(--primary) / 1)",
     borderColor: "transparent",
     borderStyle: "solid",
-    borderWidth: "1px",
+    borderWidth: "2px",
   },
   outline: {
     backgroundColor: "transparent",
-    color: "rgb(var(--foreground) / 1)",
+    color: "rgb(var(--primary) / 1)",
     borderColor: "rgb(var(--primary) / 1)",
     borderStyle: "solid",
-    borderWidth: "1px",
+    borderWidth: "2px",
   },
   inverse: {
     backgroundColor: "rgb(var(--inverse-foreground) / 1)",
     color: "rgb(var(--inverse-surface) / 1)",
     borderColor: "rgb(var(--inverse-foreground) / 1)",
     borderStyle: "solid",
-    borderWidth: "1px",
+    borderWidth: "2px",
   },
 } as const;
 

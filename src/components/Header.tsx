@@ -96,7 +96,7 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              className="inline-flex min-h-11 items-center border-b-2 border-transparent px-1 text-sm font-semibold text-[rgb(var(--muted)/1)] transition-colors hover:border-[rgb(var(--primary)/1)] hover:text-[rgb(var(--foreground)/1)]"
+              className="inline-flex min-h-11  text-primary items-center border-b-2 border-transparent px-1 text-sm font-semibold text-[rgb(var(--muted)/1)] transition-colors hover:border-[rgb(var(--primary)/1)] hover:text-[rgb(var(--foreground)/1)]"
             >
               {item.icon ? <Icon name={item.icon} className="mr-2" /> : null}
               {item.label}
@@ -113,7 +113,7 @@ export function Header() {
             setHiddenOnMobileScroll(false);
             setOpen((value) => !value);
           }}
-          className="mobile-toggle inline-flex h-11 w-11 items-center justify-center rounded-md border border-[rgb(var(--border)/1)] bg-transparent text-[rgb(var(--foreground)/1)]"
+          className="mobile-toggle inline-flex text-primary h-11 w-11 items-center justify-center rounded-md bg-transparent text-[rgb(var(--foreground)/1)]"
         >
           <Icon name={open ? "close" : "menu"} />
         </button>

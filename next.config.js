@@ -10,6 +10,14 @@ const nextConfig = {
       permanent: true,
     }));
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "https://d139alfkeie86e.cloudfront.net", // o tu dominio de CloudFront
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;
