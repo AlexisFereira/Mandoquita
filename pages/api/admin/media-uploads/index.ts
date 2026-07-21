@@ -25,22 +25,34 @@ export async function handleCatalogMediaUpload(req: NextApiRequest, res: NextApi
     const kind = rawKind === "product" ? "PRODUCT" : rawKind === "category" ? "CATEGORY" : null;
     const contentType = singleRequestHeader(req.headers["content-type"]);
     const originalFileName = singleRequestHeader(req.headers["x-file-name"]);
-    if (!kind || !contentType || !originalFileName || originalFileName.length > 255) throw new CatalogMediaRequestError("Invalid upload headers");
+
+    if (!kind || !contentType || !originalFileName || originalFileName.length > 255)
+      throw new CatalogMediaRequestError("Invalid upload headers");
+    console.log('1')
     const config = getS3ImageStorageConfig();
+    console.log('2')
     const body = await readCatalogMediaBody(req, config.maximumBytes);
+    console.log('3')
     const upload = await createCatalogMediaUpload(prisma, {
-      sessionId: context.sessionId,
       kind,
-      idempotencyKey: context.idempotencyKey,
       body,
-      declaredContentType: contentType,
       originalFileName,
+      sessionId: context.sessionId,
+      idempotencyKey: context.idempotencyKey,
+      declaredContentType: contentType,
     });
-    await prisma.productAdminAuditEvent.create({ data: {
-      requestId: context.requestId, event: "MEDIA_UPLOAD_CREATE", outcome: "SUCCESS",
-      sessionIdHash: context.sessionIdHash, mediaUploadHash: catalogMediaOpaqueHash(upload.id),
-      detectedType: upload.contentType, encodedSize: upload.size, checksumPrefix: upload.checksumSha256.slice(0, 12),
-    } });
+
+    console.log('4')
+
+    await prisma.productAdminAuditEvent.create({
+      data: {
+        requestId: context.requestId, event: "MEDIA_UPLOAD_CREATE", outcome: "SUCCESS",
+        sessionIdHash: context.sessionIdHash, mediaUploadHash: catalogMediaOpaqueHash(upload.id),
+        detectedType: upload.contentType, encodedSize: upload.size, checksumPrefix: upload.checksumSha256.slice(0, 12),
+      }
+    });
+    console.log('5')
+
     return res.status(201).json({ upload });
   } catch (error) {
     if (context) await auditCatalogMediaFailure(prisma, { requestId: context.requestId, event: "MEDIA_UPLOAD_CREATE", error, sessionIdHash: context.sessionIdHash }).catch(() => undefined);

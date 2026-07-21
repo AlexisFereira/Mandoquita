@@ -2,8 +2,8 @@ import type { AdminSubcategory, AdminSubcategoryList } from "../types";
 import { mutationHeaders, request } from "./AdminApiClient";
 
 export const subcategoriesApi = {
-  list: (q = "", page = 1, categoryId?: string, active?: boolean) => {
-    const params = new URLSearchParams({ page: String(page), limit: "20" });
+  list: (q = "", page = 1, categoryId?: string, active?: boolean, limit?: number) => {
+    const params = new URLSearchParams({ page: String(page), limit: limit ? String(limit) : "40" });
     const trimmed = q.trim();
     if (trimmed) params.set("q", trimmed);
     if (categoryId) params.set("categoryId", categoryId);

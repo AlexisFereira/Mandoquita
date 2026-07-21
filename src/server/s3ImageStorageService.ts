@@ -33,9 +33,9 @@ export type StoredImage = {
 
 type S3Sender = { send(command: PutObjectCommand): Promise<unknown> };
 
-export class S3ImageConfigurationError extends Error {}
-export class ImageUploadValidationError extends Error {}
-export class ImageUploadTooLargeError extends Error {}
+export class S3ImageConfigurationError extends Error { }
+export class ImageUploadValidationError extends Error { }
+export class ImageUploadTooLargeError extends Error { }
 
 export function getS3ImageStorageConfig(
   environment: Record<string, string | undefined> = process.env,
@@ -48,6 +48,7 @@ export function getS3ImageStorageConfig(
     maximumBytes: environment.AWS_S3_IMAGE_MAX_BYTES || undefined,
     kmsKeyId: environment.AWS_S3_KMS_KEY_ID || undefined,
   });
+
   if (!result.success) throw new S3ImageConfigurationError("S3 image storage is not configured");
   return result.data;
 }
