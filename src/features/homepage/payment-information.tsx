@@ -17,9 +17,9 @@ export function PaymentInformation({
       id="medios-de-pago"
       aria-labelledby="medios-de-pago-title"
       tone="default"
-      spacing="spacious"
+      spacing="compact"
     >
-      <Container size="wide" padding="lg">
+      <Container size="wide" padding="lg" className="grid gap-6">
         <div className="relative overflow-hidden md:hidden rounded-[8px]">
           <img
             src={`${urlBase}/images/banners/banner-forma-de-pago-sm.png`}

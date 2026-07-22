@@ -6,11 +6,17 @@ frontend:
         - npm ci
     build:
       commands:
+        - npx prisma migrate deploy
+        - npx tsx prisma/seed-admin.ts
         - npx prisma generate
         - npm run build
+
+        # ─── Aplicación ───
         - echo "DATABASE_URL=$DATABASE_URL" >> .env.production
         - echo "PUBLIC_SITE_ORIGIN=$PUBLIC_SITE_ORIGIN" >> .env.production
         - echo "WHATSAPP_BUSINESS_NUMBER=$WHATSAPP_BUSINESS_NUMBER" >> .env.production
+
+        # ─── Seguridad admin ───
         - echo "PRODUCT_ADMIN_SESSION_SECRET=$PRODUCT_ADMIN_SESSION_SECRET" >> .env.production
         - echo "PRODUCT_ADMIN_PASSWORD_PEPPER=$PRODUCT_ADMIN_PASSWORD_PEPPER" >> .env.production
         - echo "PRODUCT_ADMIN_PASSWORD_BLOCKLIST=$PRODUCT_ADMIN_PASSWORD_BLOCKLIST" >> .env.production
@@ -18,6 +24,7 @@ frontend:
         - echo "PRODUCT_ADMIN_TRUST_PROXY=$PRODUCT_ADMIN_TRUST_PROXY" >> .env.production
         - echo "PRODUCT_ADMIN_TRUSTED_PROXY_HOPS=$PRODUCT_ADMIN_TRUSTED_PROXY_HOPS" >> .env.production
         - echo "PRODUCT_ADMIN_EDGE_SECRET=$PRODUCT_ADMIN_EDGE_SECRET" >> .env.production
+
         # AWS credentials come from the attached Amplify SSR Compute role.
         - echo "AWS_REGION=$AWS_REGION" >> .env.production
         - echo "AWS_S3_BUCKET=$_AWS_S3_BUCKET" >> .env.production
@@ -25,6 +32,10 @@ frontend:
         - echo "AWS_S3_IMAGE_PREFIX=$_AWS_S3_IMAGE_PREFIX" >> .env.production
         - echo "AWS_S3_IMAGE_MAX_BYTES=$_AWS_S3_IMAGE_MAX_BYTES" >> .env.production
         - echo "AWS_S3_KMS_KEY_ID=$_AWS_S3_KMS_KEY_ID" >> .env.production
+
+        # ─── Bootstrap del super admin (NUEVO) ───
+        - echo "ADMIN_BOOTSTRAP_USERNAME=superadmin" >> .env.production
+        - echo "ADMIN_BOOTSTRAP_PASSWORD_HASH=$ADMIN_BOOTSTRAP_PASSWORD_HASH" >> .env.production
   artifacts:
     baseDirectory: .next
     files:

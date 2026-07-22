@@ -44,30 +44,42 @@ export async function handleAdminAccounts(req: NextApiRequest, res: NextApiRespo
     const input = createSchema.parse(req.body);
     const config = getProductAdminSecurityConfig();
     if (!await verifyAdminPassword(input.currentPassword, authorized.account.passwordHash, config.passwordPepper)) {
-      await prisma.productAdminAuditEvent.create({ data: {
-        requestId: productAdminRequestId(req), event: "ADMIN_ACCOUNT_CREATE", outcome: "DENIED",
-        reason: "FRESH_AUTH_REJECTED", actorAccountId: authorized.account.id,
-        sessionIdHash: authorized.sessionIdHash,
-      } });
+      await prisma.productAdminAuditEvent.create({
+        data: {
+          requestId: productAdminRequestId(req), event: "ADMIN_ACCOUNT_CREATE", outcome: "DENIED",
+          reason: "FRESH_AUTH_REJECTED", actorAccountId: authorized.account.id,
+          sessionIdHash: authorized.sessionIdHash,
+        }
+      });
       throw new ProductAdminHttpError(401, "FRESH_AUTH_REJECTED");
     }
     const password = validateAdminPassword(input.temporaryPassword, input.username, config.passwordBlocklist);
     const passwordHash = await hashAdminPassword(password, config.passwordPepper);
+
     const account = await prisma.$transaction(async (tx) => {
       const normalizedUsername = await assertAdminUsernameAvailable(tx, input.username);
-      const created = await tx.adminAccount.create({ data: {
-        username: input.username,
-        normalizedUsername,
-        passwordHash,
-        role: "ADMIN",
-        enabled: true,
-        mustChangePassword: true,
-      } });
-      await tx.productAdminAuditEvent.create({ data: {
-        requestId: productAdminRequestId(req), event: "ADMIN_ACCOUNT_CREATE", outcome: "SUCCESS",
-        actorAccountId: authorized.account.id, targetAccountId: created.id,
-        sessionIdHash: authorized.sessionIdHash,
-      } });
+      const created = await tx.adminAccount.create({
+        data: {
+          username: input.username,
+          normalizedUsername,
+          passwordHash,
+          role: "ADMIN",
+          enabled: true,
+          mustChangePassword: true,
+        }
+      });
+
+      await tx.productAdminAuditEvent.create({
+        data: {
+          requestId: productAdminRequestId(req),
+          event: "ADMIN_ACCOUNT_CREATE",
+          outcome: "SUCCESS",
+          actorAccountId: authorized.account.id,
+          targetAccountId: created.id,
+          sessionIdHash: authorized.sessionIdHash,
+        }
+      });
+
       return created;
     });
     return res.status(201).json({ item: safeAdminAccount(account) });

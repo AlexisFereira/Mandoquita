@@ -156,6 +156,7 @@ export default function HomePage({
       : showsThreeFeatured
         ? 3
         : 2;
+
   const visibleFeaturedProducts = selectVisibleFeaturedProducts(
     featuredProducts,
     featuredLimit,

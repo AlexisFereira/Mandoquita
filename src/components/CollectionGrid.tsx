@@ -1,9 +1,11 @@
 import React, { type ElementType, type PropsWithChildren } from "react";
 
-export type CollectionGridProps<T extends ElementType = "div"> = PropsWithChildren<{
-  as?: T;
-  className?: string;
-}> & Omit<React.ComponentPropsWithoutRef<T>, "as" | "children" | "className">;
+export type CollectionGridProps<T extends ElementType = "div"> =
+  PropsWithChildren<{
+    as?: T;
+    className?: string;
+  }> &
+    Omit<React.ComponentPropsWithoutRef<T>, "as" | "children" | "className">;
 
 /**
  * Domain-neutral layout for ordered Card collections. It never inspects,
