@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Container } from "./Container";
 import { Icon } from "./Icon";
+import { Button } from "./Button";
 
 const navigation = [
   { label: "Inicio", href: "/" },
@@ -104,19 +105,35 @@ export function Header() {
           ))}
         </nav>
 
-        <button
-          type="button"
-          aria-label={open ? "Cerrar navegación" : "Abrir navegación"}
-          aria-expanded={open}
-          aria-controls="mobile-navigation"
-          onClick={() => {
-            setHiddenOnMobileScroll(false);
-            setOpen((value) => !value);
-          }}
-          className="mobile-toggle inline-flex text-primary h-11 w-11 items-center justify-center rounded-md bg-transparent text-[rgb(var(--foreground)/1)]"
-        >
-          <Icon name={open ? "close" : "menu"} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            aria-label={open ? "Cerrar navegación" : "Abrir navegación"}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            onClick={() => {
+              setHiddenOnMobileScroll(false);
+              setOpen((value) => !value);
+            }}
+            className="mobile-toggle inline-flex text-primary h-11 w-11 items-center justify-center rounded-md bg-transparent text-[rgb(var(--foreground)/1)]"
+          >
+            <Icon name={open ? "close" : "menu"} />
+          </button>
+          <Link
+            href="https://www.instagram.com/mandoquitawb/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="gap-2 justify-self-start"
+          >
+            <img
+              src="/instagram.png"
+              alt="Instagram"
+              width="24"
+              height="24"
+              className="h-6 w-6 object-contain"
+            />
+          </Link>
+        </div>
       </Container>
 
       {open ? (

@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import type { GetServerSideProps } from "next";
+import FaviconLinks from "./components/FaviconLinks";
 
 import { prisma } from "../lib/prisma";
 import { Button } from "../src/components/Button";
@@ -17,11 +18,15 @@ export type FeaturedProductsPageProps = {
   products: ProductItem[];
 };
 
-export const getServerSideProps: GetServerSideProps<FeaturedProductsPageProps> = async () => ({
+export const getServerSideProps: GetServerSideProps<
+  FeaturedProductsPageProps
+> = async () => ({
   props: { products: await listFeaturedProducts(prisma, 50) },
 });
 
-export default function FeaturedProductsPage({ products }: FeaturedProductsPageProps) {
+export default function FeaturedProductsPage({
+  products,
+}: FeaturedProductsPageProps) {
   return (
     <>
       <Head>
@@ -33,9 +38,12 @@ export default function FeaturedProductsPage({ products }: FeaturedProductsPageP
         <meta name="robots" content="index,follow" />
         <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
         <link rel="canonical" href="/destacados" />
+        <FaviconLinks />
       </Head>
 
-      <a href="#main-content" className="skip-link">Ir al contenido principal</a>
+      <a href="#main-content" className="skip-link">
+        Ir al contenido principal
+      </a>
       <Header />
 
       <main id="main-content" className="py-10 sm:py-14 lg:py-16">
@@ -57,14 +65,23 @@ export default function FeaturedProductsPage({ products }: FeaturedProductsPageP
               ))}
             </CollectionGrid>
           ) : (
-            <section aria-labelledby="featured-unavailable" className="space-y-4">
-              <h2 id="featured-unavailable" className="ds-heading ds-heading-md">
+            <section
+              aria-labelledby="featured-unavailable"
+              className="space-y-4"
+            >
+              <h2
+                id="featured-unavailable"
+                className="ds-heading ds-heading-md"
+              >
                 No hay productos destacados disponibles
               </h2>
               <p className="text-[rgb(var(--muted)/1)]">
-                Explora las categorías para encontrar otros productos del catálogo.
+                Explora las categorías para encontrar otros productos del
+                catálogo.
               </p>
-              <Button variant="outline" href="/categorias">Explorar categorías</Button>
+              <Button variant="outline" href="/categorias">
+                Explorar categorías
+              </Button>
             </section>
           )}
         </Container>

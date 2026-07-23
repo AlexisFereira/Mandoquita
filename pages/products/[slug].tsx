@@ -7,10 +7,7 @@ import type { GetServerSideProps } from "next";
 import { Footer } from "../../src/components/Footer";
 import { Header } from "../../src/components/Header";
 import { ProductCard } from "../../src/components/ProductCard";
-import {
-  ProductOffer,
-  hasCurrentOffer,
-} from "../../src/components/ProductOffer";
+import { hasCurrentOffer } from "../../src/components/ProductOffer";
 import { prisma } from "../../lib/prisma";
 import {
   getProductDetail,
@@ -26,6 +23,7 @@ import type { PublicProductVariantItem } from "../../src/types/catalog";
 import { ScrollEntryMotion } from "../../src/components/ScrollEntryMotion";
 import { Icon } from "../../src/components/Icon";
 import { ProductContinuationActions } from "../../src/features/product-detail/ProductContinuationActions";
+import FaviconLinks from "pages/components/FaviconLinks";
 
 type ProductDetailPageProps = ProductDetailResponse;
 
@@ -171,6 +169,40 @@ export default function ProductDetailPage({
         {canonicalUrl ? (
           <meta property="og:url" content={canonicalUrl} />
         ) : null}
+        {/* Favicons estándar */}{" "}
+        <link rel="icon" href="/favicon.ico" sizes="any" />{" "}
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />{" "}
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        {/* Apple Touch Icon (iOS) */}{" "}
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        {/* Android Chrome / PWA */}{" "}
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href="/android-chrome-192x192.png"
+        />{" "}
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="512x512"
+          href="/android-chrome-512x512.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
       </Head>
 
       <Script
