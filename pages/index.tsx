@@ -17,8 +17,8 @@ import { useMediaQuery } from "../src/hooks/use-media-query";
 import { PaymentInformation } from "../src/features/homepage/payment-information";
 import type { HomepagePayload } from "../src/types/catalog";
 import HeadMetas from "./components/HeadMetas";
-import { whatsappUrl, urlBase, carouselSlides } from "./constants";
-import { useRandomPair } from "./hooks/use-random-pair";
+import { whatsappUrl, urlBase, carouselSlides } from "../src/constants";
+import { useRandomPair } from "../src/hooks/use-random-pair";
 
 export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
   res,
