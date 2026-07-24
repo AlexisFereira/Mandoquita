@@ -16,9 +16,9 @@ import { getHomepagePayload } from "../src/server/homepageService";
 import { useMediaQuery } from "../src/hooks/use-media-query";
 import { PaymentInformation } from "../src/features/homepage/payment-information";
 import type { HomepagePayload } from "../src/types/catalog";
-import HeadMetas from "./components/HeadMetas";
 import { whatsappUrl, urlBase, carouselSlides } from "../src/constants";
 import { useRandomPair } from "../src/hooks/use-random-pair";
+import MetaTags from "./components/MetaTags";
 
 export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
   res,
@@ -167,7 +167,7 @@ export default function HomePage({
 
   return (
     <>
-      <HeadMetas />
+      <MetaTags />
       <Script
         id="homepage-products-jsonld"
         type="application/ld+json"

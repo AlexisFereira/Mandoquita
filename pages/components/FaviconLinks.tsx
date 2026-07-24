@@ -1,7 +1,7 @@
 import React from "react";
 
 const FaviconLinks = () => {
-  return <></>;
+  return <>{/* Favicons estándar */}</>;
 };
 
 export default FaviconLinks;

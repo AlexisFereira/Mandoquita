@@ -3,7 +3,7 @@ import Head from "next/head";
 import FaviconLinks from "./FaviconLinks";
 import { APPLICATION_THEME_COLOR } from "../../src/design-system/metadata";
 
-const HeadMetas = () => {
+const MetaTags = () => {
   const ogImage =
     "https://d139alfkeie86e.cloudfront.net/images/banners/banner-meta.png";
 
@@ -21,40 +21,6 @@ const HeadMetas = () => {
       />
       <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
       <link rel="canonical" href="/" />
-      {/* Favicons estándar */}{" "}
-      <link rel="icon" href="/favicon.ico" sizes="any" />{" "}
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href="/favicon-32x32.png"
-      />{" "}
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
-        href="/favicon-16x16.png"
-      />
-      {/* Apple Touch Icon (iOS) */}{" "}
-      <link
-        rel="apple-touch-icon"
-        sizes="180x180"
-        href="/apple-touch-icon.png"
-      />
-      {/* Android Chrome / PWA */}{" "}
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="192x192"
-        href="/android-chrome-192x192.png"
-      />{" "}
-      <link
-        rel="icon"
-        type="image/png"
-        sizes="512x512"
-        href="/android-chrome-512x512.png"
-      />
-      <link rel="manifest" href="/site.webmanifest" />
       <meta property="og:title" content="Mandoquita | Catálogo de productos" />
       <meta
         property="og:description"
@@ -77,8 +43,9 @@ const HeadMetas = () => {
         content="Catálogo de combos Mandoquita."
       />
       <meta name="twitter:image" content={ogImage} />
+      <FaviconLinks />
     </Head>
   );
 };
 
-export default HeadMetas;
+export default MetaTags;
