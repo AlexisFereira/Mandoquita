@@ -16,7 +16,6 @@ import {
 } from "../../src/server/taxonomyService";
 import type { ProductItem, TaxonomyCategory } from "../../src/types/catalog";
 import { APPLICATION_THEME_COLOR } from "../../src/design-system/metadata";
-import FaviconLinks from "pages/components/FaviconLinks";
 
 export type CategoryPageProps = {
   category: TaxonomyCategory | null;
@@ -130,40 +129,6 @@ export default function CategoryPage({
         />
         <meta name="robots" content="index,follow" />
         <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
-        {/* Favicons estándar */}{" "}
-        <link rel="icon" href="/favicon.ico" sizes="any" />{" "}
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />{" "}
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        {/* Apple Touch Icon (iOS) */}{" "}
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        {/* Android Chrome / PWA */}{" "}
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="192x192"
-          href="/android-chrome-192x192.png"
-        />{" "}
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="512x512"
-          href="/android-chrome-512x512.png"
-        />
-        <link rel="manifest" href="/site.webmanifest" />
       </Head>
 
       <a href="#main-content" className="skip-link">

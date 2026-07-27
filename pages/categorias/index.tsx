@@ -1,7 +1,5 @@
-import React from "react";
 import Head from "next/head";
 import type { GetServerSideProps } from "next";
-import FaviconLinks from "../components/FaviconLinks";
 import { prisma } from "../../lib/prisma";
 import { Button } from "../../src/components/Button";
 import { CategoryCard } from "../../src/components/CategoryCard";
@@ -35,40 +33,6 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
         <meta name="robots" content="index,follow" />
         <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
         <link rel="canonical" href="/categorias" />
-        {/* Favicons estándar */}{" "}
-        <link rel="icon" href="/favicon.ico" sizes="any" />{" "}
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />{" "}
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        {/* Apple Touch Icon (iOS) */}{" "}
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href="/apple-touch-icon.png"
-        />
-        {/* Android Chrome / PWA */}{" "}
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="192x192"
-          href="/android-chrome-192x192.png"
-        />{" "}
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="512x512"
-          href="/android-chrome-512x512.png"
-        />
-        <link rel="manifest" href="/site.webmanifest" />
       </Head>
 
       <a href="#main-content" className="skip-link">
