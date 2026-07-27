@@ -757,7 +757,7 @@ function ProductGallery({
           />
         ) : null}
         {typeof task === "object" && task.type === "remove" && activeImage ? (
-          <>
+          <div className=" p-3 space-y-3 ">
             <h2 className="ds-heading ds-heading-md">Eliminar imagen</h2>
             <p>
               La imagen “{activeImage.altText}” desaparecerá del catálogo y esta
@@ -766,7 +766,7 @@ function ProductGallery({
             {activeImage.isPrimary ? (
               <p>El producto quedará sin imagen principal.</p>
             ) : null}
-            <div className="flex gap-3">
+            <div className="flex justify-end gap-3">
               <Button variant="secondary" onClick={() => setTask("")}>
                 Conservar imagen
               </Button>
@@ -792,7 +792,7 @@ function ProductGallery({
                 Eliminar imagen
               </Button>
             </div>
-          </>
+          </div>
         ) : null}
       </Modal>
     </div>

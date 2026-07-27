@@ -1,7 +1,5 @@
-import React from "react";
 import Head from "next/head";
 import type { GetServerSideProps } from "next";
-import FaviconLinks from "./components/FaviconLinks";
 
 import { prisma } from "../lib/prisma";
 import { Button } from "../src/components/Button";
@@ -38,7 +36,6 @@ export default function FeaturedProductsPage({
         <meta name="robots" content="index,follow" />
         <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
         <link rel="canonical" href="/destacados" />
-        <FaviconLinks />
       </Head>
 
       <a href="#main-content" className="skip-link">

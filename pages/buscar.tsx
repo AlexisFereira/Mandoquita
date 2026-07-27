@@ -15,7 +15,6 @@ import { SearchForm } from "../src/features/search/search-form";
 import { APPLICATION_THEME_COLOR } from "../src/design-system/metadata";
 import { listProducts } from "../src/server/catalogService";
 import type { ProductListResponse } from "../src/types/catalog";
-import FaviconLinks from "./components/FaviconLinks";
 
 export type SearchPageProps = {
   query: string;
@@ -114,7 +113,6 @@ export default function SearchPage({
         />
         <meta name="robots" content="noindex,follow" />
         <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
-        <FaviconLinks />
       </Head>
 
       <a href="#main-content" className="skip-link">

@@ -1,6 +1,4 @@
 import Link from "next/link";
-import React from "react";
-
 import { resolvePublicAssetUrl } from "../lib/publicAssetUrl";
 import { Icon, type IconName } from "./Icon";
 

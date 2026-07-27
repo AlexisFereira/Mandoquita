@@ -1,7 +1,5 @@
-import React from "react";
 import Head from "next/head";
-import FaviconLinks from "./FaviconLinks";
-import { APPLICATION_THEME_COLOR } from "../../src/design-system/metadata";
+import { APPLICATION_THEME_COLOR } from "../design-system/metadata";
 
 const MetaTags = () => {
   const ogImage =
@@ -19,8 +17,10 @@ const MetaTags = () => {
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=5"
       />
+
       <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
       <link rel="canonical" href="/" />
+
       <meta property="og:title" content="Mandoquita | Catálogo de productos" />
       <meta
         property="og:description"
@@ -36,6 +36,7 @@ const MetaTags = () => {
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="Catálogo Mandoquita" />
+
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="Mandoquita" />
       <meta
@@ -43,7 +44,6 @@ const MetaTags = () => {
         content="Catálogo de combos Mandoquita."
       />
       <meta name="twitter:image" content={ogImage} />
-      <FaviconLinks />
     </Head>
   );
 };

@@ -18,7 +18,7 @@ import { PaymentInformation } from "../src/features/homepage/payment-information
 import type { HomepagePayload } from "../src/types/catalog";
 import { whatsappUrl, urlBase, carouselSlides } from "../src/constants";
 import { useRandomPair } from "../src/hooks/use-random-pair";
-import MetaTags from "./components/MetaTags";
+import MetaTags from "../src/components/MetaTags";
 
 export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
   res,
@@ -179,12 +179,12 @@ export default function HomePage({
       <Header />
 
       <main id="main-content">
-        <h1 className="sr-only">Catálogo Mandoquita</h1>
+        <h1 className="sr-only ro">Catálogo Mandoquita</h1>
 
         {carouselSlides.length ? <Carousel slides={carouselSlides} /> : null}
 
         {categories.length ? (
-          <ScrollEntryMotion distance="sm">
+          <ScrollEntryMotion distance="sm" className="mt-10 sm:mt-12 lg:mt-16">
             <MerchandisingSection
               id="categorias"
               title="Categorías"
@@ -193,11 +193,8 @@ export default function HomePage({
               layout="split"
             >
               <ul className="flex flex-nowrap items-start justify-between gap-[30px] xl:justify-start">
-                {catsToShow.map((category, index) => (
-                  <li
-                    key={category.slug}
-                    className={`shrink-0 ${getHomepageCategoryVisibility(index)}`}
-                  >
+                {catsToShow.map((category) => (
+                  <li key={category.slug} className={`shrink-0`}>
                     <CategoryLink
                       title={category.name}
                       href={`/categorias/${category.slug}`}
