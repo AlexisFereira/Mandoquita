@@ -70,7 +70,7 @@ export default function CategoryPage({
           Ir al contenido principal
         </a>
         <Header />
-        <main id="main-content" className="py-10 sm:py-14">
+        <main id="main-content" className="py-10 sm:py-7">
           <Container size="wide" padding="lg">
             <section
               aria-labelledby="category-unavailable"
@@ -102,18 +102,18 @@ export default function CategoryPage({
   }> = ({ subcategory }) => {
     const { id, productCount, name, slug } = subcategory;
     const classNames =
-      "flex min-h-11 flex-col justify-center rounded-lg border-4 border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] p-6 no-underline shadow-[var(--shadow-sm)] hover:border-[rgb(var(--primary)/1)] motion-reduce:transform-none";
+      "flex flex-nowrap rounded-full gap-4 py-2 px-4 shadow-xl bg-white border-2 border-transparent hover:border-primary transition-colors";
     return (
       <Link
         key={id}
         href={`/categorias/${category.slug}/${slug}`}
         className={classNames}
       >
-        <span className="text-lg font-semibold text-[rgb(var(--foreground)/1)]">
+        <span className="text-lg font-semibold whitespace-nowrap text-[rgb(var(--foreground)/1)]">
           {name}
         </span>
-        <span className="mt-2 text-sm text-[rgb(var(--muted)/1)]">
-          {productCount} productos
+        <span className=" bg-gray-100 text-gray-400 px-1 rounded-lg">
+          {productCount}
         </span>
       </Link>
     );
@@ -136,7 +136,7 @@ export default function CategoryPage({
       </a>
       <Header />
 
-      <main id="main-content" className="py-10 sm:py-14">
+      <main id="main-content" className="py-10 sm:py-7">
         <Container size="wide" padding="lg" className="space-y-9">
           <div className="space-y-5">
             <nav aria-label="Breadcrumb">
@@ -182,7 +182,7 @@ export default function CategoryPage({
               >
                 Subcategorías
               </h2>
-              <div className="category-card-grid">
+              <div className="flex flex-wrap gap-4">
                 {category.subcategories.map((subcategory) => (
                   <CategoryLink
                     key={subcategory.id}

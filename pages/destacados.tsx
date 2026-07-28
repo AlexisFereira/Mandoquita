@@ -43,7 +43,7 @@ export default function FeaturedProductsPage({
       </a>
       <Header />
 
-      <main id="main-content" className="py-10 sm:py-14 lg:py-16">
+      <main id="main-content" className="py-10 sm:py-7">
         <Container size="wide" padding="lg" className="space-y-8">
           <div className="max-w-3xl space-y-3">
             <span className="ds-eyebrow">Selección Mandoquita</span>

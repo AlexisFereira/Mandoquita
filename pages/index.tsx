@@ -184,7 +184,7 @@ export default function HomePage({
         {carouselSlides.length ? <Carousel slides={carouselSlides} /> : null}
 
         {categories.length ? (
-          <ScrollEntryMotion distance="sm" className="mt-10 sm:mt-12 lg:mt-16">
+          <ScrollEntryMotion distance="sm">
             <MerchandisingSection
               id="categorias"
               title="Categorías"

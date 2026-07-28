@@ -182,7 +182,7 @@ export default function ProductDetailPage({
 
       <Header />
 
-      <main id="main-content" className="py-8 sm:py-12">
+      <main id="main-content" className="py-8 sm:py-7">
         <Container size="wide" padding="lg">
           <nav aria-label="Breadcrumb" className="mb-6 overflow-hidden">
             <ol className="m-0 flex min-w-0 list-none flex-nowrap items-center gap-2 overflow-hidden whitespace-nowrap p-0">

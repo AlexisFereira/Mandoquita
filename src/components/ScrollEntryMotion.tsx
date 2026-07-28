@@ -21,16 +21,23 @@ function getSharedObserver() {
     return sharedObserver;
   }
 
-  sharedObserver = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting && entry.intersectionRatio < OBSERVER_THRESHOLD) continue;
-      const reveal = observedElements.get(entry.target);
-      if (!reveal) continue;
-      sharedObserver?.unobserve(entry.target);
-      observedElements.delete(entry.target);
-      reveal();
-    }
-  }, { threshold: OBSERVER_THRESHOLD });
+  sharedObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (
+          !entry.isIntersecting &&
+          entry.intersectionRatio < OBSERVER_THRESHOLD
+        )
+          continue;
+        const reveal = observedElements.get(entry.target);
+        if (!reveal) continue;
+        sharedObserver?.unobserve(entry.target);
+        observedElements.delete(entry.target);
+        reveal();
+      }
+    },
+    { threshold: OBSERVER_THRESHOLD },
+  );
 
   return sharedObserver;
 }
@@ -99,9 +106,15 @@ export function ScrollEntryMotion({
       : null;
     const isTargeted = Boolean(target && element.contains(target));
     const containsFocus = element.contains(document.activeElement);
-    const belowInitialViewport = element.getBoundingClientRect().top >= window.innerHeight;
+    const belowInitialViewport =
+      element.getBoundingClientRect().top >= window.innerHeight;
 
-    if (reducedMotion.matches || isTargeted || containsFocus || !belowInitialViewport) {
+    if (
+      reducedMotion.matches ||
+      isTargeted ||
+      containsFocus ||
+      !belowInitialViewport
+    ) {
       revealed.current = true;
       setMotionState("final");
       return;
@@ -138,7 +151,11 @@ export function ScrollEntryMotion({
     reducedMotion.addEventListener("change", handlePreferenceChange);
     element.addEventListener("focusin", handleFocus);
     window.addEventListener("hashchange", handleHashChange);
-    stopObserving = observeForEntry(element, revealWithMotion, revealImmediately);
+    stopObserving = observeForEntry(
+      element,
+      revealWithMotion,
+      revealImmediately,
+    );
 
     return () => {
       stopObserving();

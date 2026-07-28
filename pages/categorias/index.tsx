@@ -40,7 +40,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
       </a>
       <Header />
 
-      <main id="main-content" className="py-10 sm:py-14">
+      <main id="main-content" className="py-10 sm:py-6">
         <Container size="wide" padding="lg" className="space-y-9">
           <div className="max-w-3xl space-y-3">
             <span className="ds-eyebrow">Catálogo Mandoquita</span>

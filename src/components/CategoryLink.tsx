@@ -26,7 +26,7 @@ export function CategoryLink({
       aria-label={title}
       className="group flex w-[100px] flex-col items-center gap-2 rounded-md no-underline"
     >
-      <span className="flex h-[100px] w-[100px] text-primary items-center justify-center overflow-hidden rounded-full bg-[rgb(var(--background)/1)]">
+      <span className="shadow-md flex h-[100px] w-[100px] text-primary items-center justify-center overflow-hidden rounded-full bg-[rgb(var(--background)/1)]">
         {icon ? (
           <Icon name={icon} size="lg" className="text-primary" />
         ) : (
