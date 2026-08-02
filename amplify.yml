@@ -15,6 +15,7 @@ frontend:
         - echo "DATABASE_URL=$DATABASE_URL" >> .env.production
         - echo "PUBLIC_SITE_ORIGIN=$PUBLIC_SITE_ORIGIN" >> .env.production
         - echo "WHATSAPP_BUSINESS_NUMBER=$WHATSAPP_BUSINESS_NUMBER" >> .env.production
+        - echo "NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL" >> .env.production
 
         # ─── Seguridad admin ───
         - echo "PRODUCT_ADMIN_SESSION_SECRET=$PRODUCT_ADMIN_SESSION_SECRET" >> .env.production
