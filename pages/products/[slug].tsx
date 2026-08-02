@@ -7,7 +7,10 @@ import type { GetServerSideProps } from "next";
 import { Footer } from "../../src/components/Footer";
 import { Header } from "../../src/components/Header";
 import { ProductCard } from "../../src/components/ProductCard";
-import { hasCurrentOffer } from "../../src/components/ProductOffer";
+import {
+  hasCurrentOffer,
+  ProductOffer,
+} from "../../src/components/ProductOffer";
 import { prisma } from "../../lib/prisma";
 import {
   getProductDetail,
@@ -262,7 +265,7 @@ export default function ProductDetailPage({
                 </p>
               ) : null}
 
-              {/* <ProductOffer product={item} emphasis="detail" />*/}
+              <ProductOffer product={item} emphasis="detail" />
 
               <ProductVariantOptions
                 key={item.id}

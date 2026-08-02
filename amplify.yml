@@ -24,6 +24,7 @@ frontend:
         - echo "PRODUCT_ADMIN_TRUST_PROXY=$PRODUCT_ADMIN_TRUST_PROXY" >> .env.production
         - echo "PRODUCT_ADMIN_TRUSTED_PROXY_HOPS=$PRODUCT_ADMIN_TRUSTED_PROXY_HOPS" >> .env.production
         - echo "PRODUCT_ADMIN_EDGE_SECRET=$PRODUCT_ADMIN_EDGE_SECRET" >> .env.production
+        - echo "REVALIDATION_TOKEN=$REVALIDATION_TOKEN" >> .env.production
 
         # AWS credentials come from the attached Amplify SSR Compute role.
         - echo "AWS_REGION=$AWS_REGION" >> .env.production

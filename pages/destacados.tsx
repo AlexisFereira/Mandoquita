@@ -55,7 +55,7 @@ export default function FeaturedProductsPage({
 
           {products.length ? (
             <CollectionGrid as="ul">
-              {products.map((product) => (
+              {products.reverse().map((product) => (
                 <li key={product.id}>
                   <ProductCard product={product} featured />
                 </li>

@@ -239,7 +239,7 @@ export async function listFeaturedProducts(prisma: CatalogDb, limit: number) {
     take: limit,
     include: relatedProductInclude,
     orderBy: [
-      { featuredOrder: { sort: "asc", nulls: "last" } },
+      { featuredOrder: { sort: "desc", nulls: "last" } },
       { createdAt: "desc" },
       { id: "asc" },
     ],
@@ -271,12 +271,12 @@ export async function listProducts(prisma: CatalogDb, rawQuery: ListQueryInput):
   const items = page === query.page
     ? requestedItems
     : await prisma.product.findMany({
-        where,
-        skip: (page - 1) * query.limit,
-        take: query.limit,
-        include: relatedProductInclude,
-        orderBy,
-      });
+      where,
+      skip: (page - 1) * query.limit,
+      take: query.limit,
+      include: relatedProductInclude,
+      orderBy,
+    });
   return {
     items: items.map(mapProduct),
     metadata: {
@@ -316,6 +316,7 @@ export async function getProductDetail(
       subcategories?: Array<{ productTypes: Array<{ name: string }> }>;
     }).subcategories ?? []).flatMap(({ productTypes }) => productTypes.map(({ name }) => name)),
   );
+
   const related = await prisma.product.findMany({
     where: {
       published: true,

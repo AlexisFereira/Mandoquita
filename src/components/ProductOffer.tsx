@@ -35,16 +35,22 @@ export function ProductOffer({
       ? "text-lg font-semibold text-[rgb(var(--muted)/1)]"
       : "text-sm font-semibold text-[rgb(var(--muted)/1)]";
 
+  function applyPercentageChange(value: number, percentage: number): number {
+    const percentageAsDecimal = percentage / 100;
+    return value + value * percentageAsDecimal;
+  }
+
   if (!hasCurrentOffer(product)) {
     return (
       <span className={unavailableClassName}>{NO_CURRENT_OFFER_MESSAGE}</span>
     );
   }
 
+  const FinalPrice = applyPercentageChange(parseFloat(product.price), 20); // Example: applying a 10% increase
+
   return (
     <strong className={availableClassName}>
-      {product.currency.trim()}
-      {product.price.trim()}
+      ${FinalPrice.toFixed(2)} {product.currency.trim()}
     </strong>
   );
 }

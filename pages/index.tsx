@@ -23,7 +23,10 @@ import MetaTags from "../src/components/MetaTags";
 export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
   res,
 }) => {
-  res.setHeader("Cache-Control", "private, no-store");
+  res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=60, stale-while-revalidate=300",
+  );
   return { props: await getHomepagePayload(prisma) };
 };
 
@@ -41,7 +44,7 @@ function pickCategoriesByRandomIndices<T>(
 }
 
 export function selectVisibleFeaturedProducts<T>(products: T[], limit: number) {
-  return products.slice(0, limit);
+  return products.reverse().slice(0, limit);
 }
 
 function getHomepageCategoryVisibility(index: number) {
