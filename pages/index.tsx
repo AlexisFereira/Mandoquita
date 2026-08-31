@@ -15,10 +15,11 @@ import { ScrollEntryMotion } from "../src/components/ScrollEntryMotion";
 import { getHomepagePayload } from "../src/server/homepageService";
 import { useMediaQuery } from "../src/hooks/use-media-query";
 import { PaymentInformation } from "../src/features/homepage/payment-information";
-import type { HomepagePayload } from "../src/types/catalog";
+import type { HomepagePayload, ProductItem } from "../src/types/catalog";
 import { whatsappUrl, urlBase, carouselSlides } from "../src/constants";
 import { useRandomPair } from "../src/hooks/use-random-pair";
 import MetaTags from "../src/components/MetaTags";
+import { listProducts } from "@/server/catalogService";
 
 export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
   res,
@@ -27,7 +28,19 @@ export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
     "Cache-Control",
     "public, s-maxage=60, stale-while-revalidate=300",
   );
-  return { props: await getHomepagePayload(prisma) };
+
+  const [defaultProps, ladyClothes] = await Promise.all([
+    getHomepagePayload(prisma),
+    listProducts(prisma, {
+      category: "ropa-y-moda",
+      limit: "8",
+      page: "1",
+    }),
+  ]);
+
+  return {
+    props: { ...defaultProps, ladyClothe: ladyClothes.items },
+  };
 };
 
 function pickCategoriesByRandomIndices<T>(
@@ -126,8 +139,9 @@ function MerchandisingSection({
 export default function HomePage({
   featuredProducts,
   categories,
+  ladyClothe,
   selectedCategoryProducts,
-}: HomepagePayload) {
+}: HomepagePayload & { ladyClothe: ProductItem[] }) {
   // Dentro de HomePage, antes del return
   const randomPair = useRandomPair();
 
@@ -144,6 +158,11 @@ export default function HomePage({
 
   const visibleFeaturedProducts = selectVisibleFeaturedProducts(
     featuredProducts,
+    featuredLimit,
+  );
+
+  const ropaMujerVisible = selectVisibleFeaturedProducts(
+    ladyClothe,
     featuredLimit,
   );
 
@@ -223,27 +242,48 @@ export default function HomePage({
         ) : null}
 
         {visibleFeaturedProducts.length ? (
-          <ScrollEntryMotion distance="sm">
-            <MerchandisingSection
-              id="destacados"
-              title="Productos destacados"
-              description="Conoce algunos de los productos seleccionados por Mandoquita."
-            >
-              <CollectionGrid as="ul">
-                {visibleFeaturedProducts.map((product) => (
-                  <li key={product.id}>
-                    <ProductCard product={product} featured />
-                  </li>
-                ))}
-              </CollectionGrid>
+          <MerchandisingSection
+            id="destacados"
+            title="Productos destacados"
+            description="Conoce algunos de los productos seleccionados por Mandoquita."
+          >
+            <CollectionGrid as="ul">
+              {visibleFeaturedProducts.map((product) => (
+                <li key={product.id}>
+                  <ProductCard product={product} featured />
+                </li>
+              ))}
+            </CollectionGrid>
 
-              <div className="flex justify-end">
-                <Button variant="outline" href="/destacados">
-                  Ver más destacados
-                </Button>
-              </div>
-            </MerchandisingSection>
-          </ScrollEntryMotion>
+            <div className="flex justify-end">
+              <Button variant="outline" href="/destacados">
+                Ver más destacados
+              </Button>
+            </div>
+          </MerchandisingSection>
+        ) : null}
+
+        {ropaMujerVisible.length ? (
+          <MerchandisingSection
+            id="ropaMujer"
+            title="Descubre las últimas tendencias para ella y para él"
+            description="Prendas para ella y para él que combinan estilo, comodidad y tendencia.."
+            tone="surface"
+          >
+            <CollectionGrid as="ul">
+              {ropaMujerVisible.map((product) => (
+                <li key={product.id}>
+                  <ProductCard product={product} featured />
+                </li>
+              ))}
+            </CollectionGrid>
+
+            <div className="flex justify-end">
+              <Button variant="outline" href="/destacados">
+                Ver más
+              </Button>
+            </div>
+          </MerchandisingSection>
         ) : null}
 
         <PaymentInformation />

@@ -21,6 +21,8 @@ export type ProductFormValues = {
   published: boolean;
   commerciallyAvailable: boolean;
   featured: boolean;
+  categoryId?: number;
+  subcategoryId?: number;
 };
 
 export const emptyProduct: ProductFormValues = {
@@ -43,6 +45,8 @@ export const emptyProduct: ProductFormValues = {
   published: false,
   commerciallyAvailable: false,
   featured: false,
+  categoryId: undefined,
+  subcategoryId: undefined,
 };
 
 /**

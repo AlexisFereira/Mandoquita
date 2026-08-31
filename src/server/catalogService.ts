@@ -227,14 +227,14 @@ export function parseListQuery(input: ListQueryInput) {
   });
 }
 
-export async function listFeaturedProducts(prisma: CatalogDb, limit: number) {
+export async function listFeaturedProducts(prisma: CatalogDb, limit: number, categoryId?: string) {
   const products = await prisma.product.findMany({
     where: {
       active: true,
       published: true,
       featured: true,
       variants: { some: {} },
-      productType: publicClassificationWhere(),
+      productType: publicClassificationWhere(categoryId),
     },
     take: limit,
     include: relatedProductInclude,

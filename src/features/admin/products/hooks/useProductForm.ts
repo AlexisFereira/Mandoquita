@@ -74,7 +74,7 @@ export function useProductForm(
           editorialApproved: item.editorialApproved,
           published: item.published,
           commerciallyAvailable: item.commerciallyAvailable,
-          featured: item.featured,
+          featured: item.featured
         });
       })
       .catch((cause) => {

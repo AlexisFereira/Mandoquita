@@ -69,7 +69,7 @@ export async function getHomepagePayload(prisma: PrismaClient, now = new Date())
   return prisma.$transaction(async (tx) => {
     const [featuredProducts, taxonomy] = await Promise.all([
       listFeaturedProducts(tx, HOMEPAGE_FEATURED_PRODUCT_LIMIT),
-      listDiscoverableTaxonomy(tx),
+      listDiscoverableTaxonomy(tx)
     ]);
     const categories = taxonomy.map(({ subcategories: _subcategories, ...category }) => category);
     return {

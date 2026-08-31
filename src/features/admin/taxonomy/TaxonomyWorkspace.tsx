@@ -133,6 +133,7 @@ function CategoryRow({
             + Subcategoría
           </Button>
           <Button
+            size="sm"
             onClick={() =>
               archive("category", node.data.id, node.data.updatedAt, () =>
                 refresh(),
@@ -176,8 +177,17 @@ function SubcategoryRow({
   onAddProductType: (subcategory: any) => void;
 }) {
   const { session } = useAdminSession();
-  const { archive } = useTaxonomyMutations(session?.csrfToken ?? "");
-  const { refresh } = useTaxonomy();
+  const { archive, busy } = useTaxonomyMutations(session?.csrfToken ?? "");
+  const { refresh, loading } = useTaxonomy();
+
+  if (busy) {
+    return (
+      <div className="text-sm text-center text-[rgb(var(--muted)/1)]">
+        Actualizando subcategoría…
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-1 border-l-2 border-[rgb(var(--border)/1)] pl-4">
       <div className="flex items-center justify-between">

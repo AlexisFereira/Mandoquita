@@ -26,13 +26,11 @@ export function ProductFormBasics({
   busy: boolean;
   set: ProductFormSetter;
 }) {
-  // Estado de la cascada (lo que el usuario va eligiendo)
   const [selectedCategoryId, setSelectedCategoryId] =
     React.useState<string>("");
   const [selectedSubcategoryId, setSelectedSubcategoryId] =
     React.useState<string>("");
 
-  // ── Pre-selección al EDITAR un producto existente ──
   React.useEffect(() => {
     if (!id) return;
     if (!values.productTypeId) return;
@@ -73,7 +71,6 @@ export function ProductFormBasics({
   return (
     <Card className="grid gap-5 md:grid-cols-2">
       <div className="col-span-2 grid md:grid-cols-6 gap-5">
-        {/* ── SELECT 1: Categoría ── */}
         <div className="md:col-span-2">
           <Select
             label="Categoría"
@@ -87,7 +84,6 @@ export function ProductFormBasics({
           />
         </div>
 
-        {/* ── SELECT 2: Subcategoría ── */}
         <div className="md:col-span-2">
           <Select
             label="Subcategoría"
@@ -101,7 +97,6 @@ export function ProductFormBasics({
           />
         </div>
 
-        {/* ── SELECT 3: Tipo de producto ── */}
         <div className="md:col-span-2">
           <Select
             label="Tipo de producto"

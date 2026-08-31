@@ -41,6 +41,7 @@ export async function handleAdminProduct(req: NextApiRequest, res: NextApiRespon
     }
 
     const parsed = productUpdateSchema.parse(req.body);
+    console.log({ parsed })
     const expectedUpdatedAt = new Date(parsed.expectedUpdatedAt);
     const changedFields = Object.keys(parsed).filter((field) => field !== "expectedUpdatedAt").sort();
     const item = await prisma.$transaction(async (tx) => {
@@ -62,10 +63,14 @@ export async function handleAdminProduct(req: NextApiRequest, res: NextApiRespon
     });
     return res.status(200).json({ item });
   } catch (error) {
+    console.log(error);
     if (error instanceof ZodError) {
       try {
         await auditProductAdminEvent(prisma, {
-          requestId, event: "PRODUCT_UPDATE", outcome: "INVALID", reason: "VALIDATION",
+          requestId,
+          event: "PRODUCT_UPDATE",
+          outcome: "INVALID",
+          reason: "VALIDATION",
           sessionIdHash, productId,
           actorAccountId: undefined,
         });
