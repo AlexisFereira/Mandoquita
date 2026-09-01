@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
     getHomepagePayload(prisma),
     listProducts(prisma, {
       category: "ropa-y-moda",
-      limit: "8",
+      limit: "16",
       page: "1",
     }),
   ]);
@@ -163,7 +163,7 @@ export default function HomePage({
 
   const ropaMujerVisible = selectVisibleFeaturedProducts(
     ladyClothe,
-    featuredLimit,
+    featuredLimit + featuredLimit,
   );
 
   const visibleCategories =
@@ -279,7 +279,7 @@ export default function HomePage({
             </CollectionGrid>
 
             <div className="flex justify-end">
-              <Button variant="outline" href="/destacados">
+              <Button variant="outline" href="/categorias/ropa-y-moda">
                 Ver más
               </Button>
             </div>

@@ -84,45 +84,6 @@ export default function FeaturedProductsPage({
             </section>
           )}
         </Container>
-
-        <Container size="wide" padding="lg" className="space-y-8">
-          <div className="max-w-3xl space-y-3">
-            <span className="ds-eyebrow">Selección Mandoquita</span>
-            <h1 className="ds-heading ds-heading-lg">Productos destacados</h1>
-            <p className="max-w-2xl leading-7 text-[rgb(var(--muted)/1)]">
-              Conoce la selección ampliada de productos destacados del catálogo.
-            </p>
-          </div>
-
-          {products.length ? (
-            <CollectionGrid as="ul">
-              {products.reverse().map((product) => (
-                <li key={product.id}>
-                  <ProductCard product={product} featured />
-                </li>
-              ))}
-            </CollectionGrid>
-          ) : (
-            <section
-              aria-labelledby="featured-unavailable"
-              className="space-y-4"
-            >
-              <h2
-                id="featured-unavailable"
-                className="ds-heading ds-heading-md"
-              >
-                No hay productos destacados disponibles
-              </h2>
-              <p className="text-[rgb(var(--muted)/1)]">
-                Explora las categorías para encontrar otros productos del
-                catálogo.
-              </p>
-              <Button variant="outline" href="/categorias">
-                Explorar categorías
-              </Button>
-            </section>
-          )}
-        </Container>
       </main>
 
       <Footer />
