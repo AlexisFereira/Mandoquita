@@ -13,7 +13,7 @@ const carouselSlides = [
     imageUrl: bannerImg[1],
     action: {
       label: "Descubrir colección",
-      href: "/categorias/belleza-y-cuidado-personal/perfumescategorias/belleza-y-cuidado-personal/perfumes",
+      href: "/categorias/belleza-y-cuidado-personal/perfumes",
     },
   },
   {
