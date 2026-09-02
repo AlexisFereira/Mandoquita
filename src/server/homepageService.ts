@@ -71,7 +71,8 @@ export async function getHomepagePayload(prisma: PrismaClient, now = new Date())
       listFeaturedProducts(tx, HOMEPAGE_FEATURED_PRODUCT_LIMIT),
       listDiscoverableTaxonomy(tx)
     ]);
-    const categories = taxonomy.map(({ subcategories: _subcategories, ...category }) => category);
+    const categories = taxonomy.map(({ subcategories: _subcategories, ...category }) => category)
+      .filter(cate => cate.slug !== 'ropa-y-moda');
     return {
       featuredProducts,
       categories,
