@@ -11,10 +11,10 @@ const carouselSlides = [
     title: "Nueva colección de perfumes",
     description: "Fragancias inspiradas en las marcas más reconocidas, para él y para ella.",
     imageUrl: bannerImg[1],
-    //action: {
-    //  label: "Descubrir colección",
-    //  href: "/categorias/ropa-y-moda/conjuntos-para-mujer",
-    //},
+    action: {
+      label: "Descubrir colección",
+      href: "/categorias/belleza-y-cuidado-personal/perfumes",
+    },
   },
   {
     title: "Llegaron nuevas prendas",
