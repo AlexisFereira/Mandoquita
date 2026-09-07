@@ -10,6 +10,7 @@ import { listDiscoverableTaxonomy } from "../../src/server/taxonomyService";
 import type { TaxonomyCategory } from "../../src/types/catalog";
 import { APPLICATION_THEME_COLOR } from "../../src/design-system/metadata";
 import { Icon } from "../../src/components/Icon";
+import MetaTags from "@/components/MetaTags";
 
 export type CategoriesPageProps = {
   categories: TaxonomyCategory[];
@@ -24,20 +25,15 @@ export const getServerSideProps: GetServerSideProps<
 export default function CategoriesPage({ categories }: CategoriesPageProps) {
   return (
     <>
-      <Head>
-        <title>Categorías | Mandoquita</title>
-        <meta
-          name="description"
-          content="Explora todas las categorías disponibles en el catálogo de Mandoquita."
-        />
-        <meta name="robots" content="index,follow" />
-        <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
-        <link rel="canonical" href="/categorias" />
-      </Head>
+      <MetaTags
+        title="Categorías | Mandoquita"
+        desc="Explora todas las categorías disponibles en el catálogo de Mandoquita."
+      />
 
       <a href="#main-content" className="skip-link">
         Ir al contenido principal
       </a>
+
       <Header />
 
       <main id="main-content" className="py-10 sm:py-6">

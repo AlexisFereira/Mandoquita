@@ -141,7 +141,7 @@ export default function HomePage({
   categories,
   ladyClothe,
   selectedCategoryProducts,
-}: HomepagePayload & { ladyClothe: ProductItem[] }) {
+}: HomepagePayload & { ladyClothe?: ProductItem[] }) {
   // Dentro de HomePage, antes del return
   const randomPair = useRandomPair();
 
@@ -161,10 +161,9 @@ export default function HomePage({
     featuredLimit,
   );
 
-  const ropaMujerVisible = selectVisibleFeaturedProducts(
-    ladyClothe,
-    featuredLimit + featuredLimit,
-  );
+  const ropaMujerVisible = ladyClothe
+    ? selectVisibleFeaturedProducts(ladyClothe, featuredLimit + featuredLimit)
+    : [];
 
   const visibleCategories =
     featuredLimit === 2 && randomPair
@@ -267,7 +266,7 @@ export default function HomePage({
           <MerchandisingSection
             id="ropaMujer"
             title="Descubre las últimas tendencias para ella y para él"
-            description="Prendas para ella y para él que combinan estilo, comodidad y tendencia.."
+            description="Prendas para ella y para él que combinan estilo, comodidad y tendencia..."
             tone="surface"
           >
             <CollectionGrid as="ul">

@@ -15,7 +15,7 @@ import {
   resolveCategorySlug,
 } from "../../src/server/taxonomyService";
 import type { ProductItem, TaxonomyCategory } from "../../src/types/catalog";
-import { APPLICATION_THEME_COLOR } from "../../src/design-system/metadata";
+import MetaTags from "@/components/MetaTags";
 
 export type CategoryPageProps = {
   category: TaxonomyCategory | null;
@@ -85,7 +85,7 @@ export default function CategoryPage({
               <p className="max-w-2xl text-[rgb(var(--muted)/1)]">
                 Esta categoría no está disponible para explorar en este momento.
               </p>
-              <Button variant="outline" href="/categorias">
+              <Button variant="secondary" href="/categorias">
                 Ver todas las categorías
               </Button>
             </section>
@@ -121,15 +121,10 @@ export default function CategoryPage({
 
   return (
     <>
-      <Head>
-        <title>{`${category.name} | Mandoquita`}</title>
-        <meta
-          name="description"
-          content={`Explora las subcategorías y productos de ${category.name} disponibles en Mandoquita.`}
-        />
-        <meta name="robots" content="index,follow" />
-        <meta name="theme-color" content={APPLICATION_THEME_COLOR} />
-      </Head>
+      <MetaTags
+        title={`Mandoquita | ${category.name}`}
+        desc={`Explora las subcategorías y productos de ${category.name} disponibles en Mandoquita.`}
+      />
 
       <a href="#main-content" className="skip-link">
         Ir al contenido principal
@@ -207,7 +202,7 @@ export default function CategoryPage({
 
           <Link
             href="/categorias"
-            className="inline-flex min-h-11 items-center font-semibold underline underline-offset-4"
+            className="inline-flex min-h-11 border border-2 border-primary color-primary  px-4 rounded-4xl items-center underline underline-offset-4"
           >
             Ver todas las categorías
           </Link>

@@ -13,7 +13,12 @@ export type ProductContinuationActionsProps = {
 function isShareCancellation(error: unknown) {
   return error instanceof DOMException
     ? error.name === "AbortError"
-    : Boolean(error && typeof error === "object" && "name" in error && error.name === "AbortError");
+    : Boolean(
+        error &&
+        typeof error === "object" &&
+        "name" in error &&
+        error.name === "AbortError",
+      );
 }
 
 export function ProductContinuationActions({
@@ -31,14 +36,17 @@ export function ProductContinuationActions({
 
   function restoreActionFocus(selector: string) {
     window.setTimeout(() => {
-      actionRegionRef.current?.querySelector<HTMLButtonElement>(selector)?.focus();
+      actionRegionRef.current
+        ?.querySelector<HTMLButtonElement>(selector)
+        ?.focus();
     }, 0);
   }
 
   if (!canonicalUrl) {
     return (
       <p className="mt-6 max-w-[440px] text-sm leading-6 text-[rgb(var(--muted)/1)]">
-        Las opciones para contactar y compartir no están disponibles en este momento.
+        Las opciones para contactar y compartir no están disponibles en este
+        momento.
       </p>
     );
   }
@@ -80,11 +88,14 @@ export function ProductContinuationActions({
     setStatus("");
     setCopyPending(true);
     try {
-      if (typeof navigator.clipboard?.writeText !== "function") throw new Error("Clipboard unavailable");
+      if (typeof navigator.clipboard?.writeText !== "function")
+        throw new Error("Clipboard unavailable");
       await navigator.clipboard.writeText(safeCanonicalUrl);
       setStatus("Enlace copiado");
     } catch {
-      setStatus("No pudimos copiar el enlace. Selecciónalo para copiarlo manualmente.");
+      setStatus(
+        "No pudimos copiar el enlace. Selecciónalo para copiarlo manualmente.",
+      );
     } finally {
       copyPendingRef.current = false;
       setCopyPending(false);
@@ -93,8 +104,15 @@ export function ProductContinuationActions({
   }
 
   return (
-    <section ref={actionRegionRef} aria-labelledby="product-continuation-heading" className="mt-6 max-w-[440px] space-y-3">
-      <h2 id="product-continuation-heading" className="ds-heading ds-heading-md">
+    <section
+      ref={actionRegionRef}
+      aria-labelledby="product-continuation-heading"
+      className="mt-6 max-w-[440px] space-y-3"
+    >
+      <h2
+        id="product-continuation-heading"
+        className="ds-heading ds-heading-md"
+      >
         ¿Te interesa este producto?
       </h2>
 
@@ -108,11 +126,12 @@ export function ProductContinuationActions({
             className="w-full gap-2"
           >
             <Icon name="contact" />
-            Preguntar por este producto
+            Comprar
             <Icon name="external-link" size="sm" />
           </Button>
           <p className="m-0 text-sm leading-6 text-[rgb(var(--muted)/1)]">
-            Abriremos WhatsApp con el nombre y el enlace del producto listos para enviar.
+            Abriremos WhatsApp con el nombre y el enlace del producto listos
+            para enviar.
           </p>
         </>
       ) : null}
@@ -154,7 +173,10 @@ export function ProductContinuationActions({
         </div>
       ) : null}
 
-      <PoliteStatus visuallyHidden={false} className="min-h-6 text-sm text-[rgb(var(--muted)/1)]">
+      <PoliteStatus
+        visuallyHidden={false}
+        className="min-h-6 text-sm text-[rgb(var(--muted)/1)]"
+      >
         {status}
       </PoliteStatus>
     </section>

@@ -26,6 +26,7 @@ import type { PublicProductVariantItem } from "../../src/types/catalog";
 import { ScrollEntryMotion } from "../../src/components/ScrollEntryMotion";
 import { Icon } from "../../src/components/Icon";
 import { ProductContinuationActions } from "../../src/features/product-detail/ProductContinuationActions";
+import MetaTags from "@/components/MetaTags";
 
 type ProductDetailPageProps = ProductDetailResponse;
 

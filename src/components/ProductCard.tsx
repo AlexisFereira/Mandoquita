@@ -50,7 +50,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
           )}
         </div>
 
-        <div className="flex h-full flex-col p-1 md:p-4">
+        <div className="flex h-full flex-col p-1 p-3 md:p-4">
           <div className="flex flex-wrap items-center">
             <Badge variant="neutral" className="max-w-full min-w-0">
               <span className="block truncate" title={product.category.name}>
