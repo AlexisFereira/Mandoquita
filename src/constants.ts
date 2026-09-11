@@ -20,10 +20,10 @@ const carouselSlides = [
     title: "Llegaron nuevas prendas",
     description: "Hay muchas opciones para combinar. Encuentra tu estilo y crea tu propio look.",
     imageUrl: bannerImg[4],
-    //action: {
-    //  label: "Descubrir colección",
-    //  href: "/categorias/ropa-y-moda/conjuntos-para-mujer",
-    //},
+    action: {
+      label: "Descubrir colección",
+      href: "/categorias/ropa-y-moda",
+    },
   },
   {
     title: "El detalle cambia el look",
