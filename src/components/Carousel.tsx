@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 
 import { Button } from "./Button";
 import { Container } from "./Container";
-import { Icon } from "./Icon";
+import { Icon, IconName } from "./Icon";
 import { PoliteStatus } from "./PoliteStatus";
 
 export type CarouselSlide = {
@@ -97,133 +97,192 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
 
   if (computedSlides.length === 0) return null;
 
-  return (
-    <section
-      aria-label="Contenido destacado"
-      className="relative w-full overflow-hidden"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onFocusCapture={() => setIsFocusedWithin(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null))
-          setIsFocusedWithin(false);
-      }}
-    >
-      <div className="relative h-[70dvh]  w-full sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[480px]">
-        {computedSlides.map((slide, index) => (
-          <article
-            key={slide.title}
-            aria-hidden={activeIndex !== index}
-            className={`absolute inset-0 ${activeIndex === index ? "pointer-events-auto" : "pointer-events-none"}`}
-            style={{
-              opacity: activeIndex === index ? 1 : 0,
-              zIndex: activeIndex === index ? 1 : 0,
-              transition: prefersReducedMotion ? "none" : "opacity 320ms ease",
-            }}
-          >
-            <div className="relative h-full w-full overflow-hidden">
-              <img
-                src="/images/banners/default-banner.svg"
-                alt=""
-                aria-hidden="true"
-                width="1280"
-                height="720"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
-              <img
-                src={slide.imageUrl}
-                alt=""
-                width="1280"
-                height="720"
-                sizes="(min-width: 1024px) 45vw, 100vw"
-                loading={index === 0 ? "eager" : "lazy"}
-                onLoad={() =>
-                  setLoadedSlides((previous) => ({
-                    ...previous,
-                    [index]: true,
-                  }))
-                }
-                className="absolute inset-0 h-full w-full object-cover object-[right] transition-opacity duration-200 motion-reduce:transition-none"
-                style={{ opacity: loadedSlides[index] ? 1 : 0 }}
-              />
-              <div className="absolute inset-x-0 bottom-0 z-10 pb-16 pt-6 sm:pb-20 sm:pt-12 lg:pt-16 bg-gradient-to-t from-black/50 to-transparent">
-                <Container size="wide" padding="lg">
-                  <h2 className="max-w-xl text-5xl text-white font-semibold tracking-[-0.03em] sm:text-2xl lg:text-5xl">
-                    {slide.title}
-                  </h2>
-                  {slide.description ? (
-                    <p className="mt-1 max-w-xl text-xs leading-5  text-white sm:mt-2 sm:text-sm sm:leading-6 lg:text-base">
-                      {slide.description}
-                    </p>
-                  ) : null}
-                  {slide.action ? (
-                    <Button
-                      href={slide.action.href}
-                      size="sm"
-                      tabIndex={activeIndex === index ? undefined : -1}
-                      className="mt-2 sm:mt-3"
-                    >
-                      {slide.action.label}
-                    </Button>
-                  ) : null}
-                </Container>
-              </div>
-            </div>
-          </article>
-        ))}
+  function TrustBlock({
+    icon,
+    label,
+    color,
+  }: {
+    icon: IconName;
+    label: string;
+    color: string;
+  }): ReactNode {
+    return (
+      <div className="grid grid-cols-1 max-w-[120] md:max-w-[150] text-center grid-row-2">
+        <Icon name={icon} className={color} size="xl" />
+        <span className={`pt-2 ${color} text-sm/5 max-w-[100]`}>{label}</span>
       </div>
+    );
+  }
 
-      {computedSlides.length > 1 ? (
-        <div className="absolute inset-x-0 bottom-0 z-20  py-3">
-          <Container
-            size="wide"
-            padding="lg"
-            className="flex flex-wrap items-center justify-between gap-3"
-          >
-            <div className="flex gap-1">
-              {computedSlides.map((slide, index) => (
-                <button
-                  key={slide.title}
-                  type="button"
-                  onClick={() => goToSlide(index)}
-                  aria-label={`Ir a la diapositiva ${index + 1}`}
-                  aria-current={activeIndex === index ? "true" : "false"}
-                  className="h-11 w-11 cursor-pointer rounded-full border-0"
-                  style={{
-                    background:
-                      activeIndex === index
-                        ? "radial-gradient(circle, rgb(var(--inverse-foreground) / 1) 0 5px, transparent 6px)"
-                        : "radial-gradient(circle, rgb(var(--inverse-muted) / 1) 0 4px, transparent 5px)",
-                  }}
+  return (
+    <>
+      <section
+        aria-label="Contenido destacado"
+        className="relative w-full overflow-hidden"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onFocusCapture={() => setIsFocusedWithin(true)}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+            setIsFocusedWithin(false);
+        }}
+      >
+        <div className="relative h-[70dvh]  w-full sm:h-[250px] md:h-[300px] lg:h-[4800px] xl:h-[620px]">
+          {computedSlides.map((slide, index) => (
+            <article
+              key={slide.title}
+              aria-hidden={activeIndex !== index}
+              className={`absolute inset-0 ${activeIndex === index ? "pointer-events-auto" : "pointer-events-none"}`}
+              style={{
+                opacity: activeIndex === index ? 1 : 0,
+                zIndex: activeIndex === index ? 1 : 0,
+                transition: prefersReducedMotion
+                  ? "none"
+                  : "opacity 320ms ease",
+              }}
+            >
+              <div className="relative h-full w-full overflow-hidden">
+                <img
+                  src="/images/banners/default-banner.svg"
+                  alt=""
+                  aria-hidden="true"
+                  width="1280"
+                  height="720"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
-              ))}
-            </div>
-            <div className="flex gap-2 hidden">
-              <button
-                type="button"
-                onClick={() => goToSlide(activeIndex - 1)}
-                aria-label="Diapositiva anterior"
-                className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-inverse-surface/75 px-3 text-inverse-foreground"
-              >
-                <Icon name="previous" />
-                <span className="sr-only sm:not-sr-only sm:ml-1">Anterior</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => goToSlide(activeIndex + 1)}
-                aria-label="Diapositiva siguiente"
-                className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-inverse-surface/75 px-3 text-inverse-foreground"
-              >
-                <span className="sr-only sm:not-sr-only sm:mr-1">
-                  Siguiente
-                </span>
-                <Icon name="next" />
-              </button>
-            </div>
-          </Container>
+                <img
+                  src={slide.imageUrl}
+                  alt=""
+                  width="1280"
+                  height="720"
+                  sizes="(min-width: 1024px) 45vw, 100vw"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  onLoad={() =>
+                    setLoadedSlides((previous) => ({
+                      ...previous,
+                      [index]: true,
+                    }))
+                  }
+                  className="absolute inset-0 h-full w-full object-cover object-[right] transition-opacity duration-200 motion-reduce:transition-none"
+                  style={{ opacity: loadedSlides[index] ? 1 : 0 }}
+                />
+                <div className="absolute h-full inset-x-0 top-0 z-10 content-end md:content-center pb-16 pt-6 sm:pb-20 sm:pt-12 lg:pt-16 bg-gradient-to-r from-black/50 to-transparent">
+                  <Container size="wide" padding="lg">
+                    <h2 className="max-w-[440] text-5xl text-white font-semibold tracking-[-0.03em] sm:text-2xl lg:text-5xl">
+                      {slide.title}
+                    </h2>
+                    <div className="max-w-[380] md:pl-5 pb-5">
+                      {slide.description ? (
+                        <p className="text-base text-white py-3">
+                          {slide.description}
+                        </p>
+                      ) : null}
+                      {slide.action ? (
+                        <Button
+                          href={slide.action.href}
+                          size="sm"
+                          tabIndex={activeIndex === index ? undefined : -1}
+                          className="mt-2 sm:mt-3"
+                        >
+                          <span className="pr-3">{slide.action.label}</span>{" "}
+                          <Icon name="MoveRight" />
+                        </Button>
+                      ) : null}
+                    </div>
+
+                    <div className="gap-3 hidden md:flex  pt-4 justify-start">
+                      <TrustBlock
+                        color="text-white"
+                        icon={"Truck"}
+                        label={"Envios nacionales"}
+                      />
+                      <div className="separator border-l border-gray-50"></div>
+                      <TrustBlock
+                        color="text-white"
+                        icon={"Smartphone"}
+                        label={"Atención por Whatsapp"}
+                      />
+                      <div className="separator border-l border-gray-50"></div>
+                      <TrustBlock
+                        color="text-white"
+                        icon={"ShieldCheck"}
+                        label={"Tu compra segura"}
+                      />
+                    </div>
+                  </Container>
+                </div>
+              </div>
+            </article>
+          ))}
         </div>
-      ) : null}
-    </section>
+
+        {computedSlides.length > 1 ? (
+          <div className="absolute inset-x-0 bottom-0 z-20  py-3">
+            <Container
+              size="wide"
+              padding="lg"
+              className="flex flex-wrap items-center justify-center md:justify-between gap-3"
+            >
+              <div className="flex md:gap-1">
+                {computedSlides.map((slide, index) => (
+                  <button
+                    key={slide.title}
+                    type="button"
+                    onClick={() => goToSlide(index)}
+                    aria-label={`Ir a la diapositiva ${index + 1}`}
+                    aria-current={activeIndex === index ? "true" : "false"}
+                    className="h-11 w-11 cursor-pointer rounded-full border-0"
+                    style={{
+                      background:
+                        activeIndex === index
+                          ? "radial-gradient(circle, rgb(var(--inverse-foreground) / 1) 0 5px, transparent 6px)"
+                          : "radial-gradient(circle, rgb(var(--inverse-muted) / 1) 0 4px, transparent 5px)",
+                    }}
+                  />
+                ))}
+              </div>
+              <div className="gap-x-3 hidden md:flex">
+                <button
+                  type="button"
+                  onClick={() => goToSlide(activeIndex - 1)}
+                  aria-label="Diapositiva anterior"
+                  className="inline-flex min-h-8 min-w-8 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-primary/75 px-1 text-inverse-foreground"
+                >
+                  <Icon name="previous" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goToSlide(activeIndex + 1)}
+                  aria-label="Diapositiva siguiente"
+                  className="inline-flex min-h-8 min-w-8 cursor-pointer items-center justify-center rounded-full border border-inverse-border bg-primary/75 px-1 text-inverse-foreground"
+                >
+                  <Icon name="next" />
+                </button>
+              </div>
+            </Container>
+          </div>
+        ) : null}
+      </section>
+      <div className="flex gap-3 md:hidden py-4 px-3 justify-center bg-orange-100">
+        <TrustBlock
+          color={"color-black"}
+          icon={"Truck"}
+          label={"Envios nacionales"}
+        />
+        <div className="separator border-l border-gray-400"></div>
+        <TrustBlock
+          color={"color-black"}
+          icon={"Smartphone"}
+          label={"Atención por Whatsapp"}
+        />
+        <div className="separator border-l border-gray-400"></div>
+        <TrustBlock
+          color={"color-black"}
+          icon={"ShieldCheck"}
+          label={"Tu compra segura"}
+        />
+      </div>
+    </>
   );
 }
 

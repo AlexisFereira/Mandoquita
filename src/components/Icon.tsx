@@ -1,4 +1,3 @@
-import React from "react";
 import {
   ImageUp,
   ArrowLeft,
@@ -23,13 +22,21 @@ import {
   X,
   Trash,
   ArrowLeftRight,
+  Truck,
+  ShieldCheck,
   LogOut,
+  Smartphone,
+  MoveRight,
   type LucideIcon,
   Plus,
 } from "lucide-react";
 
 const iconRegistry = {
   arrowDown: ArrowDown,
+  MoveRight: MoveRight,
+  ShieldCheck: ShieldCheck,
+  Truck: Truck,
+  Smartphone: Smartphone,
   arrowUp: ArrowUp,
   arrowLeft: ArrowLeft,
   arrowRight: ArrowRight,
@@ -80,6 +87,8 @@ const iconSizes = {
   sm: 16,
   md: 20,
   lg: 24,
+  xl: 32,
+  xxl: 40,
 } as const;
 
 export type IconName = keyof typeof iconRegistry;

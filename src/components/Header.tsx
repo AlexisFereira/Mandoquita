@@ -68,8 +68,22 @@ export function Header() {
       <Container
         size="wide"
         padding="lg"
-        className="flex min-h-[72px] items-center justify-between gap-6"
+        className="flex min-h-[68px] items-center justify-between"
       >
+        <button
+          type="button"
+          aria-label={open ? "Cerrar navegación" : "Abrir navegación"}
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
+          onClick={() => {
+            setHiddenOnMobileScroll(false);
+            setOpen((value) => !value);
+          }}
+          className="mobile-toggle inline-flex text-primary h-8 w-8 items-center justify-center rounded-md bg-transparent text-[rgb(var(--foreground)/1)]"
+        >
+          <Icon name={open ? "close" : "menu"} />
+        </button>
+
         <Link
           href="/"
           aria-label="Mandoquita, ir al inicio"
@@ -106,19 +120,6 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            aria-label={open ? "Cerrar navegación" : "Abrir navegación"}
-            aria-expanded={open}
-            aria-controls="mobile-navigation"
-            onClick={() => {
-              setHiddenOnMobileScroll(false);
-              setOpen((value) => !value);
-            }}
-            className="mobile-toggle inline-flex text-primary h-11 w-11 items-center justify-center rounded-md bg-transparent text-[rgb(var(--foreground)/1)]"
-          >
-            <Icon name={open ? "close" : "menu"} />
-          </button>
           <Link
             href="https://www.instagram.com/mandoquitawb/"
             target="_blank"

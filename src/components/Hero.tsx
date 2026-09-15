@@ -64,9 +64,10 @@ export function Hero({
 
           {primaryAction || secondaryAction ? (
             <div
-              className={["mt-8 flex flex-wrap gap-x-4 gap-y-3", actionAlignment].join(
-                " ",
-              )}
+              className={[
+                "mt-8 flex flex-wrap gap-x-4 gap-y-3",
+                actionAlignment,
+              ].join(" ")}
             >
               {primaryAction}
               {secondaryAction}
