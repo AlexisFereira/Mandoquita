@@ -16,7 +16,12 @@ import { getHomepagePayload } from "../src/server/homepageService";
 import { useMediaQuery } from "../src/hooks/use-media-query";
 import { PaymentInformation } from "../src/features/homepage/payment-information";
 import type { HomepagePayload, ProductItem } from "../src/types/catalog";
-import { whatsappUrl, urlBase, carouselSlides } from "../src/constants";
+import {
+  whatsappUrl,
+  urlBase,
+  carouselSlides,
+  benefitsValues,
+} from "../src/constants";
 import { useRandomPair } from "../src/hooks/use-random-pair";
 import MetaTags from "../src/components/MetaTags";
 import { listProducts } from "@/server/catalogService";
@@ -78,6 +83,56 @@ function getViewAllCategoriesVisibility(categoryCount: number) {
   ]
     .filter(Boolean)
     .join(" ");
+}
+
+function BenefitsSection() {
+  function BlockBenefit({ icon, title, desc }: Record<string, string>) {
+    return (
+      <div
+        key={`${icon}-${title}`}
+        className="flex items-center py-4 gap-3 md:grid md:grid-cols-1 md:px-3 backdrop-blur backdrop-filter-lg"
+      >
+        <div className="w-[80] md:mx-auto">
+          <img
+            src={icon}
+            alt=""
+            width="58"
+            height="auto"
+            loading="lazy"
+            className="md:m-auto d-block w-full"
+          />
+        </div>
+        <div className="md:text-center md:max-w-[350] mx-auto">
+          <h4 className="text-lg font-extrabold">{title}</h4>
+          <p className="text-gray-500">{desc}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <section className="py-5 bg-center bg-no-repeat bg-cover bg-[url(/images/beneficios/bg-block.png)]">
+      <Container size="wide" padding="lg" className="space-y-3 py-5">
+        <div className="text-center">
+          <h3 className="text-md font-semibold text-primary">
+            COMPRA CON CONFIANZA
+          </h3>
+          <h2 className="text-5xl pt-5 pb-3 font-extrabold text-primary">
+            Tu compra, más cerca de ti
+          </h2>
+          <p className="max-w-[480] text-gray-500 mx-auto">
+            Te acompañamos en cada paso para que comprar en Mandoquita sea fácil
+            y sin complicaciones.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:flex max-w-[900] mx-auto divide-y-1 md:divide-x-1 md:divide-y-0">
+          {benefitsValues.map((obj) => (
+            <BlockBenefit {...obj} key={crypto.randomUUID()} />
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
 }
 
 function MerchandisingSection({
@@ -201,9 +256,7 @@ export default function HomePage({
 
       <main id="main-content">
         <h1 className="sr-only ro">Catálogo Mandoquita</h1>
-
         {carouselSlides.length ? <Carousel slides={carouselSlides} /> : null}
-
         {categories.length ? (
           <ScrollEntryMotion distance="sm">
             <MerchandisingSection
@@ -239,7 +292,6 @@ export default function HomePage({
             </MerchandisingSection>
           </ScrollEntryMotion>
         ) : null}
-
         {visibleFeaturedProducts.length ? (
           <MerchandisingSection
             id="destacados"
@@ -261,7 +313,6 @@ export default function HomePage({
             </div>
           </MerchandisingSection>
         ) : null}
-
         {ropaMujerVisible.length ? (
           <MerchandisingSection
             id="ropaMujer"
@@ -285,7 +336,7 @@ export default function HomePage({
           </MerchandisingSection>
         ) : null}
 
-        <PaymentInformation />
+        <BenefitsSection />
 
         {selectedCategoryProducts?.products.length ? (
           <ScrollEntryMotion distance="sm">

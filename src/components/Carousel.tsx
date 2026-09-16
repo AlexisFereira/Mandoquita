@@ -127,7 +127,7 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
             setIsFocusedWithin(false);
         }}
       >
-        <div className="relative h-[70dvh]  w-full sm:h-[250px] md:h-[300px] lg:h-[4800px] xl:h-[620px]">
+        <div className="relative h-[70dvh]  w-full sm:h-[250px] md:h-[620px]">
           {computedSlides.map((slide, index) => (
             <article
               key={slide.title}

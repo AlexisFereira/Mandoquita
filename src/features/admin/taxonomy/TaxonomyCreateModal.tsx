@@ -4,16 +4,27 @@ import { Card } from "../../../components/Card";
 import { Input } from "../../../components/Input";
 import { Notice } from "../components/Notice";
 import { adminApi, AdminApiError } from "../api";
-import type { AdminCategory, AdminSubcategory } from "../types";
+import type {
+  AdminCategory,
+  AdminSubcategory,
+  AdminProductType,
+} from "../types";
 import { Icon } from "@/components/Icon";
 
 export type TaxonomyKind = "category" | "subcategory" | "productType";
+
+type TaxonomyItem =
+  | { kind: "category"; data: AdminCategory }
+  | { kind: "subcategory"; data: AdminSubcategory }
+  | { kind: "productType"; data: AdminProductType };
 
 type Props = {
   kind: TaxonomyKind;
   parent?:
     | { kind: "category"; data: AdminCategory }
     | { kind: "subcategory"; data: AdminSubcategory };
+  /** Si se provee, el modal entra en modo edición precargando estos datos */
+  item?: TaxonomyItem;
   csrfToken: string;
   onClose: () => void;
   onSuccess: () => void;
@@ -22,18 +33,24 @@ type Props = {
 export function TaxonomyCreateModal({
   kind,
   parent,
+  item,
   csrfToken,
   onClose,
   onSuccess,
 }: Props) {
-  const [name, setName] = useState("");
-  const [slug, setSlug] = useState("");
+  const isEditMode = !!item;
+
+  const [name, setName] = useState(item?.data.name ?? "");
+  const [slug, setSlug] = useState(
+    item && "slug" in item.data ? (item.data as any).slug : "",
+  );
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
+  const [slugTouched, setSlugTouched] = useState(isEditMode);
 
-  // Auto-slug desde el nombre (solo si el usuario no tocó el slug)
+  // Auto-slug desde el nombre (solo si el usuario no tocó el slug y no es edición)
   React.useEffect(() => {
-    if (!slug && name) {
+    if (!slugTouched && name) {
       setSlug(
         name
           .toLowerCase()
@@ -43,7 +60,7 @@ export function TaxonomyCreateModal({
           .replace(/-+/g, "-"),
       );
     }
-  }, [name, slug]);
+  }, [name, slugTouched]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -57,28 +74,10 @@ export function TaxonomyCreateModal({
     setStatus("");
 
     try {
-      if (kind === "category") {
-        await adminApi.createCategory(csrfToken, {
-          name: name.trim(),
-          slug,
-        });
-      } else if (kind === "subcategory") {
-        if (!parent || parent.kind !== "category") {
-          throw new Error("Falta la categoría padre.");
-        }
-        await adminApi.createSubcategory(csrfToken, {
-          name: name.trim(),
-          slug,
-          categoryId: parent.data.id,
-        });
+      if (isEditMode) {
+        await handleUpdate();
       } else {
-        if (!parent || parent.kind !== "subcategory") {
-          throw new Error("Falta la subcategoría padre.");
-        }
-        await adminApi.createProductType(csrfToken, {
-          name: name.trim(),
-          subcategoryId: parent.data.id,
-        });
+        await handleCreate();
       }
 
       onSuccess();
@@ -96,11 +95,75 @@ export function TaxonomyCreateModal({
     }
   }
 
+  async function handleCreate() {
+    if (kind === "category") {
+      await adminApi.createCategory(csrfToken, {
+        name: name.trim(),
+        slug,
+      });
+    } else if (kind === "subcategory") {
+      if (!parent || parent.kind !== "category") {
+        throw new Error("Falta la categoría padre.");
+      }
+      await adminApi.createSubcategory(csrfToken, {
+        name: name.trim(),
+        slug,
+        categoryId: parent.data.id,
+      });
+    } else {
+      if (!parent || parent.kind !== "subcategory") {
+        throw new Error("Falta la subcategoría padre.");
+      }
+      await adminApi.createProductType(csrfToken, {
+        name: name.trim(),
+        subcategoryId: parent.data.id,
+      });
+    }
+  }
+
+  async function handleUpdate() {
+    if (!item) return;
+
+    if (kind === "category") {
+      const data = item.data as AdminCategory;
+      await adminApi.updateCategory(data.id, csrfToken, {
+        name: name.trim(),
+        slug,
+      });
+    } else if (kind === "subcategory") {
+      const data = item.data as AdminSubcategory;
+      await adminApi.updateSubcategory(data.id, csrfToken, {
+        name: name.trim(),
+        slug,
+        expectedUpdatedAt: "",
+      });
+    }
+    //else {
+    //  // productType se identifica por "name", no por "id"
+    //  const data = item.data as AdminProductType;
+    //  await adminApi.updateProductType(data.name, csrfToken, {
+    //    name: name.trim(),
+    //  });
+    //}
+  }
+
   const titleByKind = {
-    category: "Nueva categoría",
-    subcategory: `Nueva subcategoría${parent ? ` en "${parent.data.name}"` : ""}`,
-    productType: `Nuevo tipo${parent ? ` en "${parent.data.name}"` : ""}`,
+    category: isEditMode ? "Editar categoría" : "Nueva categoría",
+    subcategory: isEditMode
+      ? `Editar subcategoría "${item?.data.name}"`
+      : `Nueva subcategoría${parent ? ` en "${parent.data.name}"` : ""}`,
+    productType: isEditMode
+      ? `Editar tipo "${item?.data.name}"`
+      : `Nuevo tipo${parent ? ` en "${parent.data.name}"` : ""}`,
   };
+
+  const originalSlug =
+    item && "slug" in item.data ? (item.data as any).slug : undefined;
+
+  const hasChanges = isEditMode
+    ? name.trim() !== item?.data.name ||
+      (kind !== "productType" && slug !== originalSlug)
+    : true;
 
   return (
     <div
@@ -137,13 +200,15 @@ export function TaxonomyCreateModal({
             autoFocus
           />
 
-          {/* El slug solo aplica a category y subcategory, no a productType */}
           {kind !== "productType" && (
             <Input
               id="taxonomy-slug"
               label="Slug (URL)"
               value={slug}
-              onChange={(e) => setSlug(e.target.value)}
+              onChange={(e) => {
+                setSlug(e.target.value);
+                setSlugTouched(true);
+              }}
               disabled={busy}
               helperText="Solo minúsculas, números y guiones"
             />
@@ -158,8 +223,11 @@ export function TaxonomyCreateModal({
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={busy || !name.trim()}>
-              {busy ? "Guardando…" : "Crear"}
+            <Button
+              type="submit"
+              disabled={busy || !name.trim() || (isEditMode && !hasChanges)}
+            >
+              {busy ? "Guardando…" : isEditMode ? "Guardar cambios" : "Crear"}
             </Button>
           </div>
         </form>

@@ -1,4 +1,9 @@
 const urlBase = `${process.env.NEXT_PUBLIC_BASE_URL}/images/banners/`;
+
+const whatsappUrl =
+  "https://wa.me/584245553041?text=Hola%2C%20vi%20el%20cat%C3%A1logo%20de%20Mandoquita%20y%20quisiera%20recibir%20informaci%C3%B3n%20sobre%20un%20producto.";
+
+
 const bannerImg = {
   1: `${urlBase}banner-perfumes.png`,
   2: `${urlBase}slide-accesorios.png`,
@@ -46,8 +51,25 @@ const carouselSlides = [
   },
 ];
 
-const whatsappUrl =
-  "https://wa.me/584245553041?text=Hola%2C%20vi%20el%20cat%C3%A1logo%20de%20Mandoquita%20y%20quisiera%20recibir%20informaci%C3%B3n%20sobre%20un%20producto.";
+
+const benefitsValues = [
+  {
+    icon: '/images/beneficios/truck.png',
+    title: 'Entregas en Maracaibo',
+    desc: 'Recibe tus productos de forma rápida y coordinamos contigo la entrega.'
+  },
+  {
+    icon: '/images/beneficios/whatsapp.png',
+    title: ' Atención por WhatsApp',
+    desc: '¿Tienes dudas sobre tallas o productos? Te ayudamos antes de comprar.',
+  },
+
+  {
+    icon: '/images/beneficios/pagos.png',
+    title: 'Opciones de pago',
+    desc: 'Elige entre nuestras diferentes opciones disponibles al momento de comprar.'
+  }
+];
 
 
-export { carouselSlides, whatsappUrl, urlBase };
+export { carouselSlides, whatsappUrl, urlBase, benefitsValues };
