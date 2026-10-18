@@ -19,3 +19,4 @@ export * from "./ProductOffer";
 export * from "./PoliteStatus";
 export * from "./Icon";
 export * from "./ScrollEntryMotion";
+export * from "./CategoriesBlocks";

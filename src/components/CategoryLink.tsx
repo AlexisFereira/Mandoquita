@@ -17,6 +17,8 @@ export function CategoryLink({
   imageAltText,
   icon,
 }: CategoryLinkProps) {
+  console.log({ imageUrl });
+
   const resolvedImageUrl =
     resolvePublicAssetUrl(imageUrl) ?? "/images/banners/default-banner.svg";
 

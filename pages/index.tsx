@@ -25,6 +25,7 @@ import {
 import { useRandomPair } from "../src/hooks/use-random-pair";
 import MetaTags from "../src/components/MetaTags";
 import { listProducts } from "@/server/catalogService";
+import CategoriesBlocks from "@/components/CategoriesBlocks";
 
 export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
   res,
@@ -257,41 +258,43 @@ export default function HomePage({
       <main id="main-content">
         <h1 className="sr-only ro">Catálogo Mandoquita</h1>
         {carouselSlides.length ? <Carousel slides={carouselSlides} /> : null}
-        {categories.length ? (
-          <ScrollEntryMotion distance="sm">
-            <MerchandisingSection
-              id="categorias"
-              title="Categorías"
-              description="Explora el catálogo según tus intereses."
-              tone="surface"
-              layout="split"
-            >
-              <ul className="flex flex-nowrap items-start justify-between gap-[30px] xl:justify-start">
-                {catsToShow.map((category) => (
-                  <li key={category.slug} className={`shrink-0`}>
-                    <CategoryLink
-                      title={category.name}
-                      href={`/categorias/${category.slug}`}
-                      imageUrl={category.imageUrl}
-                      imageAltText={category.imageAltText}
-                    />
-                  </li>
-                ))}
-                {categories.length > 1 ? (
-                  <li
-                    className={`shrink-0 ${getViewAllCategoriesVisibility(categories.length)}`}
-                  >
-                    <CategoryLink
-                      title="Ver todas"
-                      href="/categorias"
-                      icon="categories"
-                    />
-                  </li>
-                ) : null}
-              </ul>
-            </MerchandisingSection>
-          </ScrollEntryMotion>
+
+        <CategoriesBlocks />
+
+        {categories.length && false ? (
+          <MerchandisingSection
+            id="categorias"
+            title="Categorías"
+            description="Explora el catálogo según tus intereses."
+            tone="surface"
+            layout="split"
+          >
+            <ul className="flex flex-nowrap items-start justify-between gap-[30px] xl:justify-start">
+              {catsToShow.map((category) => (
+                <li key={category.slug} className={`shrink-0`}>
+                  <CategoryLink
+                    title={category.name}
+                    href={`/categorias/${category.slug}`}
+                    imageUrl={category.imageUrl}
+                    imageAltText={category.imageAltText}
+                  />
+                </li>
+              ))}
+              {categories.length > 1 ? (
+                <li
+                  className={`shrink-0 ${getViewAllCategoriesVisibility(categories.length)}`}
+                >
+                  <CategoryLink
+                    title="Ver todas"
+                    href="/categorias"
+                    icon="categories"
+                  />
+                </li>
+              ) : null}
+            </ul>
+          </MerchandisingSection>
         ) : null}
+
         {visibleFeaturedProducts.length ? (
           <MerchandisingSection
             id="destacados"
@@ -313,6 +316,7 @@ export default function HomePage({
             </div>
           </MerchandisingSection>
         ) : null}
+
         {ropaMujerVisible.length ? (
           <MerchandisingSection
             id="ropaMujer"
@@ -339,30 +343,28 @@ export default function HomePage({
         <BenefitsSection />
 
         {selectedCategoryProducts?.products.length ? (
-          <ScrollEntryMotion distance="sm">
-            <MerchandisingSection
-              id="seleccion-categoria"
-              title={`Productos de ${selectedCategoryProducts.category.name}`}
-              description="Descubre una selección de esta categoría para hoy."
-              tone="surface"
-            >
-              <CollectionGrid as="ul">
-                {selectedCategoryProducts.products.map((product) => (
-                  <li key={product.id}>
-                    <ProductCard product={product} />
-                  </li>
-                ))}
-              </CollectionGrid>
-              <div className="flex justify-end">
-                <Button
-                  variant="secondary"
-                  href={`/categorias/${selectedCategoryProducts.category.slug}`}
-                >
-                  Ver categoría {selectedCategoryProducts.category.name}
-                </Button>
-              </div>
-            </MerchandisingSection>
-          </ScrollEntryMotion>
+          <MerchandisingSection
+            id="seleccion-categoria"
+            title={`Productos de ${selectedCategoryProducts.category.name}`}
+            description="Descubre una selección de esta categoría para hoy."
+            tone="surface"
+          >
+            <CollectionGrid as="ul">
+              {selectedCategoryProducts.products.map((product) => (
+                <li key={product.id}>
+                  <ProductCard product={product} />
+                </li>
+              ))}
+            </CollectionGrid>
+            <div className="flex justify-end">
+              <Button
+                variant="secondary"
+                href={`/categorias/${selectedCategoryProducts.category.slug}`}
+              >
+                Ver categoría {selectedCategoryProducts.category.name}
+              </Button>
+            </div>
+          </MerchandisingSection>
         ) : null}
 
         <section id="contacto" className="py-10 sm:py-12 lg:py-16">

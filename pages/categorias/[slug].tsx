@@ -102,14 +102,14 @@ export default function CategoryPage({
   }> = ({ subcategory }) => {
     const { id, productCount, name, slug } = subcategory;
     const classNames =
-      "flex flex-nowrap rounded-full gap-4 py-2 px-4 shadow-xl bg-white border-2 border-transparent hover:border-primary transition-colors";
+      "flex flex-nowrap bg-gray-100 rounded-full gap-4 py-1 px-4 border-2 border-gray-300 hover:border-primary transition-colors";
     return (
       <Link
         key={id}
         href={`/categorias/${category.slug}/${slug}`}
         className={classNames}
       >
-        <span className="text-lg font-semibold whitespace-nowrap text-[rgb(var(--foreground)/1)]">
+        <span className="whitespace-nowrap text-[rgb(var(--foreground)/1)]">
           {name}
         </span>
         <span className=" bg-gray-100 text-gray-400 px-1 rounded-lg">
@@ -129,12 +129,13 @@ export default function CategoryPage({
       <a href="#main-content" className="skip-link">
         Ir al contenido principal
       </a>
+
       <Header />
 
-      <main id="main-content" className="py-10 sm:py-7">
-        <Container size="wide" padding="lg" className="space-y-9">
-          <div className="space-y-5">
-            <nav aria-label="Breadcrumb">
+      <main id="main-content">
+        <section className="pb-6 w-full  bg-gray-200">
+          <Container size="wide" padding="lg" className=" space-y-6">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2">
               <ol className="m-0 flex list-none flex-wrap items-center gap-2 p-0 text-sm">
                 <li>
                   <Link
@@ -164,32 +165,37 @@ export default function CategoryPage({
                   "Explora las subcategorías y productos disponibles en esta categoría."}
               </p>
             </div>
-          </div>
 
-          {category.subcategories.length > 0 ? (
-            <section
-              aria-labelledby="subcategories-heading"
-              className="space-y-6"
-            >
-              <h2
-                id="subcategories-heading"
-                className="ds-heading ds-heading-md"
+            {category.subcategories.length > 0 ? (
+              <section
+                aria-labelledby="subcategories-heading"
+                className="space-y-6"
               >
-                Subcategorías
-              </h2>
-              <div className="flex flex-wrap gap-4">
-                {category.subcategories.map((subcategory) => (
-                  <CategoryLink
-                    key={subcategory.id}
-                    subcategory={subcategory}
-                    category={category}
-                  />
-                ))}
-              </div>
-            </section>
-          ) : null}
+                <h2
+                  id="subcategories-heading"
+                  className="ds-heading ds-heading-md"
+                >
+                  Subcategorías
+                </h2>
+                <div className="flex flex-wrap gap-4">
+                  {category.subcategories.map((subcategory) => (
+                    <CategoryLink
+                      key={subcategory.id}
+                      subcategory={subcategory}
+                      category={category}
+                    />
+                  ))}
+                </div>
+              </section>
+            ) : null}
+          </Container>
+        </section>
 
-          <section aria-labelledby="products-heading" className="space-y-6">
+        <Container size="wide" padding="lg" className="space-y-9">
+          <section
+            aria-labelledby="products-heading"
+            className="space-y-6 pt-6"
+          >
             <h2 id="products-heading" className="ds-heading ds-heading-md">
               Productos de {category.name}
             </h2>
