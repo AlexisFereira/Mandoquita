@@ -39,7 +39,6 @@ export function Card<T extends ElementType = "div">({
   const classes = [
     "rounded-xl border border-[rgb(var(--border)/1)] bg-[rgb(var(--surface)/1)] transition duration-200",
     cardElevationClasses[elevation],
-    cardPaddingClasses[padding],
     interactive
       ? "hover:-translate-y-0.5 motion-reduce:transform-none hover:shadow-[var(--shadow-md)]"
       : null,

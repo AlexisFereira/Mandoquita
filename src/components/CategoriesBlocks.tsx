@@ -1,37 +1,51 @@
 import { Container } from "./Container";
+import { Icon } from "./Icon";
 
 const catImgPathBase = "/images/categories/";
 
-const categoriesConfig = {
+type CategoryConfig = {
+  title: string;
+  description: string;
+  link: string;
+  urlImg: string;
+  size?: "md" | "lg" | "xl";
+};
+
+const categoriesConfig: { [key: string]: CategoryConfig } = {
   category1: {
     title: "Ropa y Moda",
     description: "Prendas para cada estilo, ocasión y momento.",
     link: "/categorias/ropa-y-moda",
     urlImg: `${catImgPathBase}ropa-y-moda.webp`,
+    size: "xl",
   },
   category2: {
     title: "Calzado",
     description: "Comodidad y estilo para acompañar cada paso.",
     link: "/categorias/calzado",
     urlImg: `${catImgPathBase}calzado.webp`,
+    size: "xl",
   },
   category3: {
     title: "Accesorios y Joyería",
     description: "",
     link: "/categorias/accesorios-de-moda",
     urlImg: `${catImgPathBase}accesorios-y-joyeria.webp`,
+    size: "md",
   },
   category4: {
     title: "Perfumes y Fragancias",
     description: "",
     link: "/categorias/belleza-y-cuidado-personal",
     urlImg: `${catImgPathBase}perfumes-y-fragancias.webp`,
+    size: "md",
   },
   category5: {
     title: "Electrónica y Gadgets",
     description: "",
     link: "/categorias/electronica-y-seguridad",
     urlImg: `${catImgPathBase}electronica-y-gadgets.webp`,
+    size: "md",
   },
 };
 
@@ -64,9 +78,9 @@ function BlockCategory({
   urlImg: string;
 }) {
   const sizeClasses = {
-    md: "h-30 md:m-h-60 lg:h-full",
-    lg: "h-30 md:h-60",
-    xl: "h-30 md:h-80",
+    md: "h-40 md:m-h-60 lg:h-full",
+    lg: "h-50 md:h-60",
+    xl: "h-50 md:h-80",
   };
 
   const backgroundImageStyle = {
@@ -90,23 +104,31 @@ function BlockCategory({
   );
 }
 const CategoriesBlocks = () => {
+  const { category1, category2, category3, category4, category5 } =
+    categoriesConfig;
+
   return (
     <Container size="wide" padding="lg" className="space-y-8 pt-6">
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-3 pt-6">
-        <BlockCategory {...categoriesConfig.category1} size="xl" />
-        <BlockCategory {...categoriesConfig.category2} size="xl" />
+        <BlockCategory {...category1} />
+        <BlockCategory {...category2} />
         <div className="grid grid-cols-1 gap-4 sm:col-span-2 sm:grid-cols-3 lg:grid-cols-1 lg:col-span-1">
-          <BlockCategory {...categoriesConfig.category3} size="md" />
+          <BlockCategory {...category3} />
           <div className="grid grid-cols-2 gap-4 sm:col-span-2 lg:col-span-1">
-            <BlockCategory {...categoriesConfig.category4} size="md" />
-            <BlockCategory {...categoriesConfig.category5} size="md" />
+            <BlockCategory {...category4} />
+            <BlockCategory {...category5} />
           </div>
         </div>
-      </section>
-
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <div className="grid grid-cols-1 gap-4 sm:col-span-1 sm:grid-cols-1">
-          <div className="col-span-2 grid grid-cols-2 gap-4 sm:col-span-1 sm:grid-cols-1 lg:grid-cols-2"></div>
+        <div className="sm:col-span-2 lg:col-span-3">
+          <a
+            href="/categorias"
+            className="flex items-center ml-auto py-2 mr-0 border-primary justify-center h-full w-70 rounded-3xl border-2 border-primary"
+          >
+            <span className="text-sm font-semibold text-primary">
+              Ver todas las categorías
+            </span>
+            <Icon name="arrowRight" />
+          </a>
         </div>
       </section>
     </Container>

@@ -206,12 +206,16 @@ export default function CategoryPage({
             </div>
           </section>
 
-          <Link
-            href="/categorias"
-            className="inline-flex min-h-11 border border-2 border-primary color-primary  px-4 rounded-4xl items-center underline underline-offset-4"
-          >
-            Ver todas las categorías
-          </Link>
+          <div className="flex justify-center pb-6">
+            <Link
+              href="/categorias"
+              className="inline-flex hover:bg-gray-100 min-h-11 border border-2 border-primary  px-4 rounded-4xl items-center underline underline-offset-4"
+            >
+              <span className="text-primary font-semibold">
+                Ver todas las categorías
+              </span>
+            </Link>
+          </div>
         </Container>
       </main>
 

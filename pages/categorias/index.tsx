@@ -36,30 +36,35 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
 
       <Header />
 
-      <main id="main-content" className="py-10 sm:py-6">
+      <main id="main-content">
+        <section className="space-y-3 bg-gray-200">
+          <Container size="wide" padding="lg" className="space-y-3 py-6">
+            <div className="max-w-3xl space-y-3">
+              <span className="ds-eyebrow">Catálogo Mandoquita</span>
+              <h1 className="ds-heading ds-heading-lg">
+                Explora por categorías
+              </h1>
+              <p className="max-w-2xl leading-7 text-[rgb(var(--muted)/1)]">
+                Encuentra productos recorriendo las categorías disponibles según
+                tus intereses.
+              </p>
+            </div>
+
+            <Button
+              variant="outline"
+              href="/buscar?focus=1"
+              className="gap-2 justify-self-start"
+            >
+              <Icon name="search" />
+              Buscar productos
+            </Button>
+          </Container>
+        </section>
         <Container size="wide" padding="lg" className="space-y-9">
-          <div className="max-w-3xl space-y-3">
-            <span className="ds-eyebrow">Catálogo Mandoquita</span>
-            <h1 className="ds-heading ds-heading-lg">Explora por categorías</h1>
-            <p className="max-w-2xl leading-7 text-[rgb(var(--muted)/1)]">
-              Encuentra productos recorriendo las categorías disponibles según
-              tus intereses.
-            </p>
-          </div>
-
-          <Button
-            variant="outline"
-            href="/buscar?focus=1"
-            className="gap-2 justify-self-start"
-          >
-            <Icon name="search" />
-            Buscar productos
-          </Button>
-
           {categories.length > 0 ? (
             <section
               aria-labelledby="available-categories"
-              className="space-y-6"
+              className="space-y-6 py-6"
             >
               <h2
                 id="available-categories"
@@ -67,7 +72,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
               >
                 Categorías disponibles
               </h2>
-              <div className="category-card-grid">
+              <div className="grid grid-cols-1 gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-5 content-center">
                 {categories.map((category) => (
                   <CategoryCard
                     key={category.id}
@@ -77,6 +82,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
                     imageUrl={category.imageUrl}
                     imageAltText={category.imageAltText}
                     count={category.productCount}
+                    compact={true}
                   />
                 ))}
               </div>
