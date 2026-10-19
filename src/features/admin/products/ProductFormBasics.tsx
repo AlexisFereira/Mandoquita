@@ -69,7 +69,7 @@ export function ProductFormBasics({
   };
 
   return (
-    <Card className="grid gap-5 md:grid-cols-2">
+    <Card className="grid gap-5 md:grid-cols-2 p-4">
       <div className="col-span-2 grid md:grid-cols-6 gap-5">
         <div className="md:col-span-2">
           <Select
@@ -126,14 +126,14 @@ export function ProductFormBasics({
         label="Nombre"
         value={values.name}
         onChange={(e) => set("name", e.target.value)}
-        disabled={!values.productTypeId}
+        disabled={!values.productTypeId || busy}
       />
       <Input
         id="product-slug"
         label="Slug"
         value={values.slug}
         onChange={(e) => set("slug", e.target.value)}
-        disabled={!values.productTypeId}
+        disabled={!values.productTypeId || busy}
       />
       <div className="flex">
         <div className="max-w-3/6">
@@ -143,7 +143,7 @@ export function ProductFormBasics({
             inputMode="decimal"
             value={values.price}
             onChange={(e) => set("price", e.target.value)}
-            disabled={!values.productTypeId}
+            disabled={!values.productTypeId || busy}
           />
         </div>
         <span className="flex items-center pt-6 pl-3 font-black text-gray-400">
@@ -156,7 +156,7 @@ export function ProductFormBasics({
           label="SKU base"
           value={values.baseSku}
           onChange={(e) => set("baseSku", e.target.value)}
-          disabled={!values.productTypeId}
+          disabled={!values.productTypeId || busy}
         />
       ) : null}
     </Card>

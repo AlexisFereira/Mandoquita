@@ -180,12 +180,14 @@ function PromotionalCarousel({ slides }: PromotionalCarouselProps) {
                       {slide.action ? (
                         <Button
                           href={slide.action.href}
-                          size="sm"
+                          size="md"
                           tabIndex={activeIndex === index ? undefined : -1}
-                          className="mt-2 sm:mt-3"
+                          variant="primary"
                         >
-                          <span className="pr-3">{slide.action.label}</span>{" "}
-                          <Icon name="MoveRight" />
+                          <span className="pr-3 text-white">
+                            {slide.action.label}
+                          </span>{" "}
+                          <Icon name="MoveRight" className="text-white" />
                         </Button>
                       ) : null}
                     </div>

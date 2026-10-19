@@ -15,7 +15,7 @@ export function ProductFormLifecycle({
   onConfirm: () => void;
 }) {
   return (
-    <Card className="space-y-4 flex-12 lg:flex-4">
+    <Card className="space-y-4 flex-12 lg:flex-4 p-4">
       <h2 className="ds-heading ds-heading-md">Ciclo de vida</h2>
       {confirming ? (
         <>

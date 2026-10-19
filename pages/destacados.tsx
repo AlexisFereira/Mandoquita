@@ -78,7 +78,7 @@ export default function FeaturedProductsPage({
                 Explora las categorías para encontrar otros productos del
                 catálogo.
               </p>
-              <Button variant="outline" href="/categorias">
+              <Button variant="secondary" href="/categorias">
                 Explorar categorías
               </Button>
             </section>

@@ -1,5 +1,6 @@
 import { Container } from "./Container";
 import { Icon } from "./Icon";
+import { Button } from "./Button";
 
 const catImgPathBase = "/images/categories/";
 
@@ -119,16 +120,15 @@ const CategoriesBlocks = () => {
             <BlockCategory {...category5} />
           </div>
         </div>
-        <div className="sm:col-span-2 lg:col-span-3">
-          <a
+        <div className="sm:col-span-2 lg:col-span-3 pt-6 text-right">
+          <Button
             href="/categorias"
-            className="flex items-center ml-auto py-2 mr-0 border-primary justify-center h-full w-70 rounded-3xl border-2 border-primary"
+            variant="secondary"
+            className="max-w-60 ml-auto mr-0"
           >
-            <span className="text-sm font-semibold text-primary">
-              Ver todas las categorías
-            </span>
-            <Icon name="arrowRight" />
-          </a>
+            <span>Ver todas las categorías</span>
+            <Icon name="arrowRight" className="ml-4" />
+          </Button>
         </div>
       </section>
     </Container>

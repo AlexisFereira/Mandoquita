@@ -132,7 +132,7 @@ export function Icon({
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center justify-center align-[-0.125em] leading-none ${className}`.trim()}
+      className={`inline-flex shrink-0 items-center self-center justify-center align-[-0.125em] leading-none ${className}`.trim()}
       data-icon={name}
     >
       <Glyph

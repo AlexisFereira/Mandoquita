@@ -130,7 +130,7 @@ function UploadTask({
   return (
     <Card
       as="section"
-      className="mx-auto max-w-[720px] space-y-5"
+      className="mx-auto max-w-[720px] space-y-5 p-4"
       aria-labelledby="media-upload-title"
     >
       <h2 id="media-upload-title" className="ds-heading ds-heading-md">

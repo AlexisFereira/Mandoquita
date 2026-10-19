@@ -8,69 +8,33 @@ import type {
 } from "react";
 
 const btnClassNameBase =
-  "inline-flex items-center justify-center rounded-full text-sm font-semibold disabled:bg-gray-100 disabled:cursor-not-allowed min-h-10";
-
-const buttonClassNames = {
-  primary: `${btnClassNameBase}`,
-  danger: `${btnClassNameBase} `,
-  secondary: `${btnClassNameBase} `,
-  ghost: `${btnClassNameBase} transition-colors duration-200 hover:bg-[rgb(var(--primary)/0.08)]`,
-  outline: `${btnClassNameBase} `,
-  inverse: `${btnClassNameBase} `,
-} as const;
+  "rounded-full transition-all duration-200 flex flex-none items-center justify-center";
 
 const buttonSizeClasses = {
   sm: "px-4 py-2 text-sm",
-  md: "px-6 py-3 text-sm",
-  lg: "px-8 py-4 text-base",
+  md: "px-6 py-3 text-md",
+  lg: "px-8 py-3 text-base",
 } as const;
 
-const sharedProps = {
-  borderStyle: "solid",
-  borderWidth: "2px",
-  boxShadow: "var(--shadow-md)",
-};
-
 const variantStyles = {
-  primary: {
-    backgroundColor: "rgb(var(--primary) / 1)",
-    color: "rgb(var(--primary-foreground) / 1)",
-    borderColor: "rgb(var(--primary) / 1)",
-    ...sharedProps,
-  },
-  danger: {
-    backgroundColor: "rgb(var(--danger) / 1)",
-    color: "rgb(var(--primary-foreground) / 1)",
-    borderColor: "rgb(var(--danger) / 1)",
-    ...sharedProps,
-  },
-  secondary: {
-    backgroundColor: "rgb(var(--surface) / 1)",
-    color: "rgb(var(--primary) / 1)",
-    borderColor: "rgb(var(--border) / 1)",
-    ...sharedProps,
-  },
-  ghost: {
-    backgroundColor: "transparent",
-    color: "rgb(var(--primary) / 1)",
-    borderColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "2px",
-  },
-  outline: {
-    backgroundColor: "transparent",
-    color: "rgb(var(--primary) / 1)",
-    borderColor: "rgb(var(--primary) / 1)",
-    borderStyle: "solid",
-    borderWidth: "2px",
-  },
-  inverse: {
-    backgroundColor: "rgb(var(--inverse-foreground) / 1)",
-    color: "rgb(var(--inverse-surface) / 1)",
-    borderColor: "rgb(var(--inverse-foreground) / 1)",
-    borderStyle: "solid",
-    borderWidth: "2px",
-  },
+  primary:
+    "bg-[rgb(var(--primary)/1)] text-white hover:bg-primary-800 hover:text-secondary-500",
+  danger: "bg-[rgb(var(--danger)/.7)] hover:bg-[rgb(var(--danger-hover)/0.9)]",
+  secondary:
+    "bg-secondary-100 text-primary-700 hover:bg-secondary-300 hover:text-primary-700",
+  ghost: "bg-transparent text-gray-700 hover:bg-gray-100",
+  outline:
+    "bg-transparent border border-primary-700 text-gray-700 hover:bg-gray-100",
+  inverse: "bg-white text-gray-700 hover:bg-gray-100",
+} as const;
+
+const buttonClassNames = {
+  primary: `${btnClassNameBase} ${variantStyles.primary}`,
+  danger: `${btnClassNameBase} ${variantStyles.danger}`,
+  secondary: `${btnClassNameBase} ${variantStyles.secondary}`,
+  ghost: `${btnClassNameBase} ${variantStyles.ghost}`,
+  outline: `${btnClassNameBase} ${variantStyles.outline}`,
+  inverse: `${btnClassNameBase} ${variantStyles.inverse}`,
 } as const;
 
 export type ButtonVariant = keyof typeof buttonClassNames;
@@ -105,15 +69,17 @@ export function Button(props: ButtonProps) {
     onKeyDown,
     ...rest
   } = props;
+
+  const myClass = `${className} disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400`;
+
   const sharedClassName = [
     buttonClassNames[variant],
     buttonSizeClasses[size],
-    className,
+    myClass,
   ]
     .filter(Boolean)
     .join(" ");
   const sharedStyle: CSSProperties = {
-    ...variantStyles[variant],
     ...style,
   };
 
@@ -144,8 +110,8 @@ export function Button(props: ButtonProps) {
         style={sharedStyle}
         data-variant={variant}
         onKeyDown={handleKeyDown}
-        {...linkProps}
         onClick={onClick}
+        {...linkProps}
       >
         {children}
       </Link>

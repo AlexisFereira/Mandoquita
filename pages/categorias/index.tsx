@@ -37,7 +37,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
       <Header />
 
       <main id="main-content">
-        <section className="space-y-3 bg-gray-200">
+        <section className="space-y-3 bg-secondary-100">
           <Container size="wide" padding="lg" className="space-y-3 py-6">
             <div className="max-w-3xl space-y-3">
               <span className="ds-eyebrow">Catálogo Mandoquita</span>

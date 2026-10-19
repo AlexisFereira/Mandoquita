@@ -10,12 +10,14 @@ import {
 export function ProductFormFlags({
   values,
   set,
+  busy,
 }: {
   values: ProductFormValues;
   set: ProductFormSetter;
+  busy: boolean;
 }) {
   return (
-    <Card className="space-y-4">
+    <Card className="space-y-4 p-4">
       <label htmlFor="product-description" className="font-medium">
         Descripción
       </label>
@@ -24,19 +26,23 @@ export function ProductFormFlags({
         className="min-h-32 w-full rounded-md border p-3"
         value={values.description}
         onChange={(e) => set("description", e.target.value)}
+        disabled={busy}
       />
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {PRODUCT_FLAG_KEYS.map((key) => (
           <label
             key={key}
-            className="flex min-h-11 items-center gap-3 px-2 rounded-sm bg-gray-100 border-2 border-transparent hover:border-gray-300"
+            className="flex min-h-11 items-center gap-3 px-2 rounded-md bg-gray-100 border-2 border-transparent hover:border-gray-300"
           >
             <input
               type="checkbox"
               checked={values[key]}
               onChange={(e) => set(key, e.target.checked)}
+              disabled={busy}
             />
-            {PRODUCT_FLAG_LABELS[key]}
+            <span className="text-sm font-medium">
+              {PRODUCT_FLAG_LABELS[key]}
+            </span>
           </label>
         ))}
       </div>

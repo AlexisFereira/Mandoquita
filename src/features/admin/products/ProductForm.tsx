@@ -70,7 +70,7 @@ export function ProductForm({
           />
 
           {id && !form.product?.retiredAt ? (
-            <ProductFormFlags values={form.values} set={form.set} />
+            <ProductFormFlags busy={busy} values={form.values} set={form.set} />
           ) : null}
 
           <div className="flex flex-wrap gap-3">
@@ -81,7 +81,12 @@ export function ProductForm({
               {busy ? "Guardando…" : id ? "Guardar cambios" : "Crear producto"}
             </Button>
             {form.product && onMedia ? (
-              <Button type="button" variant="secondary" onClick={onMedia}>
+              <Button
+                disabled={busy}
+                type="button"
+                variant="secondary"
+                onClick={onMedia}
+              >
                 Administrar imágenes
               </Button>
             ) : null}

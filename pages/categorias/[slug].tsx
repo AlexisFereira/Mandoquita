@@ -102,7 +102,7 @@ export default function CategoryPage({
   }> = ({ subcategory }) => {
     const { id, productCount, name, slug } = subcategory;
     const classNames =
-      "flex flex-nowrap bg-gray-100 rounded-full gap-4 py-1 px-4 border-2 border-gray-300 hover:border-primary transition-colors";
+      "flex flex-nowrap rounded-full gap-4 py-1 pl-4 pr-1 border-2 border-secondary-300 hover:bg-secondary-200 transition-colors";
     return (
       <Link
         key={id}
@@ -112,7 +112,7 @@ export default function CategoryPage({
         <span className="whitespace-nowrap text-[rgb(var(--foreground)/1)]">
           {name}
         </span>
-        <span className=" bg-gray-100 text-gray-400 px-1 rounded-lg">
+        <span className=" bg-secondary-400 text-white text-sm content-center px-2 rounded-lg">
           {productCount}
         </span>
       </Link>
@@ -133,7 +133,7 @@ export default function CategoryPage({
       <Header />
 
       <main id="main-content">
-        <section className="pb-6 w-full  bg-gray-200">
+        <section className="pb-6 w-full  bg-secondary-100">
           <Container size="wide" padding="lg" className=" space-y-6">
             <nav aria-label="Breadcrumb" className="flex items-center gap-2">
               <ol className="m-0 flex list-none flex-wrap items-center gap-2 p-0 text-sm">
@@ -157,7 +157,7 @@ export default function CategoryPage({
               <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[rgb(var(--muted)/1)]">
                 Categoría
               </span>
-              <h1 className="text-4xl font-semibold tracking-[-0.04em] text-[rgb(var(--foreground)/1)] sm:text-5xl">
+              <h1 className="text-4xl font-semibold tracking-[-0.04em] text-primary sm:text-5xl">
                 {category.name}
               </h1>
               <p className="max-w-2xl leading-7 text-[rgb(var(--muted)/1)]">
@@ -173,7 +173,7 @@ export default function CategoryPage({
               >
                 <h2
                   id="subcategories-heading"
-                  className="ds-heading ds-heading-md"
+                  className="ds-heading ds-heading-m text-secondary-400"
                 >
                   Subcategorías
                 </h2>

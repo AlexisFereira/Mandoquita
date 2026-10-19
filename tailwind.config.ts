@@ -26,26 +26,105 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "rgb(var(--primary) / <alpha-value>)",
-          hover: "rgb(var(--primary-hover) / <alpha-value>)",
-          foreground: "rgb(var(--primary-foreground) / <alpha-value>)",
+          50: "var(--color-primary-50)",
+          100: "var(--color-primary-100)",
+          200: "var(--color-primary-200)",
+          300: "var(--color-primary-300)",
+          400: "var(--color-primary-400)",
+          500: "var(--color-primary-500)",
+          600: "var(--color-primary-600)",
+          700: "var(--color-primary-700)",
+          800: "var(--color-primary-800)",
+          900: "var(--color-primary-900)",
+
+          DEFAULT: "var(--color-primary-700)",
+          hover: "var(--color-primary-800)",
+          foreground: "var(--color-white)",
         },
-        background: "rgb(var(--background) / <alpha-value>)",
-        surface: "rgb(var(--surface) / <alpha-value>)",
-        "surface-muted": "rgb(var(--surface-muted) / <alpha-value>)",
-        foreground: "rgb(var(--foreground) / <alpha-value>)",
-        muted: "rgb(var(--muted) / <alpha-value>)",
-        border: "rgb(var(--border) / <alpha-value>)",
-        accent: "rgb(var(--accent) / <alpha-value>)",
-        success: "rgb(var(--success) / <alpha-value>)",
-        warning: "rgb(var(--warning) / <alpha-value>)",
-        danger: "rgb(var(--danger) / <alpha-value>)",
-        focus: "rgb(var(--focus) / <alpha-value>)",
-        info: "rgb(var(--info) / <alpha-value>)",
-        "inverse-surface": "rgb(var(--inverse-surface) / <alpha-value>)",
-        "inverse-foreground": "rgb(var(--inverse-foreground) / <alpha-value>)",
-        "inverse-muted": "rgb(var(--inverse-muted) / <alpha-value>)",
-        "inverse-border": "rgb(var(--inverse-border) / <alpha-value>)",
+
+        secondary: {
+          50: "var(--color-secondary-50)",
+          100: "var(--color-secondary-100)",
+          200: "var(--color-secondary-200)",
+          300: "var(--color-secondary-300)",
+          400: "var(--color-secondary-400)",
+          500: "var(--color-secondary-500)",
+          600: "var(--color-secondary-600)",
+          700: "var(--color-secondary-700)",
+          800: "var(--color-secondary-800)",
+          900: "var(--color-secondary-900)",
+
+          DEFAULT: "var(--color-secondary-700)",
+          foreground: "var(--color-white)",
+        },
+
+        neutral: {
+          50: "var(--color-neutral-50)",
+          100: "var(--color-neutral-100)",
+          200: "var(--color-neutral-200)",
+          300: "var(--color-neutral-300)",
+          400: "var(--color-neutral-400)",
+          500: "var(--color-neutral-500)",
+          600: "var(--color-neutral-600)",
+          700: "var(--color-neutral-700)",
+          800: "var(--color-neutral-800)",
+          900: "var(--color-neutral-900)",
+        },
+
+        background: "var(--background)",
+        "background-muted": "var(--background-muted)",
+        "background-accent": "var(--background-accent)",
+
+        surface: {
+          DEFAULT: "var(--surface)",
+          card: "var(--surface-card)",
+          muted: "var(--surface-muted)",
+          hover: "var(--surface-hover)",
+        },
+
+        foreground: "var(--text-primary)",
+        muted: "var(--text-muted)",
+        border: "var(--border-default)",
+        accent: "var(--color-secondary-500)",
+
+        success: {
+          DEFAULT: "var(--color-success-700)",
+          50: "var(--color-success-50)",
+          100: "var(--color-success-100)",
+          500: "var(--color-success-500)",
+          700: "var(--color-success-700)",
+        },
+
+        warning: {
+          DEFAULT: "var(--color-warning-700)",
+          50: "var(--color-warning-50)",
+          100: "var(--color-warning-100)",
+          500: "var(--color-warning-500)",
+          700: "var(--color-warning-700)",
+        },
+
+        danger: {
+          DEFAULT: "var(--color-error-700)",
+          50: "var(--color-error-50)",
+          100: "var(--color-error-100)",
+          500: "var(--color-error-500)",
+          700: "var(--color-error-700)",
+        },
+
+        info: {
+          DEFAULT: "var(--color-info-700)",
+          50: "var(--color-info-50)",
+          100: "var(--color-info-100)",
+          500: "var(--color-info-500)",
+          700: "var(--color-info-700)",
+        },
+
+        focus: "var(--focus-ring)",
+
+        "inverse-surface": "var(--color-neutral-900)",
+        "inverse-foreground": "var(--color-white)",
+        "inverse-muted": "var(--color-neutral-300)",
+        "inverse-border": "var(--color-neutral-700)",
       },
 
       fontFamily: {

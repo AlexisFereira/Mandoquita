@@ -26,6 +26,7 @@ import { useRandomPair } from "../src/hooks/use-random-pair";
 import MetaTags from "../src/components/MetaTags";
 import { listProducts } from "@/server/catalogService";
 import CategoriesBlocks from "@/components/CategoriesBlocks";
+import { Icon } from "@/components/Icon";
 
 export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
   res,
@@ -310,8 +311,9 @@ export default function HomePage({
             </CollectionGrid>
 
             <div className="flex justify-end">
-              <Button variant="outline" href="/destacados">
-                Ver más destacados
+              <Button variant="secondary" href="/destacados">
+                <span>Ver más</span>
+                <Icon name="arrowRight" className="ml-4" />
               </Button>
             </div>
           </MerchandisingSection>
@@ -333,8 +335,9 @@ export default function HomePage({
             </CollectionGrid>
 
             <div className="flex justify-end">
-              <Button variant="outline" href="/categorias/ropa-y-moda">
-                Ver más
+              <Button variant="secondary" href="/categorias/ropa-y-moda">
+                <span>Ver más</span>
+                <Icon name="arrowRight" className="ml-4" />
               </Button>
             </div>
           </MerchandisingSection>
@@ -361,7 +364,8 @@ export default function HomePage({
                 variant="secondary"
                 href={`/categorias/${selectedCategoryProducts.category.slug}`}
               >
-                Ver categoría {selectedCategoryProducts.category.name}
+                <span>Ver más</span>
+                <Icon name="arrowRight" className="ml-4" />
               </Button>
             </div>
           </MerchandisingSection>
