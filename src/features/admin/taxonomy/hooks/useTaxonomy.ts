@@ -43,8 +43,6 @@ export function useTaxonomy() {
       const subcategories = subcategoriesRes.items;
       const productTypes = productTypesRes.items;
 
-
-
       const tree = categories.map((category) => ({
         kind: "category" as const,
         data: category,

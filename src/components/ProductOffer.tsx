@@ -50,7 +50,7 @@ export function ProductOffer({
 
   return (
     <strong className={availableClassName}>
-      ${FinalPrice.toFixed(2)} {product.currency.trim()}
+      ${parseFloat(product.price)} {product.currency.trim()}
     </strong>
   );
 }

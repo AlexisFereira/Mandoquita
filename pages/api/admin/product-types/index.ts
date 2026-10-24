@@ -41,6 +41,7 @@ export async function handleAdminProductTypes(
     const subcategoryRepo = createPrismaSubcategoryRepository(prisma);
 
     if (req.method === "GET") {
+      console.log(req.query)
       const result = await listProductTypes(productTypeRepo, req.query);
       return res.status(200).json(result);
     }
@@ -72,6 +73,7 @@ export async function handleAdminProductTypes(
     return res.status(201).json({ item: created });
   } catch (error) {
     if (mapAdminErrorToHttp(res, error)) return;
+    console.error("Error handling product types request:", error);
     return respondProductAdminError(res, error);
   }
 }

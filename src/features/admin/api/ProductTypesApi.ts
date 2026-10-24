@@ -3,7 +3,7 @@ import { mutationHeaders, request } from "./AdminApiClient";
 
 export const productTypesApi = {
   list: (q = "", page = 1, subcategoryId?: string, active?: boolean, extraParams?: Record<string, string>) => {
-    const params = new URLSearchParams({ page: String(page), limit: "40" });
+    const params = new URLSearchParams({ page: String(page) });
     if (extraParams) {
       Object.entries(extraParams).forEach(([key, value]) => {
         params.set(key, value);
@@ -13,6 +13,7 @@ export const productTypesApi = {
     if (trimmed) params.set("q", trimmed);
     if (subcategoryId) params.set("subcategoryId", subcategoryId);
     if (typeof active === "boolean") params.set("active", String(active));
+
     return request<AdminProductTypeList>(`/api/admin/product-types?${params}`);
   },
 

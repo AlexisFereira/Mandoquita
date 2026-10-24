@@ -108,7 +108,7 @@ function CategoryRow({
   const { tree, loading, error, refresh } = useTaxonomy();
 
   return (
-    <Card className="space-y-3">
+    <Card className="space-y-3 p-4">
       <div className="flex items-center justify-between">
         <button
           type="button"

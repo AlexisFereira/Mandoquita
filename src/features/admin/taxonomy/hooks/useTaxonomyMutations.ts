@@ -37,6 +37,7 @@ export function useTaxonomyMutations(csrfToken: string) {
   const create = async (input: MutationInput) => {
     setBusy(true);
     setError(null);
+
     try {
       switch (input.kind) {
         case "category":
