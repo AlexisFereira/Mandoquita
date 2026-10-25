@@ -121,7 +121,7 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <Link
-            href="https://www.instagram.com/mandoquitawb/"
+            href="https://www.instagram.com/mandoquitatienda/"
             target="_blank"
             rel="noopener noreferrer"
             className="gap-2 justify-self-start"
