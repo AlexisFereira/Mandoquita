@@ -27,6 +27,7 @@ import MetaTags from "../src/components/MetaTags";
 import { listProducts } from "@/server/catalogService";
 import CategoriesBlocks from "@/components/CategoriesBlocks";
 import { Icon } from "@/components/Icon";
+import PaymentOptions from "@/components/PaymentOptions";
 
 export const getServerSideProps: GetServerSideProps<HomepagePayload> = async ({
   res,
@@ -371,7 +372,9 @@ export default function HomePage({
           </MerchandisingSection>
         ) : null}
 
-        <section id="contacto" className="py-10 sm:py-12 lg:py-16">
+        <PaymentOptions />
+
+        <section id="contacto" className="py-10 sm:py-12 lg:py-16 hidden ">
           <Container size="wide" padding="lg">
             <div className="grid overflow-hidden rounded-2xl bg-[rgb(var(--inverse-surface)/1)] text-[rgb(var(--inverse-foreground)/1)] lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.8fr)]">
               <div className="flex flex-col items-start justify-center px-6 py-10 sm:px-10 sm:py-12 lg:px-12">
