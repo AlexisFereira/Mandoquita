@@ -42,7 +42,7 @@ type Payment = Omit<(typeof payments)[number], "id">;
 
 function PaymentOption({ title, icon, description }: Payment) {
   return (
-    <Card className="p-4 max-w-50">
+    <Card className="p-4">
       <img
         src={icon}
         alt=""
@@ -74,7 +74,7 @@ const PaymentOptions = () => {
           conveniente. Confirma tu pedido por WhatsApp y te indicaremos cómo
           realizar tu pago.
         </p>
-        <div className="flex justify-items-start gap-4 flex-wrap">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:grid-cols-5 xl:grid-cols-7">
           {payments.map(({ id, ...obj }) => (
             <PaymentOption {...obj} key={id} />
           ))}
